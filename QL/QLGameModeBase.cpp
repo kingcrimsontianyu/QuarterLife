@@ -11,6 +11,7 @@
 
 #include "QLGameModeBase.h"
 #include "QLCharacter.h"
+#include "QLHUD.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -18,4 +19,7 @@ AQLGameModeBase::AQLGameModeBase() :
 Super()
 {
     DefaultPawnClass = AQLCharacter::StaticClass();
+
+    // use our custom HUD class
+    HUDClass = AQLHUD::StaticClass();
 }
