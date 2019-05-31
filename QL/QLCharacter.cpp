@@ -21,6 +21,11 @@
 //------------------------------------------------------------
 AQLCharacter::AQLCharacter()
 {
+    Health = 25.0f;
+    MaxHealth = 100.0f;
+    Armor = 50.0f;
+    MaxArmor = 100.0f;
+
     // Set size for collision capsule
     GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -140,4 +145,33 @@ void AQLCharacter::MoveRight(float Value)
 void AQLCharacter::OnFire()
 {
 
+}
+
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::GetHealth() const
+{
+    return Health;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::GetMaxHealth() const
+{
+    return MaxHealth;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::GetArmor() const
+{
+    return Armor;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::GetMaxArmor() const
+{
+    return MaxArmor;
 }

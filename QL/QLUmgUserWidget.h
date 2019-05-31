@@ -30,9 +30,6 @@ public:
     // Optionally override the tick event
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float GetFrameRate();
-
 protected:
-    float FPS;
+
 };

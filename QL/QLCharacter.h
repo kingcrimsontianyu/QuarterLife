@@ -97,4 +97,21 @@ public:
     // AnimMontage to play each time we fire
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
     class UAnimMontage* FireAnimation;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetHealth() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetMaxHealth() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetArmor() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetMaxArmor() const;
+protected:
+    float Health;
+    float MaxHealth;
+    float Armor;
+    float MaxArmor;
 };

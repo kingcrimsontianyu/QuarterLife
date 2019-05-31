@@ -10,12 +10,12 @@
 
 
 #include "QLUmgUserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UQLUmgUserWidget::UQLUmgUserWidget(const FObjectInitializer& ObjectInitializer) :
-Super(ObjectInitializer),
-FPS(0.0f)
+Super(ObjectInitializer)
 {
 
 }
@@ -38,12 +38,5 @@ void UQLUmgUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
     Super::NativeTick(MyGeometry, InDeltaTime);
 
     // Do your custom tick stuff here
-    FPS = 1.0 / InDeltaTime;
 }
 
-//------------------------------------------------------------
-//------------------------------------------------------------
-float UQLUmgUserWidget::GetFrameRate()
-{
-    return FPS;
-}
