@@ -21,6 +21,10 @@ AQLWeapon::AQLWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
+    RootSphereComponent->InitSphereRadius(40.0f);
+    RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
     RootComponent = RootSphereComponent;
 
     QLSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
