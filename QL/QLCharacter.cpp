@@ -40,30 +40,37 @@ AQLCharacter::AQLCharacter()
     FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
     // Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-    Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-    Mesh1P->SetOnlyOwnerSee(true);
-    Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-    Mesh1P->bCastDynamicShadow = false;
-    Mesh1P->CastShadow = false;
-    Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-    Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+    FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+    //FirstPersonMesh->SetOnlyOwnerSee(true);
+    //FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
+    //FirstPersonMesh->bCastDynamicShadow = false;
+    //FirstPersonMesh->CastShadow = false;
+    //FirstPersonMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
+    //FirstPersonMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+
+    // third person
+    ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
+    ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
+    ThirdPersonMesh->bOwnerNoSee = true;
+    ThirdPersonMesh->CastShadow = true;
+    ThirdPersonMesh->bCastDynamicShadow = true;
 
     // Create a gun mesh component
-    FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
-    FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-    FP_Gun->bCastDynamicShadow = false;
-    FP_Gun->CastShadow = false;
-    // FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-    FP_Gun->SetupAttachment(RootComponent);
+    GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunMesh"));
+    GunMesh->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
+    GunMesh->bCastDynamicShadow = false;
+    GunMesh->CastShadow = false;
+    // GunMesh->SetupAttachment(FirstPersonMesh, TEXT("GripPoint"));
+    GunMesh->SetupAttachment(RootComponent);
 
-    FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-    FP_MuzzleLocation->SetupAttachment(FP_Gun);
-    FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
+    MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+    MuzzleLocation->SetupAttachment(GunMesh);
+    MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
 
     // Default offset from the character location for projectiles to spawn
     GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
-    // Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun
+    // Note: The ProjectileClass and the skeletal mesh/anim blueprints for FirstPersonMesh, GunMesh, and VR_Gun
     // are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -78,9 +85,9 @@ void AQLCharacter::BeginPlay()
     Super::BeginPlay();
 
     //Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-    FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    //GunMesh->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
-    Mesh1P->SetHiddenInGame(false, true);
+    //FirstPersonMesh->SetHiddenInGame(false, true);
 }
 
 //------------------------------------------------------------
@@ -174,4 +181,20 @@ float AQLCharacter::GetArmor() const
 float AQLCharacter::GetMaxArmor() const
 {
     return MaxArmor;
+}
+
+//------------------------------------------------------------
+// Returns FirstPersonMesh subobject
+//------------------------------------------------------------
+//USkeletalMeshComponent* AQLCharacter::GetFirstPersonMesh()
+//{
+//    return FirstPersonMesh;
+//}
+
+//------------------------------------------------------------
+// Returns FirstPersonCameraComponent subobject
+//------------------------------------------------------------
+UCameraComponent* AQLCharacter::GetFirstPersonCameraComponent() const
+{
+    return FirstPersonCameraComponent;
 }

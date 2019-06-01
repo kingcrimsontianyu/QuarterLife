@@ -53,22 +53,27 @@ protected:
     // Fires a projectile.
     void OnFire();
 public:
-    // Returns Mesh1P subobject
-    FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+    // Returns FirstPersonMesh subobject
+    class USkeletalMeshComponent* GetFirstPersonMesh();
+
     // Returns FirstPersonCameraComponent subobject
-    FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+    class UCameraComponent* GetFirstPersonCameraComponent() const;
+
+    // Pawn mesh : 1st person view(arms; seen only by self)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    class USkeletalMeshComponent* FirstPersonMesh;
 
     // Pawn mesh: 1st person view (arms; seen only by self)
-    UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-    class USkeletalMeshComponent* Mesh1P;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    class USkeletalMeshComponent* ThirdPersonMesh;
 
     // Gun mesh: 1st person view (seen only by self)
-    UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-    class USkeletalMeshComponent* FP_Gun;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    class USkeletalMeshComponent* GunMesh;
 
     // Location on gun mesh where projectiles should spawn.
-    UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-    class USceneComponent* FP_MuzzleLocation;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    class USceneComponent* MuzzleLocation;
 
     // First person camera
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
