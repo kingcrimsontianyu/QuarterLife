@@ -42,10 +42,10 @@ public:
     virtual void AltFireRepeat() PURE_VIRTUAL(AQLWeapon::AltFireRepeat, );
 
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     class USphereComponent* RootSphereComponent;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USkeletalMeshComponent* QLSkeletalMeshComponent;
 protected:
     FName Name;
