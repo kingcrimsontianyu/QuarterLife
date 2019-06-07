@@ -14,6 +14,8 @@
 #include "GameFramework/Character.h"
 #include "QLCharacter.generated.h"
 
+class AQLWeapon;
+
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -28,7 +30,10 @@ public:
     // Called every frame
     // virtual void Tick(float DeltaTime) override;
 
-public:
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FHitResult RayTraceFromCharacterPOV(float rayTraceRange = 1e5f);
+
+protected:
     // Returns FirstPersonMesh subobject
     class USkeletalMeshComponent* GetFirstPersonMesh();
 
@@ -95,7 +100,9 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetMaxArmor() const;
 
-protected:
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void EquipWeapon(AQLWeapon* Weapon);
+
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -114,12 +121,16 @@ protected:
     void LookUpAtRate(float Rate);
 
     // Fires a projectile.
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnFire();
 
-
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnAltFire();
 protected:
     float Health;
     float MaxHealth;
     float Armor;
     float MaxArmor;
+
+    AQLWeapon* CurrentWeapon;
 };

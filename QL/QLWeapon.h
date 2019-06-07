@@ -14,6 +14,10 @@
 #include "GameFramework/Actor.h"
 #include "QLWeapon.generated.h"
 
+class AQLCharacter;
+
+//----------------------------------------
+//----------------------------------------
 UCLASS(Abstract)
 class QL_API AQLWeapon : public AActor
 {
@@ -32,7 +36,6 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
     virtual void Fire() PURE_VIRTUAL(AQLWeapon::Fire, );
     virtual void FireReleased() PURE_VIRTUAL(AQLWeapon::FireReleased, );
     virtual void FireRepeat() PURE_VIRTUAL(AQLWeapon::FireRepeat, );
@@ -40,6 +43,9 @@ public:
     virtual void AltFire() PURE_VIRTUAL(AQLWeapon::AltFire, );
     virtual void AltFireReleased() PURE_VIRTUAL(AQLWeapon::AltFireReleased, );
     virtual void AltFireRepeat() PURE_VIRTUAL(AQLWeapon::AltFireRepeat, );
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetUser(AQLCharacter* Character);
 
 public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
@@ -49,4 +55,5 @@ public:
     USkeletalMeshComponent* QLSkeletalMeshComponent;
 protected:
     FName Name;
+    AQLCharacter* User;
 };

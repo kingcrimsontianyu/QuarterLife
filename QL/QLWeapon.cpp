@@ -15,7 +15,8 @@
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
-AQLWeapon::AQLWeapon()
+AQLWeapon::AQLWeapon() :
+User(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -55,3 +56,9 @@ void AQLWeapon::Tick(float DeltaTime)
 
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::SetUser(AQLCharacter* Character)
+{
+    User = Character;
+}

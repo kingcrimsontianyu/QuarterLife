@@ -27,6 +27,7 @@
 #include "QLPortal.generated.h"
 
 //----------------------------------------
+// Basic portal
 //----------------------------------------
 UCLASS()
 class QL_API AQLPortal : public AActor
@@ -46,43 +47,32 @@ public:
 
     //----------------------------------------
     //----------------------------------------
-    virtual void PostInitializeComponents() override;
-
-    //----------------------------------------
-    //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetSpouse(AQLPortal* Spouse);
 
     //----------------------------------------
     //----------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USceneCaptureComponent2D* SceneCaptureComponent;
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UBoxComponent* GetBoxComponent();
 
     //----------------------------------------
     //----------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UTextureRenderTarget2D* RenderTarget;
-
-    //----------------------------------------
-    //----------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class UBoxComponent* BoxComponent;
-
-    //----------------------------------------
-    //----------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UStaticMeshComponent* FrameStaticMesh;
-
-    //----------------------------------------
-    //----------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UStaticMeshComponent* DisplayPlaneStaticMesh;
-
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UStaticMeshComponent* GetDisplayPlaneStaticMesh();
 protected:
     //----------------------------------------
     // Called when the game starts or when spawned
     //----------------------------------------
     virtual void BeginPlay() override;
+
+    //----------------------------------------
+    //----------------------------------------
+    virtual void PostInitializeComponents() override;
+
+    //----------------------------------------
+    //----------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void RelinkSCCAndRenderTarget();
 
     //----------------------------------------
     // Update scene capture component
@@ -105,7 +95,31 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     FRotator ConvertRotationToSpouseSpace(const FRotator& OldRotator);
 
-    AQLPortal* Spouse;
+    //----------------------------------------
+    //----------------------------------------
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    class USceneCaptureComponent2D* SceneCaptureComponent;
 
+    //----------------------------------------
+    // The game and editor crash if UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property") is added
+    //----------------------------------------
+    UTextureRenderTarget2D* RenderTarget;
+
+    //----------------------------------------
+    //----------------------------------------
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    class UBoxComponent* BoxComponent;
+
+    //----------------------------------------
+    //----------------------------------------
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UStaticMeshComponent* FrameStaticMesh;
+
+    //----------------------------------------
+    //----------------------------------------
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UStaticMeshComponent* DisplayPlaneStaticMesh;
+
+    AQLPortal* Spouse;
     UMaterialInstanceDynamic* DynamicDisplayPlaneMaterial;
 };

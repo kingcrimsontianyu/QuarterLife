@@ -15,11 +15,14 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "Kismet/GameplayStatics.h"
+#include "QLWeaponPortalGun.h" // to be modified
+#include "DrawDebugHelpers.h"
 
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
-AQLCharacter::AQLCharacter()
+AQLCharacter::AQLCharacter() :
+CurrentWeapon(nullptr)
 {
     Health = 25.0f;
     MaxHealth = 100.0f;
@@ -41,12 +44,12 @@ AQLCharacter::AQLCharacter()
 
     // Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
     FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
-    //FirstPersonMesh->SetOnlyOwnerSee(true);
-    //FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
-    //FirstPersonMesh->bCastDynamicShadow = false;
-    //FirstPersonMesh->CastShadow = false;
-    //FirstPersonMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-    //FirstPersonMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+    FirstPersonMesh->SetOnlyOwnerSee(true);
+    FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
+    FirstPersonMesh->bCastDynamicShadow = false;
+    FirstPersonMesh->CastShadow = false;
+    FirstPersonMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
+    FirstPersonMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
     // third person
     ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
@@ -60,8 +63,6 @@ AQLCharacter::AQLCharacter()
     GunMesh->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
     GunMesh->bCastDynamicShadow = false;
     GunMesh->CastShadow = false;
-    // GunMesh->SetupAttachment(FirstPersonMesh, TEXT("GripPoint"));
-    GunMesh->SetupAttachment(RootComponent);
 
     MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
     MuzzleLocation->SetupAttachment(GunMesh);
@@ -84,8 +85,8 @@ void AQLCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    //Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-    //GunMesh->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    // Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
+    GunMesh->AttachToComponent(FirstPersonMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
     //FirstPersonMesh->SetHiddenInGame(false, true);
 }
@@ -103,17 +104,15 @@ void AQLCharacter::BeginPlay()
 //------------------------------------------------------------
 void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-    // Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-    // set up gameplay key bindings
-    check(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
 
     // Bind jump events
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
     PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
     // Bind fire event
-    // PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AQLCharacter::OnFire);
+    PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AQLCharacter::OnFire);
+    PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &AQLCharacter::OnAltFire);
 
     // Bind movement events
     PlayerInputComponent->BindAxis("MoveForward", this, &AQLCharacter::MoveForward);
@@ -148,10 +147,22 @@ void AQLCharacter::MoveRight(float Value)
 }
 
 //------------------------------------------------------------
+// UE_LOG(LogTemp, Warning, TEXT("%s"), *CurrentWeapon->GetName());
 //------------------------------------------------------------
 void AQLCharacter::OnFire()
 {
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->Fire();
+    }
+}
 
+void AQLCharacter::OnAltFire()
+{
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->AltFire();
+    }
 }
 
 
@@ -197,4 +208,38 @@ float AQLCharacter::GetMaxArmor() const
 UCameraComponent* AQLCharacter::GetFirstPersonCameraComponent() const
 {
     return FirstPersonCameraComponent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::EquipWeapon(AQLWeapon* Weapon)
+{
+    CurrentWeapon = Weapon;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FHitResult AQLCharacter::RayTraceFromCharacterPOV(float rayTraceRange)
+{
+    FCollisionQueryParams params(FName(TEXT("lineTrace")),
+                                 true, // bTraceComplex
+                                 this); // ignore actor
+    params.bReturnPhysicalMaterial = false;
+
+    FVector start = FirstPersonCameraComponent->GetComponentLocation();
+    FVector end = FirstPersonCameraComponent->GetForwardVector() * rayTraceRange + start;
+
+    FHitResult hitResult(ForceInit);
+    GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_Pawn, params);
+
+    // useful properties
+    // hitResult.bBlockingHit  // did ray hit something
+    // hitResult.GetActor();   // the hit actor if there is one
+    // hitResult.ImpactPoint;  // FVector
+    // hitResult.ImpactNormal; // FVector
+
+    // for debugging purpose
+    // DrawDebugLine(GetWorld(), start, hitResult.ImpactPoint, FColor(255, 0, 0), true, -1, 0, 10);
+
+    return hitResult;
 }

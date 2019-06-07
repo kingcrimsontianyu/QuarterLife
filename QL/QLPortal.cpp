@@ -18,6 +18,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "QLUtility.h"
 
 //----------------------------------------
 // Sets default values
@@ -37,9 +38,15 @@ Spouse(nullptr)
 
     FrameStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameStaticMesh"));
     FrameStaticMesh->SetupAttachment(RootComponent);
+    FrameStaticMesh->SetSimulatePhysics(false);
+    FrameStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    FrameStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
     DisplayPlaneStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DisplayPlaneStaticMesh"));
     DisplayPlaneStaticMesh->SetupAttachment(RootComponent);
+    DisplayPlaneStaticMesh->SetSimulatePhysics(false);
+    DisplayPlaneStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    DisplayPlaneStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
     SceneCaptureComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent"));
     SceneCaptureComponent->SetRelativeLocation(FVector(200.0f, 0.0f, 0.0f));
@@ -74,16 +81,34 @@ void AQLPortal::Tick(float DeltaTime)
 }
 
 //----------------------------------------
+// To list material parameters, use:
+// TArray<FMaterialParameterInfo> outParamInfo;
+// TArray<FGuid> outParamIds;
+// DynamicDisplayPlaneMaterial->GetAllTextureParameterInfo(outParamInfo, outParamIds);
+// for (auto&& item : outParamInfo)
+// {
+//     QLUtility::Screen(item.Name.ToString());
+// }
 //----------------------------------------
 void AQLPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
+    RelinkSCCAndRenderTarget();
+}
+
+//----------------------------------------
+//----------------------------------------
+void AQLPortal::RelinkSCCAndRenderTarget()
+{
     SceneCaptureComponent->TextureTarget = RenderTarget;
 
     UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
-    DynamicDisplayPlaneMaterial = DisplayPlaneStaticMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, PortalMaterial);
-    DynamicDisplayPlaneMaterial->SetTextureParameterValue("PortalTexture", RenderTarget);
+    if (PortalMaterial)
+    {
+        DynamicDisplayPlaneMaterial = DisplayPlaneStaticMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, PortalMaterial);
+        DynamicDisplayPlaneMaterial->SetTextureParameterValue("PortalTexture", RenderTarget);
+    }
 }
 
 //----------------------------------------
@@ -181,4 +206,18 @@ FRotator AQLPortal::ConvertRotationToSpouseSpace(const FRotator& OldRotator)
     FRotator NewRotator = result.Rotator();
 
     return NewRotator;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UBoxComponent* AQLPortal::GetBoxComponent()
+{
+    return BoxComponent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UStaticMeshComponent* AQLPortal::GetDisplayPlaneStaticMesh()
+{
+    return DisplayPlaneStaticMesh;
 }
