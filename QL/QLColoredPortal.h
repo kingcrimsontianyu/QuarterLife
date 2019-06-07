@@ -28,23 +28,40 @@ public:
 
     //----------------------------------------
     // Given the type of portal and its spouse,
-    // initialize self
+    // initialize self and spouse
     //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Initialize(EPortalColor PortalColor, AQLPortal* Spouse);
 
+    //----------------------------------------
+    // Clean up self and spouse
+    //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void CleanUp();
 
+    //----------------------------------------
+    // Set the portal color to blue
+    //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetBlue();
 
+    //----------------------------------------
+    // Set the portal color to orange
+    //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetOrange();
 
+    //----------------------------------------
+    // Set the portal state to active where the
+    // portal appears as a circular band
+    //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetActive();
 
+    //----------------------------------------
+    // Set the portal state to inactive where the
+    // portal appears as a filled circle
+    //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetInactive();
 
@@ -52,11 +69,4 @@ public:
     //----------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     EPortalColor PortalColor;
-
-    //------------------------------------------------------------
-    // four important materials
-    // --- 2 x default material: filled single-color ellipse
-    // --- 2 x material: hollow single-color ellipse, to be filled by
-    //     the render target at runtime
-    //------------------------------------------------------------
 };

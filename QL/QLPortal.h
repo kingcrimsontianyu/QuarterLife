@@ -59,6 +59,7 @@ public:
     //----------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UStaticMeshComponent* GetDisplayPlaneStaticMesh();
+
 protected:
     //----------------------------------------
     // Called when the game starts or when spawned
@@ -68,11 +69,6 @@ protected:
     //----------------------------------------
     //----------------------------------------
     virtual void PostInitializeComponents() override;
-
-    //----------------------------------------
-    //----------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void RelinkSCCAndRenderTarget();
 
     //----------------------------------------
     // Update scene capture component
@@ -120,6 +116,13 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UStaticMeshComponent* DisplayPlaneStaticMesh;
 
+    //----------------------------------------
+    // The pairing portal
+    //----------------------------------------
     AQLPortal* Spouse;
+
+    //----------------------------------------
+    // Points to the dynamic instanced material of DisplayPlaneStaticMesh
+    //----------------------------------------
     UMaterialInstanceDynamic* DynamicDisplayPlaneMaterial;
 };

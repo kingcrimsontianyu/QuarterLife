@@ -30,8 +30,6 @@ void AQLColoredPortal::Initialize(EPortalColor PortalColorExt, AQLPortal* Spouse
 {
     PortalColor = PortalColorExt;
 
-    RelinkSCCAndRenderTarget();
-
     if (PortalColor == EPortalColor::Blue)
     {
         SetBlue();
@@ -51,7 +49,6 @@ void AQLColoredPortal::Initialize(EPortalColor PortalColorExt, AQLPortal* Spouse
     {
         ThisSpouse->SetSpouse(this);
         ThisSpouse->SetActive();
-        ThisSpouse->RelinkSCCAndRenderTarget();
         SetActive();
     }
     else

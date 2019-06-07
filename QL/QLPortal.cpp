@@ -81,7 +81,7 @@ void AQLPortal::Tick(float DeltaTime)
 }
 
 //----------------------------------------
-// To list material parameters, use:
+// To list the availablematerial parameters, use:
 // TArray<FMaterialParameterInfo> outParamInfo;
 // TArray<FGuid> outParamIds;
 // DynamicDisplayPlaneMaterial->GetAllTextureParameterInfo(outParamInfo, outParamIds);
@@ -94,13 +94,7 @@ void AQLPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    RelinkSCCAndRenderTarget();
-}
-
-//----------------------------------------
-//----------------------------------------
-void AQLPortal::RelinkSCCAndRenderTarget()
-{
+    // set up scene campture component and reder target
     SceneCaptureComponent->TextureTarget = RenderTarget;
 
     UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
