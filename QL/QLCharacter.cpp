@@ -17,6 +17,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "QLWeaponPortalGun.h" // to be modified
 #include "DrawDebugHelpers.h"
+#include "QLWeaponManager.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -76,6 +77,9 @@ CurrentWeapon(nullptr)
 
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
+
+    // manager
+    WeaponManager = NewObject<UQLWeaponManager>();
 }
 
 //------------------------------------------------------------
@@ -154,6 +158,23 @@ void AQLCharacter::OnFire()
     if (CurrentWeapon)
     {
         CurrentWeapon->Fire();
+
+        //// try and play the sound if specified
+        //if (FireSound)
+        //{
+        //    UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+        //}
+
+        //// try and play a firing animation if specified
+        //if (FireAnimation)
+        //{
+        //    // Get the animation object for the arms mesh
+        //    UAnimInstance* AnimInstance = FirstPersonMesh->GetAnimInstance();
+        //    if (AnimInstance)
+        //    {
+        //        AnimInstance->Montage_Play(FireAnimation, 1.0f);
+        //    }
+        //}
     }
 }
 
@@ -197,10 +218,10 @@ float AQLCharacter::GetMaxArmor() const
 //------------------------------------------------------------
 // Returns FirstPersonMesh subobject
 //------------------------------------------------------------
-//USkeletalMeshComponent* AQLCharacter::GetFirstPersonMesh()
-//{
-//    return FirstPersonMesh;
-//}
+USkeletalMeshComponent* AQLCharacter::GetFirstPersonMesh()
+{
+    return FirstPersonMesh;
+}
 
 //------------------------------------------------------------
 // Returns FirstPersonCameraComponent subobject

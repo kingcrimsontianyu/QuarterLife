@@ -27,15 +27,8 @@ public:
 	// Sets default values for this actor's properties
 	AQLWeapon();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-    virtual void PostInitializeComponents() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
     virtual void Fire() PURE_VIRTUAL(AQLWeapon::Fire, );
     virtual void FireReleased() PURE_VIRTUAL(AQLWeapon::FireReleased, );
     virtual void FireRepeat() PURE_VIRTUAL(AQLWeapon::FireRepeat, );
@@ -47,13 +40,32 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetUser(AQLCharacter* Character);
 
-public:
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void UnsetUser();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlayFireSound(const FName& FireSoundName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlayFireAnimation(const FName& FireAnimationName);
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, USoundBase*> FireSoundList;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, UAnimMontage*> FireAnimationList;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     class USphereComponent* RootSphereComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USkeletalMeshComponent* QLSkeletalMeshComponent;
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+    virtual void PostInitializeComponents() override;
+
     FName Name;
     AQLCharacter* User;
 };

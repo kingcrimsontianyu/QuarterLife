@@ -15,6 +15,7 @@
 #include "QLCharacter.generated.h"
 
 class AQLWeapon;
+class UQLWeaponManager;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -33,10 +34,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     FHitResult RayTraceFromCharacterPOV(float rayTraceRange = 1e5f);
 
-protected:
     // Returns FirstPersonMesh subobject
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     class USkeletalMeshComponent* GetFirstPersonMesh();
-
+protected:
     // Returns FirstPersonCameraComponent subobject
     class UCameraComponent* GetFirstPersonCameraComponent() const;
 
@@ -75,14 +76,6 @@ protected:
     // Projectile class to spawn
     // UPROPERTY(EditDefaultsOnly, Category = Projectile)
     // TSubclassOf<class ATestFirstPersonProjectile> ProjectileClass;
-
-    // Sound to play each time we fire
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USoundBase* FireSound;
-
-    // AnimMontage to play each time we fire
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class UAnimMontage* FireAnimation;
 
 protected:
     // Called when the game starts or when spawned
@@ -133,4 +126,5 @@ protected:
     float MaxArmor;
 
     AQLWeapon* CurrentWeapon;
+    UQLWeaponManager* WeaponManager;
 };

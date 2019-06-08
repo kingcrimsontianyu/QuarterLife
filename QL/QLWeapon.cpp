@@ -11,6 +11,11 @@
 
 #include "QLWeapon.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "QLCharacter.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -61,4 +66,49 @@ void AQLWeapon::Tick(float DeltaTime)
 void AQLWeapon::SetUser(AQLCharacter* Character)
 {
     User = Character;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::UnsetUser()
+{
+    User = nullptr;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PlayFireSound(const FName& FireSoundName)
+{
+    USoundBase** Result = FireSoundList.Find(FireSoundName);
+    if (Result)
+    {
+        USoundBase* Sound = *Result;
+        if (Sound && User)
+        {
+            UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PlayFireAnimation(const FName& FireAnimationName)
+{
+    UAnimMontage** Result = FireAnimationList.Find(FireAnimationName);
+    if (Result)
+    {
+        UAnimMontage* Animation = *Result;
+        if (Animation && User)
+        {
+            USkeletalMeshComponent* ArmMesh = User->GetFirstPersonMesh();
+            if (ArmMesh)
+            {
+                UAnimInstance* AnimInstance = ArmMesh->GetAnimInstance();
+                if (AnimInstance)
+                {
+                    AnimInstance->Montage_Play(Animation, 1.0f);
+                }
+            }
+        }
+    }
 }

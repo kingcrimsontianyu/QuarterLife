@@ -13,6 +13,7 @@
 #include "CoreMinimal.h"
 #include "QLPortal.h"
 #include "QLPortalEnum.h"
+#include "Components/TimelineComponent.h"
 #include "QLColoredPortal.generated.h"
 
 //----------------------------------------
@@ -69,4 +70,20 @@ public:
     //----------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     EPortalColor PortalColor;
+
+protected:
+    //----------------------------------------
+    //----------------------------------------
+    virtual void PostInitializeComponents() override;
+
+    UPROPERTY()
+    UTimelineComponent* EnlargeTimeline;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
+    UCurveFloat* EnlargeCurve;
+
+    FOnTimelineFloat EnlargeTimelineInterpFunction;
+
+    UFUNCTION()
+    void EnlargeCallback(float Val);
 };

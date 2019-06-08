@@ -53,6 +53,9 @@ void AQLWeaponPortalGun::Tick(float DeltaTime)
 void AQLWeaponPortalGun::Fire()
 {
     CreatePortalIfConditionsAreMet(EPortalColor::Blue);
+
+    PlayFireSound(FName("FireBlue"));
+    PlayFireAnimation(FName("Fire"));
 }
 
 //----------------------------------------
@@ -60,6 +63,9 @@ void AQLWeaponPortalGun::Fire()
 void AQLWeaponPortalGun::AltFire()
 {
     CreatePortalIfConditionsAreMet(EPortalColor::Orange);
+
+    PlayFireSound(FName("FireOrange"));
+    PlayFireAnimation(FName("Fire"));
 }
 
 //----------------------------------------
@@ -126,6 +132,29 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     Portal->SetActorLocation(location);
     Portal->SetActorRotation(rotation);
     UGameplayStatics::FinishSpawningActor(Portal, transform);
+
+    // the newly spawned portal has top priority
+    // previously spawned overlapping portal is destroyed
+    TSet<AActor*> OverlapperList;
+    Portal->GetOverlappingActors(OverlapperList, AQLColoredPortal::StaticClass());
+    if (OverlapperList.Num() > 0)
+    {
+        for (const auto& Item : OverlapperList)
+        {
+            if (Item == BluePortal)
+            {
+                BluePortal->CleanUp();
+                BluePortal->Destroy();
+                BluePortal = nullptr;
+            }
+            else
+            {
+                OrangePortal->CleanUp();
+                OrangePortal->Destroy();
+                OrangePortal = nullptr;
+            }
+        }
+    }
 
     // now that a new portal is appropriately created without overlap,
     // set the new portal's properties

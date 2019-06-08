@@ -22,6 +22,25 @@ AQLColoredPortal::AQLColoredPortal() :
 PortalColor(EPortalColor::Invalid)
 {
     BoxComponent->InitBoxExtent(FVector(50.0f, 120.0f, 150.0f));
+
+    // animation
+    EnlargeCurve = CreateDefaultSubobject<UCurveFloat>(TEXT("EnlargeCurve"));
+    EnlargeTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("EnlargeTimeline"));
+    EnlargeTimelineInterpFunction.BindUFunction(this, FName{ TEXT("EnlargeCallback") });
+}
+
+//----------------------------------------
+//----------------------------------------
+void AQLColoredPortal::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+
+    if (DynamicDisplayPlaneMaterial)
+    {
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", 0.1);
+    }
+
+    EnlargeTimeline->AddInterpFloat(EnlargeCurve, EnlargeTimelineInterpFunction, FName(TEXT("Enlarge")));
 }
 
 //----------------------------------------
@@ -55,6 +74,9 @@ void AQLColoredPortal::Initialize(EPortalColor PortalColorExt, AQLPortal* Spouse
     {
         SetInactive();
     }
+
+    // animation
+    EnlargeTimeline->PlayFromStart();
 }
 
 //----------------------------------------
@@ -101,3 +123,12 @@ void AQLColoredPortal::SetInactive()
     DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 0);
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLColoredPortal::EnlargeCallback(float Val)
+{
+    if (DynamicDisplayPlaneMaterial)
+    {
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", Val);
+    }
+}

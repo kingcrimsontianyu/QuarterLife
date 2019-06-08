@@ -36,7 +36,7 @@ AQLPortalCompatibleActor::AQLPortalCompatibleActor()
     //float zDim = StaticMeshComponent->Bounds.BoxExtent.Z; // note: extent refers to half of the side
     //StaticMeshComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -2.0f * zDim));
     //StaticMeshComponent->SetWorldScale3D(FVector(0.4f, 2.0f, 2.0f));
-    StaticMeshComponent->bCastDynamicShadow = false; // avoid performance hit when the actor has large volume
+    //StaticMeshComponent->bCastDynamicShadow = false; // avoid performance hit when the actor has large volume
 }
 
 //----------------------------------------
