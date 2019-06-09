@@ -111,12 +111,13 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
     // Bind jump events
-    PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-    PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+    PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+    PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &ACharacter::StopJumping);
 
     // Bind fire event
-    PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AQLCharacter::OnFire);
-    PlayerInputComponent->BindAction("AltFire", IE_Pressed, this, &AQLCharacter::OnAltFire);
+    PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnFire);
+    PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &AQLCharacter::OnFireRelease);
+    PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnAltFire);
 
     // Bind movement events
     PlayerInputComponent->BindAxis("MoveForward", this, &AQLCharacter::MoveForward);
@@ -178,6 +179,18 @@ void AQLCharacter::OnFire()
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnFireRelease()
+{
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->FireRelease();
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLCharacter::OnAltFire()
 {
     if (CurrentWeapon)

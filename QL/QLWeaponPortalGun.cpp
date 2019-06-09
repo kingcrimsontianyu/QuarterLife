@@ -23,7 +23,8 @@
 //----------------------------------------
 AQLWeaponPortalGun::AQLWeaponPortalGun() :
 BluePortal(nullptr),
-OrangePortal(nullptr)
+OrangePortal(nullptr),
+HitRange(10000.0f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -71,7 +72,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
         return;
     }
 
-    FHitResult HitResult = User->RayTraceFromCharacterPOV(10000.0f);
+    FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
 
     // if hit does not occur
     if (!HitResult.bBlockingHit)

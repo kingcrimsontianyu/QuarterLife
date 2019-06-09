@@ -32,10 +32,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void Fire() override;
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void AltFire() override;
 protected:
     // Called when the game starts or when spawned
@@ -48,4 +46,6 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<AQLColoredPortal> PortalClass;
+
+    float HitRange;
 };

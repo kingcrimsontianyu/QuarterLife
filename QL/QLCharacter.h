@@ -118,6 +118,9 @@ protected:
     void OnFire();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnFireRelease();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnAltFire();
 protected:
     float Health;

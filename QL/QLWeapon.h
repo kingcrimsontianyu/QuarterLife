@@ -18,7 +18,7 @@ class AQLCharacter;
 
 //----------------------------------------
 //----------------------------------------
-UCLASS(Abstract)
+UCLASS()
 class QL_API AQLWeapon : public AActor
 {
 	GENERATED_BODY()
@@ -29,13 +29,24 @@ public:
 
     // Called every frame
     virtual void Tick(float DeltaTime) override;
-    virtual void Fire() PURE_VIRTUAL(AQLWeapon::Fire, );
-    virtual void FireReleased() PURE_VIRTUAL(AQLWeapon::FireReleased, );
-    virtual void FireRepeat() PURE_VIRTUAL(AQLWeapon::FireRepeat, );
 
-    virtual void AltFire() PURE_VIRTUAL(AQLWeapon::AltFire, );
-    virtual void AltFireReleased() PURE_VIRTUAL(AQLWeapon::AltFireReleased, );
-    virtual void AltFireRepeat() PURE_VIRTUAL(AQLWeapon::AltFireRepeat, );
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void Fire();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void FireRelease();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void FireRepeat();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void AltFire();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void AltFireRelease();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void AltFireRepeat();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetUser(AQLCharacter* Character);
