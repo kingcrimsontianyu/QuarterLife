@@ -53,9 +53,6 @@ void AQLWeaponPortalGun::Tick(float DeltaTime)
 void AQLWeaponPortalGun::Fire()
 {
     CreatePortalIfConditionsAreMet(EPortalColor::Blue);
-
-    PlayFireSound(FName("FireBlue"));
-    PlayFireAnimation(FName("Fire"));
 }
 
 //----------------------------------------
@@ -63,9 +60,6 @@ void AQLWeaponPortalGun::Fire()
 void AQLWeaponPortalGun::AltFire()
 {
     CreatePortalIfConditionsAreMet(EPortalColor::Orange);
-
-    PlayFireSound(FName("FireOrange"));
-    PlayFireAnimation(FName("Fire"));
 }
 
 //----------------------------------------
@@ -84,6 +78,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: no hit");
+        PlayFireSound(FName("NoPortal"));
         return;
     }
 
@@ -96,6 +91,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: not compatible");
+        PlayFireSound(FName("NoPortal"));
         return;
     }
 
@@ -169,5 +165,17 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
         OrangePortal = Portal;
     }
 
+    // sound
+    FName SoundName;
+    if (PortalColor == EPortalColor::Blue)
+    {
+        SoundName = FName("FireBlue");
+    }
+    else
+    {
+        SoundName = FName("FireOrange");
+    }
+    PlayFireSound(SoundName);
+    PlayFireAnimation(FName("Fire"));
 }
 
