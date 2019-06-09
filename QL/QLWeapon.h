@@ -60,6 +60,21 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlayFireAnimation(const FName& FireAnimationName);
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    USkeletalMeshComponent* GetGunSkeletalMeshComponent();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FVector GetMuzzleLocation();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FName GetWeaponName();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+    virtual void PostInitializeComponents() override;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, USoundBase*> FireSoundList;
 
@@ -70,13 +85,24 @@ public:
     class USphereComponent* RootSphereComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    USkeletalMeshComponent* QLSkeletalMeshComponent;
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    USkeletalMeshComponent* GunSkeletalMeshComponent;
 
-    virtual void PostInitializeComponents() override;
+    // Location on gun mesh where projectiles should spawn.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    USceneComponent* MuzzleSceneComponent;
 
-    FName Name;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UParticleSystemComponent* BeamComponent;
+
+    FName WeaponName;
+
     AQLCharacter* User;
+
+    FTimerHandle HeldDownFireTimerHandle;
+
+    float HitRange;
+
+    float RateOfFire;
+
+    bool bIsFireHeld;
 };

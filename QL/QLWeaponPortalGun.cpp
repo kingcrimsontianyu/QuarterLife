@@ -23,11 +23,14 @@
 //----------------------------------------
 AQLWeaponPortalGun::AQLWeaponPortalGun() :
 BluePortal(nullptr),
-OrangePortal(nullptr),
-HitRange(10000.0f)
+OrangePortal(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+    HitRange = 10000.0f;
+
+    WeaponName = FName("PortalGun");
 
     PortalClass = AQLColoredPortal::StaticClass();
 }

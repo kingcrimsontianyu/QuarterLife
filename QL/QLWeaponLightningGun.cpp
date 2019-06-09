@@ -12,20 +12,75 @@
 #include "QLCharacter.h"
 #include "QLUtility.h"
 #include "Engine/World.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Camera/CameraComponent.h"
 
 //----------------------------------------
 //----------------------------------------
-AQLWeaponLightningGun::AQLWeaponLightningGun() :
-HitRange(2000.0f),
-RateOfFire(0.048f)
+AQLWeaponLightningGun::AQLWeaponLightningGun()
 {
+    WeaponName = FName("LightningGun");
+    HitRange = 2000.0f;
+    RateOfFire = 0.048f;
+    bIsFireHeld = false;
+}
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponLightningGun::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+
+    if (BeamComponent)
+    {
+        // BeamComponent->bAutoActivate = false does not work
+        BeamComponent->Deactivate();
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponLightningGun::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    if (bIsFireHeld)
+    {
+        // to do: ray trace is performed twice, one in Tick(), the other in HasHitEnemy(), to ensure correctness
+        // need to understand the tick order and simplify the calculation
+        FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
+
+        BeamComponent->SetBeamSourcePoint(0, GetMuzzleLocation(), 0);
+
+        // if hit does not occur
+        if (!HitResult.bBlockingHit)
+        {
+            FVector TargetLocation = GetMuzzleLocation() + User->GetFirstPersonCameraComponent()->GetForwardVector() * HitRange;
+            BeamComponent->SetBeamTargetPoint(0, TargetLocation, 0);
+        }
+        else
+        {
+            // if hit occurs, handle beam
+            if (BeamComponent)
+            {
+                BeamComponent->SetBeamTargetPoint(0, HitResult.ImpactPoint, 0);
+            }
+        }
+    }
 }
 
 //----------------------------------------
 //----------------------------------------
 void AQLWeaponLightningGun::Fire()
 {
+    bIsFireHeld = true;
+
+    // handle beam
+    if (BeamComponent)
+    {
+        BeamComponent->Activate();
+    }
+
     GetWorldTimerManager().SetTimer(HeldDownFireTimerHandle,
                                     this,
                                     &AQLWeaponLightningGun::DealDamageIfHit,
@@ -38,6 +93,13 @@ void AQLWeaponLightningGun::Fire()
 //----------------------------------------
 void AQLWeaponLightningGun::FireRelease()
 {
+    bIsFireHeld = false;
+
+    if (BeamComponent)
+    {
+        BeamComponent->Deactivate();
+    }
+
     GetWorldTimerManager().ClearTimer(HeldDownFireTimerHandle);
 }
 

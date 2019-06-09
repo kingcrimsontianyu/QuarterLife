@@ -46,6 +46,4 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<AQLColoredPortal> PortalClass;
-
-    float HitRange;
 };

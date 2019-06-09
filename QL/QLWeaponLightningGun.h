@@ -24,6 +24,8 @@ class QL_API AQLWeaponLightningGun : public AQLWeapon
 public:
     AQLWeaponLightningGun();
 
+    virtual void Tick(float DeltaTime) override;
+
     virtual void Fire() override;
 
     virtual void FireRelease() override;
@@ -33,8 +35,7 @@ public:
     bool HasHitEnemy();
 
 protected:
-    FTimerHandle HeldDownFireTimerHandle;
+    virtual void PostInitializeComponents() override;
 
-    float HitRange;
-    float RateOfFire;
+
 };

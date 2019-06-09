@@ -16,5 +16,5 @@
 AQLWeaponRailGun::AQLWeaponRailGun() :
 Ammo(10)
 {
-
+    WeaponName = FName("RailGun");
 }

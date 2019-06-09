@@ -37,9 +37,11 @@ public:
     // Returns FirstPersonMesh subobject
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     class USkeletalMeshComponent* GetFirstPersonMesh();
-protected:
+
     // Returns FirstPersonCameraComponent subobject
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     class UCameraComponent* GetFirstPersonCameraComponent() const;
+protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
@@ -48,14 +50,6 @@ protected:
     // Pawn mesh: 1st person view (arms; seen only by self)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     class USkeletalMeshComponent* ThirdPersonMesh;
-
-    // Gun mesh: 1st person view (seen only by self)
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USkeletalMeshComponent* GunMesh;
-
-    // Location on gun mesh where projectiles should spawn.
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USceneComponent* MuzzleLocation;
 
     // First person camera
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property", meta = (AllowPrivateAccess = "true"))
@@ -68,10 +62,6 @@ protected:
     // Base look up/down rate, in deg/sec. Other scaling may affect final rate.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BaseLookUpRate;
-
-    // Gun muzzle's offset from the characters location
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FVector GunOffset;
 
     // Projectile class to spawn
     // UPROPERTY(EditDefaultsOnly, Category = Projectile)
@@ -94,7 +84,10 @@ protected:
     float GetMaxArmor() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void EquipWeapon(AQLWeapon* Weapon);
+    void AddWeapon(AQLWeapon* Weapon);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCurrentWeapon(const FName& WeaponName);
 
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -128,6 +121,5 @@ protected:
     float Armor;
     float MaxArmor;
 
-    AQLWeapon* CurrentWeapon;
     UQLWeaponManager* WeaponManager;
 };

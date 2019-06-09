@@ -16,12 +16,17 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
 AQLWeapon::AQLWeapon() :
-User(nullptr)
+WeaponName("None"),
+User(nullptr),
+HitRange(10000.0f),
+RateOfFire(1.0f),
+bIsFireHeld(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,7 +38,14 @@ User(nullptr)
 
     RootComponent = RootSphereComponent;
 
-    QLSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+    GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunSkeletalMeshComponent"));
+    GunSkeletalMeshComponent->SetupAttachment(RootComponent);
+
+    MuzzleSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
+    MuzzleSceneComponent->SetupAttachment(GunSkeletalMeshComponent);
+
+    BeamComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("BeamComponent"));
+    BeamComponent->SetupAttachment(MuzzleSceneComponent);
 }
 
 //------------------------------------------------------------
@@ -147,4 +159,25 @@ void AQLWeapon::AltFireRelease()
 //------------------------------------------------------------
 void AQLWeapon::AltFireRepeat()
 {
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+USkeletalMeshComponent* AQLWeapon::GetGunSkeletalMeshComponent()
+{
+    return GunSkeletalMeshComponent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FVector AQLWeapon::GetMuzzleLocation()
+{
+    return MuzzleSceneComponent->GetComponentLocation();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FName AQLWeapon::GetWeaponName()
+{
+    return WeaponName;
 }
