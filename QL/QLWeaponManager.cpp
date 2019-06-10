@@ -50,7 +50,9 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
 
     CurrentWeapon = *Result;
 
-    CurrentWeapon->GetGunSkeletalMeshComponent()->CastShadow = false;
+    auto* gunMesh = CurrentWeapon->GetGunSkeletalMeshComponent();
+    gunMesh->CastShadow = false;
+    gunMesh->bCastDynamicShadow = false;
 
     // attach actor to component
     CurrentWeapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
