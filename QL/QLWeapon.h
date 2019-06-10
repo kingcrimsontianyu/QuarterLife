@@ -72,6 +72,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void InflictDamage();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetHitRange(float HitRange);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

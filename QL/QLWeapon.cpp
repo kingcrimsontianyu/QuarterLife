@@ -187,3 +187,10 @@ FName AQLWeapon::GetWeaponName()
 void AQLWeapon::InflictDamage()
 {
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::SetHitRange(float HitRangeExt)
+{
+    HitRange = HitRangeExt;
+}

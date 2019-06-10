@@ -25,9 +25,9 @@
 //------------------------------------------------------------
 AQLCharacter::AQLCharacter()
 {
-    Health = 25.0f;
+    Health = 100.0f;
     MaxHealth = 100.0f;
-    Armor = 50.0f;
+    Armor = 100.0f;
     MaxArmor = 100.0f;
 
     // Set size for collision capsule
@@ -278,17 +278,41 @@ FHitResult AQLCharacter::RayTraceFromCharacterPOV(float rayTraceRange)
 float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
     const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
     if (ActualDamage > 0.0f)
     {
-        Health -= ActualDamage;
+        const float HealthAbsorbingFraction = 0.33f;
+        const float ArmorAbsorbingFraction = 1.0f - HealthAbsorbingFraction;
+        float HealthDamage = HealthAbsorbingFraction * ActualDamage;
+        float ArmorDamage = ArmorAbsorbingFraction * ActualDamage;
 
+        // update armor
+        float RemainingAmor = Armor - ArmorDamage;
+        if (RemainingAmor < 0.0f)
         {
-            FString msg("Character health: " + FString::SanitizeFloat(Health));
-            QLUtility::Log(msg);
+            HealthDamage -= RemainingAmor;
+            Armor = 0.0f;
+        }
+        else
+        {
+            Armor = RemainingAmor;
         }
 
-        FString msg("Character " + GetName() + " health = " + FString::SanitizeFloat(Health));
-        QLUtility::Screen(msg);
+        // update health
+        float RemainingHealth = Health - HealthDamage;
+        if (RemainingHealth < 0.0f)
+        {
+            Health = 0.0f;
+        }
+        else
+        {
+            Health = RemainingHealth;
+        }
+
+        {
+            FString msg("Character " + GetName() + " health = " + FString::SanitizeFloat(Health) + " armor = " + FString::SanitizeFloat(Armor));
+            QLUtility::Screen(msg);
+        }
 
         if (Health <= 0.0f)
         {
