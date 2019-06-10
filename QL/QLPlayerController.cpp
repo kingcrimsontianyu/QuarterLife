@@ -1,4 +1,4 @@
-//----------------------------------------
+//------------------------------------------------------------
 // Quarter Life
 //
 // GNU General Public License v3.0
@@ -6,7 +6,7 @@
 //  (\-/)
 // (='.'=)
 // (")-(")o
-//----------------------------------------
+//------------------------------------------------------------
 
 
 #include "QLPlayerController.h"
@@ -16,7 +16,9 @@
 AQLPlayerController::AQLPlayerController() :
 FPS(0.0f)
 {
-
+    // ui
+    UmgUserWidgetClass = UQLUmgUserWidget::StaticClass();
+    UmgUserWidget = nullptr;
 }
 
 //------------------------------------------------------------
@@ -51,5 +53,36 @@ float AQLPlayerController::GetControlledPawnVelocityLength() const
 //------------------------------------------------------------
 void AQLPlayerController::Tick(float DeltaSeconds)
 {
+    Super::Tick(DeltaSeconds);
+
     FPS = 1.0 / DeltaSeconds;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::AddUMG()
+{
+    if (UmgUserWidgetClass)
+    {
+        UmgUserWidget = CreateWidget<UQLUmgUserWidget>(GetWorld(), UmgUserWidgetClass, FName("UmgUserWidget"));
+        UmgUserWidget->AddToViewport();
+        bShowMouseCursor = false;
+        SetInputMode(FInputModeGameOnly());
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::BeginPlay()
+{
+    Super::BeginPlay();
+
+    AddUMG();
 }

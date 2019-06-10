@@ -1,4 +1,4 @@
-//----------------------------------------
+//------------------------------------------------------------
 // Quarter Life
 //
 // GNU General Public License v3.0
@@ -6,7 +6,7 @@
 //  (\-/)
 // (='.'=)
 // (")-(")o
-//----------------------------------------
+//------------------------------------------------------------
 
 
 #include "QLColoredPortal.h"
@@ -16,8 +16,8 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "QLUtility.h"
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 AQLColoredPortal::AQLColoredPortal() :
 PortalColor(EPortalColor::Invalid)
 {
@@ -29,8 +29,8 @@ PortalColor(EPortalColor::Invalid)
     EnlargeTimelineInterpFunction.BindUFunction(this, FName{ TEXT("EnlargeCallback") });
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
@@ -43,8 +43,8 @@ void AQLColoredPortal::PostInitializeComponents()
     EnlargeTimeline->AddInterpFloat(EnlargeCurve, EnlargeTimelineInterpFunction, FName(TEXT("Enlarge")));
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::Initialize(EPortalColor PortalColorExt, AQLPortal* SpouseExt)
 {
     PortalColor = PortalColorExt;
@@ -79,8 +79,8 @@ void AQLColoredPortal::Initialize(EPortalColor PortalColorExt, AQLPortal* Spouse
     EnlargeTimeline->PlayFromStart();
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::CleanUp()
 {
     SetSpouse(nullptr);
@@ -95,29 +95,29 @@ void AQLColoredPortal::CleanUp()
     }
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::SetBlue()
 {
     DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 0);
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::SetOrange()
 {
     DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 1);
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::SetActive()
 {
     DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 1);
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLColoredPortal::SetInactive()
 {
     DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 0);

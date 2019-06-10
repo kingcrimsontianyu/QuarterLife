@@ -1,4 +1,4 @@
-//----------------------------------------
+//------------------------------------------------------------
 // Quarter Life
 //
 // GNU General Public License v3.0
@@ -6,12 +6,13 @@
 //  (\-/)
 // (='.'=)
 // (")-(")o
-//----------------------------------------
+//------------------------------------------------------------
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "QLUmgUserWidget.h"
 #include "QLPlayerController.generated.h"
 
 //------------------------------------------------------------
@@ -32,6 +33,22 @@ public:
 
     virtual void Tick(float DeltaSeconds) override;
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void AddUMG();
+
+    UPROPERTY(EditDefaultsOnly, Category = "C++Property")
+    TSubclassOf<UQLUmgUserWidget> UmgUserWidgetClass;
+
 protected:
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void PostInitializeComponents() override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void BeginPlay() override;
+
+    UQLUmgUserWidget* UmgUserWidget;
+
     float FPS;
 };

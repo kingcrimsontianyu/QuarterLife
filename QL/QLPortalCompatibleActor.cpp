@@ -1,4 +1,4 @@
-//----------------------------------------
+//------------------------------------------------------------
 // Quarter Life
 //
 // GNU General Public License v3.0
@@ -6,15 +6,15 @@
 //  (\-/)
 // (='.'=)
 // (")-(")o
-//----------------------------------------
+//------------------------------------------------------------
 
 
 #include "QLPortalCompatibleActor.h"
 #include "Components/BoxComponent.h"
 
-//----------------------------------------
+//------------------------------------------------------------
 // Sets default values
-//----------------------------------------
+//------------------------------------------------------------
 AQLPortalCompatibleActor::AQLPortalCompatibleActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -39,18 +39,18 @@ AQLPortalCompatibleActor::AQLPortalCompatibleActor()
     //StaticMeshComponent->bCastDynamicShadow = false; // avoid performance hit when the actor has large volume
 }
 
-//----------------------------------------
+//------------------------------------------------------------
 // Called when the game starts or when spawned
-//----------------------------------------
+//------------------------------------------------------------
 void AQLPortalCompatibleActor::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
-//----------------------------------------
+//------------------------------------------------------------
 // Called every frame
-//----------------------------------------
+//------------------------------------------------------------
 void AQLPortalCompatibleActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

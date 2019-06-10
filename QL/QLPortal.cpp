@@ -1,4 +1,4 @@
-//----------------------------------------
+//------------------------------------------------------------
 // Quarter Life
 //
 // GNU General Public License v3.0
@@ -6,7 +6,7 @@
 //  (\-/)
 // (='.'=)
 // (")-(")o
-//----------------------------------------
+//------------------------------------------------------------
 
 
 #include "QLPortal.h"
@@ -20,9 +20,9 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "QLUtility.h"
 
-//----------------------------------------
+//------------------------------------------------------------
 // Sets default values
-//----------------------------------------
+//------------------------------------------------------------
 AQLPortal::AQLPortal() :
 Spouse(nullptr)
 {
@@ -61,18 +61,18 @@ Spouse(nullptr)
     RenderTarget->AddressY = TextureAddress::TA_Wrap;
 }
 
-//----------------------------------------
+//------------------------------------------------------------
 // Called when the game starts or when spawned
-//----------------------------------------
+//------------------------------------------------------------
 void AQLPortal::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
-//----------------------------------------
+//------------------------------------------------------------
 // Called every frame
-//----------------------------------------
+//------------------------------------------------------------
 void AQLPortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -80,7 +80,7 @@ void AQLPortal::Tick(float DeltaTime)
     UpdateSCC();
 }
 
-//----------------------------------------
+//------------------------------------------------------------
 // To list the availablematerial parameters, use:
 // TArray<FMaterialParameterInfo> outParamInfo;
 // TArray<FGuid> outParamIds;
@@ -89,7 +89,7 @@ void AQLPortal::Tick(float DeltaTime)
 // {
 //     QLUtility::Screen(item.Name.ToString());
 // }
-//----------------------------------------
+//------------------------------------------------------------
 void AQLPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
@@ -105,8 +105,8 @@ void AQLPortal::PostInitializeComponents()
     }
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLPortal::UpdateSCC()
 {
     if (Spouse == nullptr)
@@ -130,8 +130,8 @@ void AQLPortal::UpdateSCC()
     SceneCaptureComponent->ClipPlaneNormal = Spouse->GetActorForwardVector();
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLPortal::SetSpouse(AQLPortal* SpouseExt)
 {
     if (SpouseExt != this)
@@ -140,8 +140,8 @@ void AQLPortal::SetSpouse(AQLPortal* SpouseExt)
     }
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 FVector AQLPortal::ConvertDirectionToSpouseSpace(const FVector& OldDirection)
 {
     if (Spouse == nullptr)
@@ -162,8 +162,8 @@ FVector AQLPortal::ConvertDirectionToSpouseSpace(const FVector& OldDirection)
     return NewDirection;
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 FVector AQLPortal::ConvertLocationToSpouseSpace(const FVector& OldLocation)
 {
     if (Spouse == nullptr)
@@ -178,8 +178,8 @@ FVector AQLPortal::ConvertLocationToSpouseSpace(const FVector& OldLocation)
     return NewLocation;
 }
 
-//----------------------------------------
-//----------------------------------------
+//------------------------------------------------------------
+//------------------------------------------------------------
 FRotator AQLPortal::ConvertRotationToSpouseSpace(const FRotator& OldRotator)
 {
     if (Spouse == nullptr)

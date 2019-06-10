@@ -1,4 +1,4 @@
-//----------------------------------------
+//------------------------------------------------------------
 // Quarter Life
 //
 // GNU General Public License v3.0
@@ -6,7 +6,7 @@
 //  (\-/)
 // (='.'=)
 // (")-(")o
-//----------------------------------------
+//------------------------------------------------------------
 
 #include "QLCharacter.h"
 #include "Animation/AnimInstance.h"
@@ -19,6 +19,7 @@
 #include "DrawDebugHelpers.h"
 #include "QLWeaponManager.h"
 #include "QLUtility.h"
+#include "QLPlayerController.h"
 
 //------------------------------------------------------------
 // Sets default values
