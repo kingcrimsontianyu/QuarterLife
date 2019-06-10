@@ -69,6 +69,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     FName GetWeaponName();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void InflictDamage();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

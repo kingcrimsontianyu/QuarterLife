@@ -18,6 +18,7 @@
 #include "QLWeaponPortalGun.h" // to be modified
 #include "DrawDebugHelpers.h"
 #include "QLWeaponManager.h"
+#include "QLUtility.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -270,4 +271,30 @@ FHitResult AQLCharacter::RayTraceFromCharacterPOV(float rayTraceRange)
     // DrawDebugLine(GetWorld(), start, hitResult.ImpactPoint, FColor(255, 0, 0), true, -1, 0, 10);
 
     return hitResult;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+    if (ActualDamage > 0.0f)
+    {
+        Health -= ActualDamage;
+
+        {
+            FString msg("Character health: " + FString::SanitizeFloat(Health));
+            QLUtility::Log(msg);
+        }
+
+        FString msg("Character " + GetName() + " health = " + FString::SanitizeFloat(Health));
+        QLUtility::Screen(msg);
+
+        if (Health <= 0.0f)
+        {
+            Destroy();
+        }
+    }
+
+    return ActualDamage;
 }

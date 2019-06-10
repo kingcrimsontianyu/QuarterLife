@@ -41,6 +41,8 @@ public:
     // Returns FirstPersonCameraComponent subobject
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     class UCameraComponent* GetFirstPersonCameraComponent() const;
+
+    virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -66,6 +68,18 @@ protected:
     // Projectile class to spawn
     // UPROPERTY(EditDefaultsOnly, Category = Projectile)
     // TSubclassOf<class ATestFirstPersonProjectile> ProjectileClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float Health;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float MaxHealth;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float Armor;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float MaxArmor;
 
 protected:
     // Called when the game starts or when spawned
@@ -115,11 +129,8 @@ protected:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnAltFire();
+
 protected:
-    float Health;
-    float MaxHealth;
-    float Armor;
-    float MaxArmor;
 
     UQLWeaponManager* WeaponManager;
 };

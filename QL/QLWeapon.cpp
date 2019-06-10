@@ -181,3 +181,9 @@ FName AQLWeapon::GetWeaponName()
 {
     return WeaponName;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::InflictDamage()
+{
+}

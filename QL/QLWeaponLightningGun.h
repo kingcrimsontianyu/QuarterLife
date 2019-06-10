@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "QLWeapon.h"
+#include "Engine/TextRenderActor.h"
 #include "QLWeaponLightningGun.generated.h"
 
 //------------------------------------------------------------
@@ -30,12 +31,10 @@ public:
 
     virtual void FireRelease() override;
 
-    void DealDamageIfHit();
-
-    bool HasHitEnemy();
+    virtual void InflictDamage();
 
 protected:
     virtual void PostInitializeComponents() override;
 
-
+    float BasicDamage;
 };

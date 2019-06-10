@@ -14,6 +14,7 @@
 #include "Engine/World.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/DamageType.h"
 
 //----------------------------------------
 //----------------------------------------
@@ -21,8 +22,10 @@ AQLWeaponLightningGun::AQLWeaponLightningGun()
 {
     WeaponName = FName("LightningGun");
     HitRange = 2000.0f;
-    RateOfFire = 0.048f;
+    RateOfFire = 0.05f;
     bIsFireHeld = false;
+
+    BasicDamage = 6.0f;
 }
 
 //------------------------------------------------------------
@@ -46,7 +49,7 @@ void AQLWeaponLightningGun::Tick(float DeltaTime)
 
     if (bIsFireHeld)
     {
-        // to do: ray trace is performed twice, one in Tick(), the other in HasHitEnemy(), to ensure correctness
+        // to do: in order to ensure correctness, for each tick, ray trace is performed twice, one in Tick(), the other in HasHitEnemy()
         // need to understand the tick order and simplify the calculation
         FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
 
@@ -83,7 +86,7 @@ void AQLWeaponLightningGun::Fire()
 
     GetWorldTimerManager().SetTimer(HeldDownFireTimerHandle,
                                     this,
-                                    &AQLWeaponLightningGun::DealDamageIfHit,
+                                    &AQLWeaponLightningGun::InflictDamage,
                                     RateOfFire, // time interval in second
                                     true, // loop
                                     0.0f); // delay in second
@@ -103,13 +106,13 @@ void AQLWeaponLightningGun::FireRelease()
     GetWorldTimerManager().ClearTimer(HeldDownFireTimerHandle);
 }
 
-//----------------------------------------
-//----------------------------------------
-bool AQLWeaponLightningGun::HasHitEnemy()
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponLightningGun::InflictDamage()
 {
     if (User == nullptr)
     {
-        return false;
+        return;
     }
 
     FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
@@ -119,7 +122,7 @@ bool AQLWeaponLightningGun::HasHitEnemy()
     {
         // do sth
         QLUtility::Log("AQLWeaponLightningGun: no hit");
-        return false;
+        return;
     }
 
     // if hit occurs, check the hit actor
@@ -128,25 +131,21 @@ bool AQLWeaponLightningGun::HasHitEnemy()
     {
         // do sth
         QLUtility::Log("AQLWeaponLightningGun: does not hit AQLCharacter");
-        return false;
+        return;
     }
 
+    // if self-hurt
     if (hitActor == User)
     {
         // do sth
         QLUtility::Log("AQLWeaponLightningGun: only hit player himself");
-        return false;
+        return;
     }
 
-    return true;
-}
+    // create a damage event
+    TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
+    FDamageEvent DamageEvent(ValidDamageTypeClass);
 
-//----------------------------------------
-//----------------------------------------
-void AQLWeaponLightningGun::DealDamageIfHit()
-{
-    if (HasHitEnemy())
-    {
-        QLUtility::Log("AQLWeaponLightningGun: deal dmg");
-    }
+    const float DamageAmount = BasicDamage;
+    hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
 }
