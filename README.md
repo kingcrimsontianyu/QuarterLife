@@ -10,7 +10,7 @@ kingcrimsontianyu@gmail.com
 
 Quarter Life (QL), based on Unreal Engine (version 4.22.2), is a first-person adventure game and my personal side project. My inspiration comes from Half Life, Portal, Bioshock, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom and Quake.
 
-This git repository contains C++ source code that establishes the main game mechanics. Blueprint scripts and asset data are not included, but avalable on request (kingcrimsontianyu@gmail.com). Use of blueprint scripts has been kept to a minimum.
+This git repository contains C++ source code that establishes the main game mechanics. Blueprint scripts and asset data are not included in this repository, but available on request (kingcrimsontianyu@gmail.com). Use of blueprint scripts has been kept to a minimum.
 
 ------
 
@@ -35,10 +35,10 @@ This git repository contains C++ source code that establishes the main game mech
 + Ability
     + Healing rain 愈雨
     + Ghost walk 鬼影 (Quake Champions)
-	+ Dire orb 瞬殺 (Quake Champions)
+    + Dire orb 瞬殺 (Quake Champions)
 
 + Movement
-    + Strafe jump (Quake Champions).
+    + Strafe jump (Quake Champions)
 
 ------
 
