@@ -97,6 +97,7 @@ void AQLWeapon::PlayFireSound(const FName& FireSoundName)
         USoundBase* Sound = *Result;
         if (Sound && User)
         {
+            // sound played using this function is fire and forget and does not travel with the actor
             UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
         }
     }
