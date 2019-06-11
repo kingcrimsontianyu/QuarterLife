@@ -20,6 +20,7 @@
 #include "QLWeaponManager.h"
 #include "QLUtility.h"
 #include "QLPlayerController.h"
+#include "Components/WidgetComponent.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -69,6 +70,11 @@ AQLCharacter::AQLCharacter()
     // manager
     WeaponManager = CreateDefaultSubobject<UQLWeaponManager>(TEXT("WeaponManager"));
     WeaponManager->SetUser(this);
+
+    // ui
+    PlayerHealthArmorBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PlayerHealthArmorBarWidgetComponent"));
+    PlayerHealthArmorBarWidgetComponent->SetupAttachment(GetCapsuleComponent());
+    PlayerHealthArmorBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 }
 
 //------------------------------------------------------------
@@ -78,7 +84,8 @@ void AQLCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    // FirstPersonMesh->SetHiddenInGame(false, true);
+    UpdateHealth();
+    UpdateArmor();
 }
 
 //------------------------------------------------------------
@@ -287,7 +294,7 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
         float HealthDamage = HealthAbsorbingFraction * ActualDamage;
         float ArmorDamage = ArmorAbsorbingFraction * ActualDamage;
 
-        // update armor
+        // calculate armor
         float RemainingAmor = Armor - ArmorDamage;
         if (RemainingAmor < 0.0f)
         {
@@ -299,7 +306,9 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
             Armor = RemainingAmor;
         }
 
-        // update health
+        UpdateArmor();
+
+        // calculate health
         float RemainingHealth = Health - HealthDamage;
         if (RemainingHealth < 0.0f)
         {
@@ -310,10 +319,7 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
             Health = RemainingHealth;
         }
 
-        {
-            FString msg("Character " + GetName() + " health = " + FString::SanitizeFloat(Health) + " armor = " + FString::SanitizeFloat(Armor));
-            QLUtility::Screen(msg);
-        }
+        UpdateHealth();
 
         if (Health <= 0.0f)
         {
@@ -322,4 +328,52 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
     }
 
     return ActualDamage;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetHealthArmorBarVisible(bool bFlag)
+{
+    if (PlayerHealthArmorBarWidgetComponent)
+    {
+        PlayerHealthArmorBarWidgetComponent->SetVisibility(bFlag);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::UpdateHealth()
+{
+    if (PlayerHealthArmorBarWidgetComponent)
+    {
+        UUserWidget* UUserWidgetResult = PlayerHealthArmorBarWidgetComponent->GetUserWidgetObject();
+        if (UUserWidgetResult)
+        {
+            UQLPlayerHealthArmorBarUserWidget* Result = Cast<UQLPlayerHealthArmorBarUserWidget>(UUserWidgetResult);
+            if (Result)
+            {
+                float HealthPercent = Health / MaxHealth;
+                Result->UpdateHealthBar(HealthPercent);
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::UpdateArmor()
+{
+    if (PlayerHealthArmorBarWidgetComponent)
+    {
+        UUserWidget* UUserWidgetResult = PlayerHealthArmorBarWidgetComponent->GetUserWidgetObject();
+        if (UUserWidgetResult)
+        {
+            UQLPlayerHealthArmorBarUserWidget* Result = Cast<UQLPlayerHealthArmorBarUserWidget>(UUserWidgetResult);
+            if (Result)
+            {
+                float ArmorPercent = Armor / MaxArmor;
+                Result->UpdateArmorBar(ArmorPercent);
+            }
+        }
+    }
 }

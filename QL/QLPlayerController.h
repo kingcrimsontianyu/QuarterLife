@@ -48,6 +48,10 @@ protected:
     //------------------------------------------------------------
     virtual void BeginPlay() override;
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void OnPossess(APawn* ControlledPawn) override;
+
     UQLUmgUserWidget* UmgUserWidget;
 
     float FPS;

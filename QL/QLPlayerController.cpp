@@ -10,6 +10,8 @@
 
 
 #include "QLPlayerController.h"
+#include "QLUtility.h"
+#include "QLCharacter.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -62,13 +64,10 @@ void AQLPlayerController::Tick(float DeltaSeconds)
 //------------------------------------------------------------
 void AQLPlayerController::AddUMG()
 {
-    if (UmgUserWidgetClass)
-    {
-        UmgUserWidget = CreateWidget<UQLUmgUserWidget>(GetWorld(), UmgUserWidgetClass, FName("UmgUserWidget"));
-        UmgUserWidget->AddToViewport();
-        bShowMouseCursor = false;
-        SetInputMode(FInputModeGameOnly());
-    }
+    UmgUserWidget = CreateWidget<UQLUmgUserWidget>(GetWorld(), UmgUserWidgetClass, FName("UmgUserWidget"));
+    UmgUserWidget->AddToViewport();
+    bShowMouseCursor = false;
+    SetInputMode(FInputModeGameOnly());
 }
 
 //------------------------------------------------------------
@@ -85,4 +84,18 @@ void AQLPlayerController::BeginPlay()
     Super::BeginPlay();
 
     AddUMG();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::OnPossess(APawn* ControlledPawn)
+{
+    Super::OnPossess(ControlledPawn);
+
+    AQLCharacter* ControlledCharacter = Cast<AQLCharacter>(ControlledPawn);
+    if (ControlledCharacter)
+    {
+        // controlled character does not see his own health and armor bar
+        ControlledCharacter->SetHealthArmorBarVisible(false);
+    }
 }

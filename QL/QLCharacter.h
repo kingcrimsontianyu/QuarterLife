@@ -12,10 +12,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "QLPlayerHealthArmorBarUserWidget.h"
 #include "QLCharacter.generated.h"
 
 class AQLWeapon;
 class UQLWeaponManager;
+class UWidgetComponent;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -42,7 +44,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     class UCameraComponent* GetFirstPersonCameraComponent() const;
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetHealthArmorBarVisible(bool bFlag);
+
     virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void UpdateHealth();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void UpdateArmor();
+
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -131,5 +143,9 @@ protected:
     void OnAltFire();
 
 protected:
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UWidgetComponent* PlayerHealthArmorBarWidgetComponent;
+
     UQLWeaponManager* WeaponManager;
 };
