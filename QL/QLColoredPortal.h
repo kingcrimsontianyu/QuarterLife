@@ -76,7 +76,6 @@ protected:
     //------------------------------------------------------------
     virtual void PostInitializeComponents() override;
 
-    UPROPERTY()
     UTimelineComponent* EnlargeTimeline;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")

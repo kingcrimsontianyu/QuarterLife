@@ -47,7 +47,7 @@ float AQLPlayerController::GetControlledPawnVelocityLength() const
     else
     {
         // UE_LOG();
-        return 0.0;
+        return 0.0f;
     }
 }
 
@@ -57,7 +57,7 @@ void AQLPlayerController::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    FPS = 1.0 / DeltaSeconds;
+    FPS = 1.0f / DeltaSeconds;
 }
 
 //------------------------------------------------------------

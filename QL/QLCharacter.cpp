@@ -112,6 +112,8 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &AQLCharacter::OnFireRelease);
     PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnAltFire);
 
+    PlayerInputComponent->BindAction("RestartLevel", EInputEvent::IE_Pressed, this, &AQLCharacter::OnRestartLevel);
+
     // Bind movement events
     PlayerInputComponent->BindAxis("MoveForward", this, &AQLCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AQLCharacter::MoveRight);
@@ -376,4 +378,11 @@ void AQLCharacter::UpdateArmor()
             }
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnRestartLevel()
+{
+    UGameplayStatics::OpenLevel(GetWorld(), "QLArena");
 }

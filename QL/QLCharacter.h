@@ -142,6 +142,9 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnAltFire();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnRestartLevel();
+
 protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")

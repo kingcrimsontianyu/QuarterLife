@@ -19,12 +19,12 @@
 //------------------------------------------------------------
 //------------------------------------------------------------
 AQLColoredPortal::AQLColoredPortal() :
-PortalColor(EPortalColor::Invalid)
+PortalColor(EPortalColor::Invalid),
+EnlargeCurve(nullptr)
 {
     BoxComponent->InitBoxExtent(FVector(50.0f, 120.0f, 150.0f));
 
     // animation
-    EnlargeCurve = CreateDefaultSubobject<UCurveFloat>(TEXT("EnlargeCurve"));
     EnlargeTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("EnlargeTimeline"));
     EnlargeTimelineInterpFunction.BindUFunction(this, FName{ TEXT("EnlargeCallback") });
 }
@@ -40,7 +40,10 @@ void AQLColoredPortal::PostInitializeComponents()
         DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", 0.1);
     }
 
-    EnlargeTimeline->AddInterpFloat(EnlargeCurve, EnlargeTimelineInterpFunction, FName(TEXT("Enlarge")));
+    if (EnlargeTimeline && EnlargeCurve)
+    {
+        EnlargeTimeline->AddInterpFloat(EnlargeCurve, EnlargeTimelineInterpFunction, FName(TEXT("Enlarge")));
+    }
 }
 
 //------------------------------------------------------------
