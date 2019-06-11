@@ -13,6 +13,9 @@
 #include "QLWeapon.h"
 #include "QLCharacter.h"
 #include "QLUtility.h"
+#include "QLPlayerController.h"
+#include "QLHUD.h"
+#include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -50,12 +53,39 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
 
     CurrentWeapon = *Result;
 
+    // change mesh
     auto* gunMesh = CurrentWeapon->GetGunSkeletalMeshComponent();
     gunMesh->CastShadow = false;
     gunMesh->bCastDynamicShadow = false;
 
     // attach actor to component
     CurrentWeapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+
+    // change cross-hair
+    UpdateCrossHair();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLWeaponManager::UpdateCrossHair()
+{
+    AController* MyController = User->GetController();
+    if (MyController)
+    {
+        AQLPlayerController* MyQLPlayerController = Cast<AQLPlayerController>(MyController);
+        if (MyQLPlayerController)
+        {
+            AHUD* MyHUD = MyQLPlayerController->GetHUD();
+            if (MyHUD)
+            {
+                AQLHUD* MyQLHUD = Cast<AQLHUD>(MyHUD);
+                if (MyQLHUD)
+                {
+                    MyQLHUD->UpdateCrossHair(CurrentWeapon->GetCrossHairTexture());
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------

@@ -34,6 +34,8 @@ public:
 
     void SetCurrentWeapon(const FName& WeaponName);
 
+    void UpdateCrossHair();
+
     AQLWeapon* GetCurrentWeapon();
 protected:
     AQLCharacter* User;

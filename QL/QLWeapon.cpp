@@ -215,3 +215,18 @@ void AQLWeapon::SetHitRange(float HitRangeExt)
 {
     HitRange = HitRangeExt;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UTexture2D* AQLWeapon::GetCrossHairTexture(const FName& CrossHairTextureName)
+{
+    UTexture2D* Result = nullptr;
+
+    UTexture2D** Temp = CrosshairTextureList.Find(CrossHairTextureName);
+    if (Temp)
+    {
+        Result = *Temp;
+    }
+
+    return Result;
+}

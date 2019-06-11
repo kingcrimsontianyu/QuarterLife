@@ -27,10 +27,9 @@ public:
     // Primary draw call for the HUD
     virtual void DrawHUD() override;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    UTexture2D* CrosshairTextureDefault;
-protected:
-    void DrawDefaultCrosshair();
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void UpdateCrossHair(UTexture2D* CrosshairTextureExt);
 
-    TArray<UTexture2D*> CrosshairTextureList;
+protected:
+    UTexture2D* CrosshairTexture;
 };

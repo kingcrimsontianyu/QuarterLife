@@ -79,6 +79,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetHitRange(float HitRange);
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UTexture2D* GetCrossHairTexture(const FName& CrossHairTextureName = "Default");
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -87,6 +90,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UAudioComponent* FireSoundComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, UTexture2D*> CrosshairTextureList;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, USoundBase*> FireSoundList;
