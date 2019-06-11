@@ -15,6 +15,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/DamageType.h"
+#include "Components/AudioComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -49,33 +50,16 @@ void AQLWeaponLightningGun::Tick(float DeltaTime)
 
     if (bIsFireHeld)
     {
-        // to do: in order to ensure correctness, for each tick, ray trace is performed twice, one in Tick(), the other in HasHitEnemy()
-        // need to understand the tick order and simplify the calculation
-        FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
-
-        BeamComponent->SetBeamSourcePoint(0, GetMuzzleLocation(), 0);
-
-        // if hit does not occur
-        if (!HitResult.bBlockingHit)
-        {
-            FVector TargetLocation = GetMuzzleLocation() + User->GetFirstPersonCameraComponent()->GetForwardVector() * HitRange;
-            BeamComponent->SetBeamTargetPoint(0, TargetLocation, 0);
-        }
-        else
-        {
-            // if hit occurs, handle beam
-            if (BeamComponent)
-            {
-                BeamComponent->SetBeamTargetPoint(0, HitResult.ImpactPoint, 0);
-            }
-        }
+        OnFireHold();
     }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponLightningGun::Fire()
+void AQLWeaponLightningGun::OnFire()
 {
+    PlayFireSound(FName("ElectricZap"));
+
     bIsFireHeld = true;
 
     // handle beam
@@ -94,8 +78,10 @@ void AQLWeaponLightningGun::Fire()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponLightningGun::FireRelease()
+void AQLWeaponLightningGun::OnFireRelease()
 {
+    StopFireSound();
+
     bIsFireHeld = false;
 
     if (BeamComponent)
@@ -104,6 +90,38 @@ void AQLWeaponLightningGun::FireRelease()
     }
 
     GetWorldTimerManager().ClearTimer(HeldDownFireTimerHandle);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponLightningGun::OnFireHold()
+{
+    // to do: in order to ensure correctness, for each tick, ray trace is performed twice, one in Tick(), the other in HasHitEnemy()
+    // need to understand the tick order and simplify the calculation
+    FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
+
+    BeamComponent->SetBeamSourcePoint(0, GetMuzzleLocation(), 0);
+
+    // if hit does not occur
+    if (!HitResult.bBlockingHit)
+    {
+        FVector TargetLocation = GetMuzzleLocation() + User->GetFirstPersonCameraComponent()->GetForwardVector() * HitRange;
+        BeamComponent->SetBeamTargetPoint(0, TargetLocation, 0);
+    }
+    else
+    {
+        // if hit occurs, handle beam
+        if (BeamComponent)
+        {
+            BeamComponent->SetBeamTargetPoint(0, HitResult.ImpactPoint, 0);
+        }
+    }
+
+    // repeat fire sound
+    if (!FireSoundComponent->IsPlaying())
+    {
+        FireSoundComponent->Play();
+    }
 }
 
 //------------------------------------------------------------

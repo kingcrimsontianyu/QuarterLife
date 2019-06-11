@@ -17,6 +17,7 @@
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -46,6 +47,9 @@ bIsFireHeld(false)
 
     BeamComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("BeamComponent"));
     BeamComponent->SetupAttachment(MuzzleSceneComponent);
+
+    FireSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FireSoundComponent"));
+    FireSoundComponent->SetupAttachment(RootComponent);
 }
 
 //------------------------------------------------------------
@@ -97,8 +101,24 @@ void AQLWeapon::PlayFireSound(const FName& FireSoundName)
         USoundBase* Sound = *Result;
         if (Sound && User)
         {
-            // sound played using this function is fire and forget and does not travel with the actor
-            UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
+            FireSoundComponent->SetSound(Sound);
+            FireSoundComponent->Play(0.0f);
+
+            //// sound played using this function is fire and forget and does not travel with the actor
+            //UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::StopFireSound()
+{
+    if (FireSoundComponent)
+    {
+        if (FireSoundComponent->IsPlaying())
+        {
+            FireSoundComponent->Stop();
         }
     }
 }
@@ -128,37 +148,37 @@ void AQLWeapon::PlayFireAnimation(const FName& FireAnimationName)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::Fire()
+void AQLWeapon::OnFire()
 {
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::FireRelease()
+void AQLWeapon::OnFireRelease()
 {
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::FireRepeat()
+void AQLWeapon::OnFireHold()
 {
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::AltFire()
+void AQLWeapon::OnAltFire()
 {
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::AltFireRelease()
+void AQLWeapon::OnAltFireRelease()
 {
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::AltFireRepeat()
+void AQLWeapon::OnAltFireHold()
 {
 }
 

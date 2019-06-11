@@ -27,11 +27,14 @@ public:
 
     virtual void Tick(float DeltaTime) override;
 
-    virtual void Fire() override;
+    virtual void OnFire() override;
 
-    virtual void FireRelease() override;
+    virtual void OnFireRelease() override;
+
+    virtual void OnFireHold() override;
 
     virtual void InflictDamage();
+
 
 protected:
     virtual void PostInitializeComponents() override;

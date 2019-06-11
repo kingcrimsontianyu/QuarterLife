@@ -15,6 +15,7 @@
 #include "QLWeapon.generated.h"
 
 class AQLCharacter;
+class UAudioComponent;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -31,22 +32,22 @@ public:
     virtual void Tick(float DeltaTime) override;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void Fire();
+    virtual void OnFire();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void FireRelease();
+    virtual void OnFireRelease();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void FireRepeat();
+    virtual void OnFireHold();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void AltFire();
+    virtual void OnAltFire();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void AltFireRelease();
+    virtual void OnAltFireRelease();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void AltFireRepeat();
+    virtual void OnAltFireHold();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetUser(AQLCharacter* Character);
@@ -56,6 +57,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlayFireSound(const FName& FireSoundName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void StopFireSound();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlayFireAnimation(const FName& FireAnimationName);
@@ -80,6 +84,9 @@ protected:
 	virtual void BeginPlay() override;
 
     virtual void PostInitializeComponents() override;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UAudioComponent* FireSoundComponent;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, USoundBase*> FireSoundList;

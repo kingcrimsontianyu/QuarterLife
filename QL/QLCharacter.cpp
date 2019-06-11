@@ -154,7 +154,7 @@ void AQLCharacter::OnFire()
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
-        CurrentWeapon->Fire();
+        CurrentWeapon->OnFire();
 
         //// try and play the sound if specified
         //if (FireSound)
@@ -182,7 +182,7 @@ void AQLCharacter::OnFireRelease()
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
-        CurrentWeapon->FireRelease();
+        CurrentWeapon->OnFireRelease();
     }
 }
 
@@ -193,7 +193,7 @@ void AQLCharacter::OnAltFire()
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
-        CurrentWeapon->AltFire();
+        CurrentWeapon->OnAltFire();
     }
 }
 

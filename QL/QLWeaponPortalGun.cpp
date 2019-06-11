@@ -54,14 +54,14 @@ void AQLWeaponPortalGun::Tick(float DeltaTime)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponPortalGun::Fire()
+void AQLWeaponPortalGun::OnFire()
 {
     CreatePortalIfConditionsAreMet(EPortalColor::Blue);
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponPortalGun::AltFire()
+void AQLWeaponPortalGun::OnAltFire()
 {
     CreatePortalIfConditionsAreMet(EPortalColor::Orange);
 }

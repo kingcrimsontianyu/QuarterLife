@@ -32,9 +32,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-    virtual void Fire() override;
+    virtual void OnFire() override;
 
-    virtual void AltFire() override;
+    virtual void OnAltFire() override;
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
