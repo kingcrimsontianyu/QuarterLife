@@ -19,6 +19,10 @@
 class AQLColoredPortal;
 
 //------------------------------------------------------------
+// In Blueprint, set these properties
+// - crosshair texture list
+// - fire sound list
+// - fire animation list
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLWeaponPortalGun : public AQLWeapon

@@ -16,6 +16,11 @@
 #include "QLWeaponLightningGun.generated.h"
 
 //------------------------------------------------------------
+// In Blueprint, set these properties
+// - crosshair texture list
+// - fire sound list
+// - fire animation list
+// - beam component
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLWeaponLightningGun : public AQLWeapon
@@ -39,5 +44,6 @@ public:
 protected:
     virtual void PostInitializeComponents() override;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
 };

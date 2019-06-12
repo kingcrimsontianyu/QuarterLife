@@ -13,6 +13,8 @@
 #include "CoreMinimal.h"
 #include "QLPortalEnum.generated.h"
 
+//------------------------------------------------------------
+//------------------------------------------------------------
 UENUM()
 enum class EPortalColor : uint8
 {

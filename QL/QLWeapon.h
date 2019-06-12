@@ -81,6 +81,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UQLWeaponManager* GetWeaponManager();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -112,12 +113,15 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UParticleSystemComponent* BeamComponent;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FName WeaponName;
 
     FTimerHandle HeldDownFireTimerHandle;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float HitRange;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float RateOfFire;
 
     bool bIsFireHeld;
