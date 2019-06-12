@@ -112,6 +112,11 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &AQLCharacter::OnFireRelease);
     PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnAltFire);
 
+    PlayerInputComponent->BindAction("SwitchToRocketLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRocketLauncher);
+    PlayerInputComponent->BindAction("SwitchToLightningGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToLightningGun);
+    PlayerInputComponent->BindAction("SwitchToRailGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRailGun);
+    PlayerInputComponent->BindAction("SwitchToPortalGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToPortalGun);
+
     PlayerInputComponent->BindAction("RestartLevel", EInputEvent::IE_Pressed, this, &AQLCharacter::OnRestartLevel);
 
     // Bind movement events
@@ -404,4 +409,32 @@ AQLPlayerController* AQLCharacter::GetQLPlayerController()
     }
 
     return MyQLPlayerController;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToRocketLauncher()
+{
+    SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToLightningGun()
+{
+    SetCurrentWeapon(FName(TEXT("LightningGun")));
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToRailGun()
+{
+    SetCurrentWeapon(FName(TEXT("RailGun")));
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToPortalGun()
+{
+    SetCurrentWeapon(FName(TEXT("PortalGun")));
 }

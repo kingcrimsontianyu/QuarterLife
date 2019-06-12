@@ -46,35 +46,11 @@ void AQLWeaponRailGun::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLWeaponRailGun::OnFire()
 {
-    InflictDamage();
-
     PlayFireAnimation(FName("Fire"));
 
     PlayFireSound(FName("RailGunShot"));
-}
 
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponRailGun::OnAltFire()
-{
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponRailGun::OnAltFireRelease()
-{
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponRailGun::OnAltFireHold()
-{
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponRailGun::InflictDamage()
-{
+    // create the transient beam actor
     UParticleSystemComponent* BeamComponentTemp = nullptr;
     AQLRailBeam* RailBeamTemp = nullptr;
 
@@ -91,6 +67,7 @@ void AQLWeaponRailGun::InflictDamage()
         }
     }
 
+    // ray tracing
     AQLCharacter* User = GetWeaponManager()->GetUser();
 
     if (User == nullptr)
@@ -154,4 +131,22 @@ void AQLWeaponRailGun::InflictDamage()
 
     int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
     UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::OnAltFire()
+{
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::OnAltFireRelease()
+{
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::OnAltFireHold()
+{
 }

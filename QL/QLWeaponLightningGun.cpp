@@ -73,7 +73,7 @@ void AQLWeaponLightningGun::OnFire()
 
     GetWorldTimerManager().SetTimer(HeldDownFireTimerHandle,
                                     this,
-                                    &AQLWeaponLightningGun::InflictDamage,
+                                    &AQLWeaponLightningGun::HitTarget,
                                     RateOfFire, // time interval in second
                                     true, // loop
                                     0.0f); // delay in second
@@ -131,7 +131,7 @@ void AQLWeaponLightningGun::OnFireHold()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponLightningGun::InflictDamage()
+void AQLWeaponLightningGun::HitTarget()
 {
     AQLCharacter* User = GetWeaponManager()->GetUser();
 

@@ -47,26 +47,26 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
     if (Result == nullptr)
     {
         CurrentWeapon = nullptr;
-        QLUtility::Log("UQLWeaponManager::SetCurrentWeapon failed");
         return;
     }
 
     if (*Result == nullptr)
     {
         CurrentWeapon = nullptr;
-        QLUtility::Log("UQLWeaponManager::SetCurrentWeapon failed");
         return;
     }
 
     CurrentWeapon = *Result;
 
-    // change mesh
-    auto* gunMesh = CurrentWeapon->GetGunSkeletalMeshComponent();
-    gunMesh->CastShadow = false;
-    gunMesh->bCastDynamicShadow = false;
-
-    // attach actor to component
-    CurrentWeapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    // set up the weapon
+    CurrentWeapon->SetActorHiddenInGame(false);
+    for (auto&& Elem : WeaponList)
+    {
+        if (Elem.Value != CurrentWeapon)
+        {
+            Elem.Value->SetActorHiddenInGame(true);
+        }
+    }
 
     // change cross-hair
     UpdateCrossHair();
@@ -109,6 +109,16 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 {
     WeaponList.Add(Weapon->GetWeaponName(), Weapon);
     Weapon->SetWeaponManager(this);
+
+    // set up the weapon
+    auto* gunMesh = Weapon->GetGunSkeletalMeshComponent();
+    gunMesh->CastShadow = false;
+    gunMesh->bCastDynamicShadow = false;
+
+    Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+
+    Weapon->SetActorHiddenInGame(true);
+    Weapon->SetActorEnableCollision(false);
 }
 
 

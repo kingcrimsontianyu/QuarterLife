@@ -38,7 +38,7 @@ public:
 
     virtual void OnFireHold() override;
 
-    virtual void InflictDamage();
+    virtual void HitTarget();
 
 
 protected:

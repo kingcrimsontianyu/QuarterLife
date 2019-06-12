@@ -38,8 +38,6 @@ public:
     virtual void OnAltFireRelease();
 
     virtual void OnAltFireHold();
-
-    virtual void InflictDamage();
 protected:
     virtual void PostInitializeComponents() override;
 

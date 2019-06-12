@@ -148,6 +148,17 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnRestartLevel();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToRocketLauncher();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToLightningGun();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToRailGun();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToPortalGun();
 protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
