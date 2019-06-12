@@ -30,9 +30,18 @@ AQLWeaponRailGun::AQLWeaponRailGun()
     RateOfFire = 1.5f;
 
     BasicDamage = 80.0f;
-    ScopeDamage = 90.0f;
+    ZoomDamage = 90.0f;
+    CurrentDamage = BasicDamage;
+
+    bZoomedIn = false;
+    FOVCached = 90.0f;
+    CameraComponentCached = nullptr;
 
     RailBeamClass = AQLRailBeam::StaticClass();
+
+    // animation
+    ZoomTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("ZoomTimeline"));
+    ZoomTimelineInterpFunction.BindUFunction(this, FName{ TEXT("ZoomCallback") });
 }
 
 //------------------------------------------------------------
@@ -40,6 +49,11 @@ AQLWeaponRailGun::AQLWeaponRailGun()
 void AQLWeaponRailGun::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    if (ZoomTimeline && ZoomCurve)
+    {
+        ZoomTimeline->AddInterpFloat(ZoomCurve, ZoomTimelineInterpFunction, FName(TEXT("Zoom")));
+    }
 }
 
 //------------------------------------------------------------
@@ -48,7 +62,7 @@ void AQLWeaponRailGun::OnFire()
 {
     PlayFireAnimation(FName("Fire"));
 
-    PlayFireSound(FName("RailGunShot"));
+    PlayFireSoundFireAndForget(FName("RailGunShot"));
 
     // create the transient beam actor
     UParticleSystemComponent* BeamComponentTemp = nullptr;
@@ -113,8 +127,7 @@ void AQLWeaponRailGun::OnFire()
     TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
     FDamageEvent DamageEvent(ValidDamageTypeClass);
 
-    const float DamageAmount = BasicDamage;
-    hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
+    hitActor->TakeDamage(CurrentDamage, DamageEvent, User->GetController(), this);
 
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
@@ -129,7 +142,7 @@ void AQLWeaponRailGun::OnFire()
         return;
     }
 
-    int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
+    int32 DamageAmountInt = FMath::RoundToInt(CurrentDamage);
     UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
 }
 
@@ -137,12 +150,62 @@ void AQLWeaponRailGun::OnFire()
 //------------------------------------------------------------
 void AQLWeaponRailGun::OnAltFire()
 {
+    bZoomedIn = true;
+    CurrentDamage = ZoomDamage;
+
+    // animation
+    if (ZoomTimeline && ZoomCurve)
+    {
+        if (ZoomTimeline->IsPlaying())
+        {
+            ZoomTimeline->Stop();
+        }
+        // if the zoom animation is not currently played
+        // get the original fov and cache it
+        else
+        {
+            // fov
+            if (WeaponManager)
+            {
+                AQLCharacter* QLCharacter = WeaponManager->GetUser();
+                if (QLCharacter)
+                {
+                    CameraComponentCached = QLCharacter->GetFirstPersonCameraComponent();
+                    if (CameraComponentCached)
+                    {
+                        FOVCached = CameraComponentCached->FieldOfView;
+                    }
+                }
+            }
+        }
+
+        ZoomTimeline->Play();
+    }
+
+    // sound
+    PlayFireSound(FName("RailGunCharge"));
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLWeaponRailGun::OnAltFireRelease()
 {
+    bZoomedIn = false;
+    CurrentDamage = BasicDamage;
+
+    // animation
+    if (ZoomTimeline && ZoomCurve)
+    {
+        if (ZoomTimeline->IsPlaying())
+        {
+            ZoomTimeline->Stop();
+        }
+
+        ZoomTimeline->Reverse();
+    }
+
+    // sound
+    StopFireSound();
 }
 
 //------------------------------------------------------------
@@ -150,3 +213,22 @@ void AQLWeaponRailGun::OnAltFireRelease()
 void AQLWeaponRailGun::OnAltFireHold()
 {
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::ZoomCallback(float Val)
+{
+    if (CameraComponentCached)
+    {
+        CameraComponentCached->SetFieldOfView(FOVCached + Val);
+    }
+}
+
+

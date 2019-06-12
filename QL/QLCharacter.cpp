@@ -111,6 +111,7 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnFire);
     PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &AQLCharacter::OnFireRelease);
     PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnAltFire);
+    PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Released, this, &AQLCharacter::OnAltFireRelease);
 
     PlayerInputComponent->BindAction("SwitchToRocketLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRocketLauncher);
     PlayerInputComponent->BindAction("SwitchToLightningGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToLightningGun);
@@ -202,6 +203,16 @@ void AQLCharacter::OnAltFire()
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnAltFireRelease()
+{
+    AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->OnAltFireRelease();
+    }
+}
 
 //------------------------------------------------------------
 //------------------------------------------------------------

@@ -50,6 +50,9 @@ public:
     virtual void OnAltFireHold();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlayFireSoundFireAndForget(const FName& FireSoundName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlayFireSound(const FName& FireSoundName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

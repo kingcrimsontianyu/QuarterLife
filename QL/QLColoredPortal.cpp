@@ -79,7 +79,10 @@ void AQLColoredPortal::Initialize(EPortalColor PortalColorExt, AQLPortal* Spouse
     }
 
     // animation
-    EnlargeTimeline->PlayFromStart();
+    if (EnlargeTimeline && EnlargeCurve)
+    {
+        EnlargeTimeline->PlayFromStart();
+    }
 }
 
 //------------------------------------------------------------

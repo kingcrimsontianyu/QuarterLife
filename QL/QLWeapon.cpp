@@ -20,6 +20,7 @@
 #include "Components/AudioComponent.h"
 #include "QLPlayerController.h"
 #include "QLWeaponManager.h"
+#include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -77,6 +78,22 @@ void AQLWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PlayFireSoundFireAndForget(const FName& FireSoundName)
+{
+    USoundBase** Result = FireSoundList.Find(FireSoundName);
+    if (Result)
+    {
+        USoundBase* Sound = *Result;
+        AQLCharacter* User = GetWeaponManager()->GetUser();
+        if (Sound && User)
+        {
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
+        }
+    }
 }
 
 //------------------------------------------------------------

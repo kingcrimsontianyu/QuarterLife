@@ -12,13 +12,18 @@
 #include "CoreMinimal.h"
 #include "QLWeapon.h"
 #include "QLRailBeam.h"
+#include "Components/TimelineComponent.h"
 #include "QLWeaponRailGun.generated.h"
+
+class UCameraComponent;
 
 //------------------------------------------------------------
 // In Blueprint, set these properties
 // - crosshair texture list
 // - fire sound list
 // - fire animation list
+// - zoom curve
+// - rail beam class
 //
 // Do not add beam component, because rail gun dynamically creates
 // emitters in the world when fired, instead of using beam component.
@@ -38,15 +43,33 @@ public:
     virtual void OnAltFireRelease();
 
     virtual void OnAltFireHold();
+
 protected:
+    virtual void Tick(float DeltaTime) override;
+
     virtual void PostInitializeComponents() override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float ScopeDamage;
+    float ZoomDamage;
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<AQLRailBeam> RailBeamClass;
+
+    UTimelineComponent* ZoomTimeline;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
+    UCurveFloat* ZoomCurve;
+
+    FOnTimelineFloat ZoomTimelineInterpFunction;
+
+    UFUNCTION()
+    void ZoomCallback(float Val);
+
+    bool bZoomedIn;
+    float CurrentDamage;
+    float FOVCached;
+    UCameraComponent* CameraComponentCached;
 };

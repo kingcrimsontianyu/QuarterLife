@@ -146,6 +146,9 @@ protected:
     void OnAltFire();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnAltFireRelease();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnRestartLevel();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
