@@ -36,6 +36,7 @@ AQLWeaponRailGun::AQLWeaponRailGun()
     bZoomedIn = false;
     FOVCached = 90.0f;
     CameraComponentCached = nullptr;
+    bFireEnabled = true;
 
     RailBeamClass = AQLRailBeam::StaticClass();
 
@@ -60,6 +61,12 @@ void AQLWeaponRailGun::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLWeaponRailGun::OnFire()
 {
+    // if we are still in the fire disabled window, the weapon cannot be used
+    if (!bFireEnabled)
+    {
+        return;
+    }
+
     PlayFireAnimation(FName("Fire"));
 
     PlayFireSoundFireAndForget(FName("RailGunShot"));
@@ -144,6 +151,16 @@ void AQLWeaponRailGun::OnFire()
 
     int32 DamageAmountInt = FMath::RoundToInt(CurrentDamage);
     UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
+
+    // enforce rate of fire
+    bFireEnabled = false;
+    GetWorldTimerManager().SetTimer(DisableFireTimerHandle,
+                                    this,
+                                    &AQLWeaponRailGun::EnableFire,
+                                    1.0f, // time interval in second. since loop is not used,
+                                          // this parameter can be an arbitrary value except 0.0f.
+                                    false, // loop
+                                    RateOfFire); // delay in second
 }
 
 //------------------------------------------------------------
@@ -245,4 +262,13 @@ void AQLWeaponRailGun::PrepareForImpendingWeaponSwitch()
     {
         CameraComponentCached->SetFieldOfView(FOVCached);
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::EnableFire()
+{
+    bFireEnabled = true;
+
+    GetWorldTimerManager().ClearTimer(DisableFireTimerHandle);
 }
