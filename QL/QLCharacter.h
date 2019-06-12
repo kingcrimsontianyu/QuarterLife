@@ -55,6 +55,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void UpdateArmor();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    AQLPlayerController* GetQLPlayerController();
+
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)

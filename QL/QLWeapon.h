@@ -50,12 +50,6 @@ public:
     virtual void OnAltFireHold();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetUser(AQLCharacter* Character);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void UnsetUser();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlayFireSound(const FName& FireSoundName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -82,6 +76,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UTexture2D* GetCrossHairTexture(const FName& CrossHairTextureName = "Default");
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetWeaponManager(UQLWeaponManager* WeaponManagerExt);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UQLWeaponManager* GetWeaponManager();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -115,8 +114,6 @@ protected:
 
     FName WeaponName;
 
-    AQLCharacter* User;
-
     FTimerHandle HeldDownFireTimerHandle;
 
     float HitRange;
@@ -124,4 +121,6 @@ protected:
     float RateOfFire;
 
     bool bIsFireHeld;
+
+    UQLWeaponManager* WeaponManager;
 };

@@ -16,6 +16,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/DamageType.h"
 #include "Components/AudioComponent.h"
+#include "QLWeaponManager.h"
+#include "QLUmgUserWidget.h"
+#include "QLPlayerController.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -96,31 +99,33 @@ void AQLWeaponLightningGun::OnFireRelease()
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFireHold()
 {
+    AQLCharacter* User = GetWeaponManager()->GetUser();
+
     // to do: in order to ensure correctness, for each tick, ray trace is performed twice, one in Tick(), the other in HasHitEnemy()
     // need to understand the tick order and simplify the calculation
     FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
 
-    BeamComponent->SetBeamSourcePoint(0, GetMuzzleLocation(), 0);
+    if (BeamComponent)
+    {
+        BeamComponent->SetBeamSourcePoint(0, GetMuzzleLocation(), 0);
 
-    // if hit does not occur
-    if (!HitResult.bBlockingHit)
-    {
-        FVector TargetLocation = GetMuzzleLocation() + User->GetFirstPersonCameraComponent()->GetForwardVector() * HitRange;
-        BeamComponent->SetBeamTargetPoint(0, TargetLocation, 0);
-    }
-    else
-    {
-        // if hit occurs, handle beam
-        if (BeamComponent)
+        // if hit does not occur
+        if (!HitResult.bBlockingHit)
         {
+            FVector TargetLocation = GetMuzzleLocation() + User->GetFirstPersonCameraComponent()->GetForwardVector() * HitRange;
+            BeamComponent->SetBeamTargetPoint(0, TargetLocation, 0);
+        }
+        else
+        {
+            // if hit occurs, handle beam
             BeamComponent->SetBeamTargetPoint(0, HitResult.ImpactPoint, 0);
         }
-    }
 
-    // repeat fire sound
-    if (!FireSoundComponent->IsPlaying())
-    {
-        FireSoundComponent->Play();
+        // repeat fire sound
+        if (!FireSoundComponent->IsPlaying())
+        {
+            FireSoundComponent->Play();
+        }
     }
 }
 
@@ -128,6 +133,8 @@ void AQLWeaponLightningGun::OnFireHold()
 //------------------------------------------------------------
 void AQLWeaponLightningGun::InflictDamage()
 {
+    AQLCharacter* User = GetWeaponManager()->GetUser();
+
     if (User == nullptr)
     {
         return;
@@ -166,4 +173,20 @@ void AQLWeaponLightningGun::InflictDamage()
 
     const float DamageAmount = BasicDamage;
     hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
+
+    // display damage
+    AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
+    if (!QLPlayerController)
+    {
+        return;
+    }
+
+    UQLUmgUserWidget* UMG = QLPlayerController->GetUMG();
+    if (!UMG)
+    {
+        return;
+    }
+
+    int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
+    UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
 }

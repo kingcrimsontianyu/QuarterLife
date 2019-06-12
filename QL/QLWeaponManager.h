@@ -30,6 +30,8 @@ public:
 
     void SetUser(AQLCharacter* Character);
 
+    AQLCharacter* GetUser();
+
     void AddWeapon(AQLWeapon* Weapon);
 
     void SetCurrentWeapon(const FName& WeaponName);

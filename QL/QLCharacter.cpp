@@ -386,3 +386,22 @@ void AQLCharacter::OnRestartLevel()
 {
     UGameplayStatics::OpenLevel(GetWorld(), "QLArena");
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+AQLPlayerController* AQLCharacter::GetQLPlayerController()
+{
+    AController* MyController = GetController();
+    if (!MyController)
+    {
+        return nullptr;
+    }
+
+    AQLPlayerController* MyQLPlayerController = Cast<AQLPlayerController>(MyController);
+    if (!MyQLPlayerController)
+    {
+        return nullptr;
+    }
+
+    return MyQLPlayerController;
+}

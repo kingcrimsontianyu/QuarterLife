@@ -65,9 +65,17 @@ void AQLPlayerController::Tick(float DeltaSeconds)
 void AQLPlayerController::AddUMG()
 {
     UmgUserWidget = CreateWidget<UQLUmgUserWidget>(GetWorld(), UmgUserWidgetClass, FName("UmgUserWidget"));
+    UmgUserWidget->SetQLPlayerController(this);
     UmgUserWidget->AddToViewport();
     bShowMouseCursor = false;
     SetInputMode(FInputModeGameOnly());
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UQLUmgUserWidget* AQLPlayerController::GetUMG()
+{
+    return UmgUserWidget;
 }
 
 //------------------------------------------------------------

@@ -17,6 +17,7 @@
 #include "Components/BoxComponent.h"
 #include "QLPortalCompatibleActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "QLWeaponManager.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -70,6 +71,7 @@ void AQLWeaponPortalGun::OnAltFire()
 //------------------------------------------------------------
 void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor)
 {
+    AQLCharacter* User = GetWeaponManager()->GetUser();
     if (User == nullptr)
     {
         return;

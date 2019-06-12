@@ -34,6 +34,13 @@ void UQLWeaponManager::SetUser(AQLCharacter* Character)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+AQLCharacter* UQLWeaponManager::GetUser()
+{
+    return User;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
 {
     AQLWeapon** Result = WeaponList.Find(WeaponName);
@@ -96,10 +103,12 @@ AQLWeapon* UQLWeaponManager::GetCurrentWeapon()
 }
 
 //------------------------------------------------------------
+// todo: RemoveWeapon
 //------------------------------------------------------------
 void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 {
     WeaponList.Add(Weapon->GetWeaponName(), Weapon);
+    Weapon->SetWeaponManager(this);
 }
 
 

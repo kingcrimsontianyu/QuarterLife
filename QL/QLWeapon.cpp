@@ -18,16 +18,18 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Components/AudioComponent.h"
+#include "QLPlayerController.h"
+#include "QLWeaponManager.h"
 
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
 AQLWeapon::AQLWeapon() :
 WeaponName("None"),
-User(nullptr),
 HitRange(10000.0f),
 RateOfFire(1.0f),
-bIsFireHeld(false)
+bIsFireHeld(false),
+WeaponManager(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -79,26 +81,13 @@ void AQLWeapon::Tick(float DeltaTime)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::SetUser(AQLCharacter* Character)
-{
-    User = Character;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeapon::UnsetUser()
-{
-    User = nullptr;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
 void AQLWeapon::PlayFireSound(const FName& FireSoundName)
 {
     USoundBase** Result = FireSoundList.Find(FireSoundName);
     if (Result)
     {
         USoundBase* Sound = *Result;
+        AQLCharacter* User = GetWeaponManager()->GetUser();
         if (Sound && User)
         {
             FireSoundComponent->SetSound(Sound);
@@ -131,6 +120,7 @@ void AQLWeapon::PlayFireAnimation(const FName& FireAnimationName)
     if (Result)
     {
         UAnimMontage* Animation = *Result;
+        AQLCharacter* User = GetWeaponManager()->GetUser();
         if (Animation && User)
         {
             USkeletalMeshComponent* ArmMesh = User->GetFirstPersonMesh();
@@ -230,3 +220,61 @@ UTexture2D* AQLWeapon::GetCrossHairTexture(const FName& CrossHairTextureName)
 
     return Result;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::SetWeaponManager(UQLWeaponManager* WeaponManagerExt)
+{
+    WeaponManager = WeaponManagerExt;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UQLWeaponManager* AQLWeapon::GetWeaponManager()
+{
+    return WeaponManager;
+}
+
+////------------------------------------------------------------
+////------------------------------------------------------------
+//AQLCharacter* AQLWeapon::GetUser()
+//{
+//    return User;
+//}
+//
+////------------------------------------------------------------
+////------------------------------------------------------------
+//AQLPlayerController* AQLWeapon::GetQLPlayerController()
+//{
+//    if (!User)
+//    {
+//        return nullptr;
+//    }
+//
+//    AController* Controller = User->GetController();
+//    if (!Controller)
+//    {
+//        return nullptr;
+//    }
+//
+//    AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
+//    if (!QLPlayerController)
+//    {
+//        return nullptr;
+//    }
+//
+//    return QLPlayerController;
+//}
+//
+////------------------------------------------------------------
+////------------------------------------------------------------
+//UQLUmgUserWidget* AQLWeapon::GetQLUMG()
+//{
+//    AQLPlayerController* QLPlayerController = GetQLPlayerController();
+//    if (!QLPlayerController)
+//    {
+//        return nullptr;
+//    }
+//
+//    return QLPlayerController->GetUMG();
+//}

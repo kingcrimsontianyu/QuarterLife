@@ -36,8 +36,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void AddUMG();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UQLUmgUserWidget* GetUMG();
+
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<UQLUmgUserWidget> UmgUserWidgetClass;
+
+
 
 protected:
     //------------------------------------------------------------
