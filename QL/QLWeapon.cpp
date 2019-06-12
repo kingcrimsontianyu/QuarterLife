@@ -252,46 +252,10 @@ UQLWeaponManager* AQLWeapon::GetWeaponManager()
     return WeaponManager;
 }
 
-////------------------------------------------------------------
-////------------------------------------------------------------
-//AQLCharacter* AQLWeapon::GetUser()
-//{
-//    return User;
-//}
-//
-////------------------------------------------------------------
-////------------------------------------------------------------
-//AQLPlayerController* AQLWeapon::GetQLPlayerController()
-//{
-//    if (!User)
-//    {
-//        return nullptr;
-//    }
-//
-//    AController* Controller = User->GetController();
-//    if (!Controller)
-//    {
-//        return nullptr;
-//    }
-//
-//    AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
-//    if (!QLPlayerController)
-//    {
-//        return nullptr;
-//    }
-//
-//    return QLPlayerController;
-//}
-//
-////------------------------------------------------------------
-////------------------------------------------------------------
-//UQLUmgUserWidget* AQLWeapon::GetQLUMG()
-//{
-//    AQLPlayerController* QLPlayerController = GetQLPlayerController();
-//    if (!QLPlayerController)
-//    {
-//        return nullptr;
-//    }
-//
-//    return QLPlayerController->GetUMG();
-//}
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PrepareForImpendingWeaponSwitch()
+{
+}
+
+

@@ -190,3 +190,14 @@ void AQLWeaponLightningGun::HitTarget()
     int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
     UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponLightningGun::PrepareForImpendingWeaponSwitch()
+{
+    // stop firing
+    if (bIsFireHeld)
+    {
+        OnFireRelease();
+    }
+}

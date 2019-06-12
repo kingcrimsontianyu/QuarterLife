@@ -43,6 +43,11 @@ AQLCharacter* UQLWeaponManager::GetUser()
 //------------------------------------------------------------
 void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
 {
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->PrepareForImpendingWeaponSwitch();
+    }
+
     AQLWeapon** Result = WeaponList.Find(WeaponName);
     if (Result == nullptr)
     {

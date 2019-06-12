@@ -231,4 +231,18 @@ void AQLWeaponRailGun::ZoomCallback(float Val)
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::PrepareForImpendingWeaponSwitch()
+{
+    // reset fov
+    if (ZoomTimeline->IsPlaying())
+    {
+        ZoomTimeline->Stop();
+    }
 
+    if (CameraComponentCached)
+    {
+        CameraComponentCached->SetFieldOfView(FOVCached);
+    }
+}

@@ -40,7 +40,7 @@ public:
 
     virtual void HitTarget();
 
-
+    virtual void PrepareForImpendingWeaponSwitch() override;
 protected:
     virtual void PostInitializeComponents() override;
 

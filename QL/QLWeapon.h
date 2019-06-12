@@ -85,6 +85,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UQLWeaponManager* GetWeaponManager();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void PrepareForImpendingWeaponSwitch();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

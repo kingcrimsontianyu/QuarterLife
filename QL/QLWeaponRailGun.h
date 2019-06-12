@@ -44,6 +44,7 @@ public:
 
     virtual void OnAltFireHold();
 
+    virtual void PrepareForImpendingWeaponSwitch() override;
 protected:
     virtual void Tick(float DeltaTime) override;
 
