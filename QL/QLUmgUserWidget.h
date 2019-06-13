@@ -85,13 +85,19 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
     UWidgetAnimation* FadeAnimationCPP5;
 
-
+    UPROPERTY()
     TArray<UTextBlock*> DamageTextList;
+
+    UPROPERTY()
     TArray<UWidgetAnimation*> FadeAnimationCPPList;
 
+    UPROPERTY()
     UTextBlock* CurrentDamageText;
+
+    UPROPERTY()
     UWidgetAnimation* CurrentFadeAnimationCPP;
 
+    UPROPERTY()
     AQLPlayerController* QLPlayerController;
 
     int32 Counter;

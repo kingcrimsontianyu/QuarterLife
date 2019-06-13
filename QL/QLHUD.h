@@ -31,5 +31,6 @@ public:
     void UpdateCrossHair(UTexture2D* CrosshairTextureExt);
 
 protected:
+    UPROPERTY()
     UTexture2D* CrosshairTexture;
 };

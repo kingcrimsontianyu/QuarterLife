@@ -130,7 +130,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float RateOfFire;
 
+    UPROPERTY()
     bool bIsFireHeld;
 
+    UPROPERTY()
     UQLWeaponManager* WeaponManager;
 };

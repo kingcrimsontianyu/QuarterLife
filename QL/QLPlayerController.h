@@ -57,6 +57,7 @@ protected:
     //------------------------------------------------------------
     virtual void OnPossess(APawn* ControlledPawn) override;
 
+    UPROPERTY()
     UQLUmgUserWidget* UmgUserWidget;
 
     float FPS;

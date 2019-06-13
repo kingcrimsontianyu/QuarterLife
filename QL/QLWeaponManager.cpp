@@ -43,34 +43,33 @@ AQLCharacter* UQLWeaponManager::GetUser()
 //------------------------------------------------------------
 void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
 {
+    // if current weapon exists, hide it
     if (CurrentWeapon)
     {
         CurrentWeapon->PrepareForImpendingWeaponSwitch();
+        CurrentWeapon->SetActorHiddenInGame(true);
     }
 
-    AQLWeapon** Result = WeaponList.Find(WeaponName);
-    if (Result == nullptr)
+    // find if the named weapon is in the inventory
+    bool bFound = false;
+    for (const auto& Item : WeaponList)
     {
-        CurrentWeapon = nullptr;
-        return;
-    }
-
-    if (*Result == nullptr)
-    {
-        CurrentWeapon = nullptr;
-        return;
-    }
-
-    CurrentWeapon = *Result;
-
-    // set up the weapon
-    CurrentWeapon->SetActorHiddenInGame(false);
-    for (auto&& Elem : WeaponList)
-    {
-        if (Elem.Value != CurrentWeapon)
+        if (WeaponName == Item->GetWeaponName())
         {
-            Elem.Value->SetActorHiddenInGame(true);
+            CurrentWeapon = Item;
+            CurrentWeapon->SetActorHiddenInGame(false);
+            bFound = true;
         }
+    }
+
+    if (!bFound)
+    {
+        CurrentWeapon = nullptr;
+        FString msg = "UQLWeaponManager: Not found " + WeaponName.ToString();
+        int result = WeaponList.Num();
+        msg += FString::FromInt(result);
+        QLUtility::Log(msg);
+        return;
     }
 
     // change cross-hair
@@ -112,7 +111,7 @@ AQLWeapon* UQLWeaponManager::GetCurrentWeapon()
 //------------------------------------------------------------
 void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 {
-    WeaponList.Add(Weapon->GetWeaponName(), Weapon);
+    WeaponList.Add(Weapon);
     Weapon->SetWeaponManager(this);
 
     // set up the weapon

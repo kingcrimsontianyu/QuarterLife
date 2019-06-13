@@ -119,10 +119,12 @@ protected:
     //------------------------------------------------------------
     // The pairing portal
     //------------------------------------------------------------
+    UPROPERTY()
     AQLPortal* Spouse;
 
     //------------------------------------------------------------
     // Points to the dynamic instanced material of DisplayPlaneStaticMesh
     //------------------------------------------------------------
+    UPROPERTY()
     UMaterialInstanceDynamic* DynamicDisplayPlaneMaterial;
 };

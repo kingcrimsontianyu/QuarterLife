@@ -61,6 +61,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<AQLRailBeam> RailBeamClass;
 
+    UPROPERTY()
     UTimelineComponent* ZoomTimeline;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
@@ -71,11 +72,20 @@ protected:
     UFUNCTION()
     void ZoomCallback(float Val);
 
+    UPROPERTY()
     bool bZoomedIn;
+
+    UPROPERTY()
     float CurrentDamage;
+
+    UPROPERTY()
     float FOVCached;
+
+    UPROPERTY()
     UCameraComponent* CameraComponentCached;
 
     FTimerHandle DisableFireTimerHandle;
+
+    UPROPERTY()
     bool bFireEnabled;
 };

@@ -32,7 +32,7 @@ public:
     // initialize self and spouse
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void Initialize(EPortalColor PortalColor, AQLPortal* Spouse);
+    void Initialize(EPortalColor PortalColor, AQLPortal* SpouseExt);
 
     //------------------------------------------------------------
     // Clean up self and spouse

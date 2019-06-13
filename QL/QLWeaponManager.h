@@ -40,7 +40,12 @@ public:
 
     AQLWeapon* GetCurrentWeapon();
 protected:
+    UPROPERTY()
     AQLCharacter* User;
+
+    UPROPERTY()
     AQLWeapon* CurrentWeapon;
-    TMap<FName, AQLWeapon*> WeaponList;
+
+    UPROPERTY()
+    TArray<AQLWeapon*> WeaponList;
 };

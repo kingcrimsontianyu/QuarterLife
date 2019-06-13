@@ -167,5 +167,6 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UWidgetComponent* PlayerHealthArmorBarWidgetComponent;
 
+    UPROPERTY()
     UQLWeaponManager* WeaponManager;
 };

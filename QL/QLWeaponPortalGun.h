@@ -45,7 +45,10 @@ protected:
 
     void CreatePortalIfConditionsAreMet(EPortalColor PortalColor);
 
+    UPROPERTY()
     AQLColoredPortal* BluePortal;
+
+    UPROPERTY()
     AQLColoredPortal* OrangePortal;
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")

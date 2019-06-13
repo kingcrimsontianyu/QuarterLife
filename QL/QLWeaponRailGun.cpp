@@ -67,6 +67,16 @@ void AQLWeaponRailGun::OnFire()
         return;
     }
 
+    // enforce rate of fire
+    bFireEnabled = false;
+    GetWorldTimerManager().SetTimer(DisableFireTimerHandle,
+        this,
+        &AQLWeaponRailGun::EnableFire,
+        1.0f, // time interval in second. since loop is not used,
+              // this parameter can be an arbitrary value except 0.0f.
+        false, // loop
+        RateOfFire); // delay in second
+
     PlayFireAnimation(FName("Fire"));
 
     PlayFireSoundFireAndForget(FName("RailGunShot"));
@@ -151,16 +161,6 @@ void AQLWeaponRailGun::OnFire()
 
     int32 DamageAmountInt = FMath::RoundToInt(CurrentDamage);
     UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
-
-    // enforce rate of fire
-    bFireEnabled = false;
-    GetWorldTimerManager().SetTimer(DisableFireTimerHandle,
-                                    this,
-                                    &AQLWeaponRailGun::EnableFire,
-                                    1.0f, // time interval in second. since loop is not used,
-                                          // this parameter can be an arbitrary value except 0.0f.
-                                    false, // loop
-                                    RateOfFire); // delay in second
 }
 
 //------------------------------------------------------------
