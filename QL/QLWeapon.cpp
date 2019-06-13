@@ -43,7 +43,7 @@ AQLWeapon::AQLWeapon()
     RootSphereComponent->InitSphereRadius(40.0f);
     RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-
+    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLWeapon::OnComponentBeginOverlapImpl);
     RootComponent = RootSphereComponent;
 
     GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunSkeletalMeshComponent"));
@@ -60,9 +60,6 @@ AQLWeapon::AQLWeapon()
 
     FireSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FireSoundComponent"));
     FireSoundComponent->SetupAttachment(RootComponent);
-
-    // built-in dynamic delegate
-    this->OnActorBeginOverlap.AddDynamic(this, &AQLWeapon::OnActorBeginOverlapImpl);
 }
 
 //------------------------------------------------------------
@@ -286,16 +283,15 @@ void AQLWeapon::PrepareForImpendingWeaponSwitch()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherActor)
+void AQLWeapon::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     AQLCharacter* QLCharacter = Cast<AQLCharacter>(OtherActor);
     if (QLCharacter)
     {
         QLCharacter->AddWeapon(this);
         QLCharacter->SetCurrentWeapon(this->GetWeaponName());
+        PlayFireSound("PickUp");
     }
-
-    PlayFireSound("PickUp");
 }
 
 //------------------------------------------------------------

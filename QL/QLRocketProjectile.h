@@ -1,4 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+//------------------------------------------------------------
+// Quarter Life
+//
+// GNU General Public License v3.0
+//
+//  (\-/)
+// (='.'=)
+// (")-(")o
+//------------------------------------------------------------
 
 #pragma once
 
@@ -6,6 +14,10 @@
 #include "GameFramework/Actor.h"
 #include "QLRocketProjectile.generated.h"
 
+class UProjectileMovementComponent;
+class USphereComponent;
+//------------------------------------------------------------
+//------------------------------------------------------------
 UCLASS()
 class QL_API AQLRocketProjectile : public AActor
 {
@@ -15,12 +27,31 @@ public:
 	// Sets default values for this actor's properties
 	AQLRocketProjectile();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UProjectileMovementComponent* GetProjectileMovementComponent();
+protected:
+    UFUNCTION()
+    void OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UProjectileMovementComponent* ProjectileMovementComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    USphereComponent* RootSphereComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UStaticMeshComponent* StaticMeshComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float RocketLifeSpan;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float RocketSpeed;
 };

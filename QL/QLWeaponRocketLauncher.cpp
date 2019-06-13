@@ -14,6 +14,9 @@
 #include "QLCharacter.h"
 #include "QLUtility.h"
 #include "Engine/World.h"
+#include "Camera/CameraComponent.h"
+#include "QLRocketProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -62,26 +65,64 @@ void AQLWeaponRocketLauncher::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    // spawn a rocket
+    PlayFireAnimation(FName("Fire"));
+
+    PlayFireSoundFireAndForget(FName("Fire"));
+
+    // ray tracing
+    AQLCharacter* User = GetWeaponManager()->GetUser();
+
+    if (User == nullptr)
+    {
+        return;
+    }
+
+    FHitResult HitResult = User->RayTraceFromCharacterPOV(HitRange);
+
+    // determine source and target
+    UCameraComponent* CameraComponent = User->GetFirstPersonCameraComponent();
+    if (CameraComponent == nullptr)
+    {
+        return;
+    }
+
+    FVector SourceLocation = GetMuzzleLocation() + CameraComponent->GetForwardVector() * 10.0f;
+    FVector TargetLocation;
+
+    // if hit occurs
+    if (HitResult.bBlockingHit)
+    {
+        TargetLocation = HitResult.ImpactPoint;
+    }
+    else
+    {
+        TargetLocation = GetMuzzleLocation() + CameraComponent->GetForwardVector() * HitRange;
+    }
+
+    FVector ProjectileForwardVector = TargetLocation - SourceLocation;
+    ProjectileForwardVector.Normalize();
+
+    FMatrix result = FRotationMatrix::MakeFromXZ(ProjectileForwardVector, CameraComponent->GetUpVector());
+    FRotator SourceRotation = result.Rotator();
+
+    // spawn and launch a rocket
     UWorld* const World = GetWorld();
     GetMuzzleLocation();
     if (RocketProjectileClass && World && WeaponManager)
     {
-        AQLCharacter* Character = WeaponManager->GetUser();
-
-        if (!Character)
+        if (!User || !CameraComponent)
         {
             return;
         }
 
-        const FRotator SpawnRotation = Character->GetControlRotation();
-        const FVector SpawnLocation = GetMuzzleLocation();
-
         FActorSpawnParameters ActorSpawnParams;
-        World->SpawnActor<AQLRocketProjectile>(RocketProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+        AQLRocketProjectile* Rocket = World->SpawnActor<AQLRocketProjectile>(RocketProjectileClass, SourceLocation, SourceRotation, ActorSpawnParams);
+        if (Rocket)
+        {
+            // change velocity
+
+            FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
+            Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
+        }
     }
-
-    PlayFireAnimation(FName("Fire"));
-
-    PlayFireSoundFireAndForget(FName("Fire"));
 }
