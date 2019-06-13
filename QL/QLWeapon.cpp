@@ -275,4 +275,6 @@ void AQLWeapon::OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherAc
         QLCharacter->AddWeapon(this);
         QLCharacter->SetCurrentWeapon(this->GetWeaponName());
     }
+
+    PlayFireSound("PickUpWeapon");
 }

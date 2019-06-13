@@ -40,7 +40,8 @@ public:
 
     AQLWeapon* GetCurrentWeapon();
 protected:
-    UPROPERTY()
+    // do not use UPROPERTY() here
+    // it breaks the character weapon system
     AQLCharacter* User;
 
     UPROPERTY()

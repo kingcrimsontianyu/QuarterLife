@@ -122,10 +122,7 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     Weapon->SetActorEnableCollision(false);
     Weapon->DisableComponentsSimulatePhysics();
 
-    // attach actor to actor / component (Weapon->AttachToComponent) does not work
-    // this seems to be a long-standing bug
-    //Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-    //Weapon->AttachToActor(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 }
 
 
