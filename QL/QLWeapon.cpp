@@ -83,6 +83,8 @@ void AQLWeapon::BeginPlay()
 void AQLWeapon::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
+
+    // to do: under which EndPlayReason?
     GetWorldTimerManager().ClearAllTimersForObject(this);
 }
 
