@@ -23,8 +23,8 @@ AQLRocketProjectile::AQLRocketProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    RocketLifeSpan = 10.0f;
-    RocketSpeed = 1000.0f;
+    RocketLifeSpan = 5.0f;
+    RocketSpeed = 2000.0f;
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(20.0f);
@@ -56,9 +56,10 @@ void AQLRocketProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-    // property rocket speed may be modified in BP
     ProjectileMovementComponent->InitialSpeed = RocketSpeed;
     ProjectileMovementComponent->MaxSpeed = RocketSpeed;
+
+    SetLifeSpan(RocketLifeSpan);
 }
 
 //------------------------------------------------------------
