@@ -50,8 +50,6 @@ protected:
 
     virtual void PostInitializeComponents() override;
 
-    void EnableFire();
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
 
@@ -83,9 +81,4 @@ protected:
 
     UPROPERTY()
     UCameraComponent* CameraComponentCached;
-
-    FTimerHandle DisableFireTimerHandle;
-
-    UPROPERTY()
-    bool bFireEnabled;
 };

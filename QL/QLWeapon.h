@@ -94,6 +94,8 @@ protected:
 
     virtual void PostInitializeComponents() override;
 
+    virtual void EnableFireCallBack();
+
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherActor);
 
@@ -138,4 +140,9 @@ protected:
 
     UPROPERTY()
     UQLWeaponManager* WeaponManager;
+
+    FTimerHandle DisableFireTimerHandle;
+
+    UPROPERTY()
+    bool bFireEnabled;
 };

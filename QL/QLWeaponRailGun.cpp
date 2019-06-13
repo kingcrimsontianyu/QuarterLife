@@ -70,12 +70,12 @@ void AQLWeaponRailGun::OnFire()
     // enforce rate of fire
     bFireEnabled = false;
     GetWorldTimerManager().SetTimer(DisableFireTimerHandle,
-        this,
-        &AQLWeaponRailGun::EnableFire,
-        1.0f, // time interval in second. since loop is not used,
-              // this parameter can be an arbitrary value except 0.0f.
-        false, // loop
-        RateOfFire); // delay in second
+                                    this,
+                                    &AQLWeaponRailGun::EnableFireCallBack,
+                                    1.0f, // time interval in second. since loop is not used,
+                                          // this parameter can be an arbitrary value except 0.0f.
+                                    false, // loop
+                                    RateOfFire); // delay in second
 
     PlayFireAnimation(FName("Fire"));
 
@@ -264,11 +264,4 @@ void AQLWeaponRailGun::PrepareForImpendingWeaponSwitch()
     }
 }
 
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponRailGun::EnableFire()
-{
-    bFireEnabled = true;
 
-    GetWorldTimerManager().ClearTimer(DisableFireTimerHandle);
-}

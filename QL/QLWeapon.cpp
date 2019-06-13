@@ -278,3 +278,12 @@ void AQLWeapon::OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherAc
 
     PlayFireSound("PickUpWeapon");
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::EnableFireCallBack()
+{
+    bFireEnabled = true;
+
+    GetWorldTimerManager().ClearTimer(DisableFireTimerHandle);
+}
