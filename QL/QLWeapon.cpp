@@ -22,6 +22,7 @@
 #include "QLWeaponManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "QLUtility.h"
+#include "TimerManager.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -78,6 +79,14 @@ void AQLWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);
+    GetWorldTimerManager().ClearAllTimersForObject(this);
 }
 
 //------------------------------------------------------------
@@ -209,7 +218,15 @@ USkeletalMeshComponent* AQLWeapon::GetGunSkeletalMeshComponent()
 //------------------------------------------------------------
 FVector AQLWeapon::GetMuzzleLocation()
 {
-    return MuzzleSceneComponent->GetComponentLocation();
+    if (MuzzleSceneComponent)
+    {
+        return MuzzleSceneComponent->GetComponentLocation();
+    }
+    else
+    {
+        return FVector();
+    }
+
 }
 
 //------------------------------------------------------------

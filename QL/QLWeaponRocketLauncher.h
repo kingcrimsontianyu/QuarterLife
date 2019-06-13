@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "QLWeapon.h"
+#include "QLRocketProjectile.h"
 #include "QLWeaponRocketLauncher.generated.h"
 
 //------------------------------------------------------------
@@ -34,6 +35,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
 
-    //UPROPERTY(EditDefaultsOnly, Category = "C++Property")
-    //TSubclassOf<AQLRocketProjectile> RocketProjectileClass;
+    UPROPERTY(EditDefaultsOnly, Category = "C++Property")
+    TSubclassOf<AQLRocketProjectile> RocketProjectileClass;
 };

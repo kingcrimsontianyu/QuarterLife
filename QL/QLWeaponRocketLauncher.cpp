@@ -10,6 +10,10 @@
 
 
 #include "QLWeaponRocketLauncher.h"
+#include "QLWeaponManager.h"
+#include "QLCharacter.h"
+#include "QLUtility.h"
+#include "Engine/World.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -20,6 +24,8 @@ AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
 
     BasicDamage = 100.0f;
     bFireEnabled = true;
+
+    RocketProjectileClass = AQLRocketProjectile::StaticClass();
 }
 
 //------------------------------------------------------------
@@ -55,6 +61,25 @@ void AQLWeaponRocketLauncher::OnFire()
                                           // this parameter can be an arbitrary value except 0.0f.
                                     false, // loop
                                     RateOfFire); // delay in second
+
+    // spawn a rocket
+    UWorld* const World = GetWorld();
+    GetMuzzleLocation();
+    if (RocketProjectileClass && World && WeaponManager)
+    {
+        AQLCharacter* Character = WeaponManager->GetUser();
+
+        if (!Character)
+        {
+            return;
+        }
+
+        const FRotator SpawnRotation = Character->GetControlRotation();
+        const FVector SpawnLocation = GetMuzzleLocation();
+
+        FActorSpawnParameters ActorSpawnParams;
+        World->SpawnActor<AQLRocketProjectile>(RocketProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+    }
 
     PlayFireAnimation(FName("Fire"));
 

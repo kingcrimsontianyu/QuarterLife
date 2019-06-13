@@ -96,6 +96,8 @@ protected:
 
     virtual void EnableFireCallBack();
 
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherActor);
 
