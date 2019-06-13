@@ -25,9 +25,13 @@ namespace QLUtility
     //------------------------------------------------------------
     void Screen(const FString& msg)
     {
-        bool bNewerOnTop = true;
+        //bool bNewerOnTop = true;
+        //FVector2D TextScale(1.0f, 1.0f);
+        //GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Cyan, msg, bNewerOnTop, TextScale);
+
+        bool bNewerOnTop = false;
         FVector2D TextScale(1.0f, 1.0f);
-        GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Cyan, msg, bNewerOnTop, TextScale);
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, msg, bNewerOnTop, TextScale);
     }
 
 }

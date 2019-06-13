@@ -120,6 +120,7 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 
     Weapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
     Weapon->SetActorEnableCollision(false);
+    Weapon->DisableComponentsSimulatePhysics();
 
     // attach actor to actor / component (Weapon->AttachToComponent) does not work
     // this seems to be a long-standing bug
