@@ -21,4 +21,19 @@ class QL_API AQLWeaponRocketLauncher : public AQLWeapon
 {
 	GENERATED_BODY()
 
+public:
+    AQLWeaponRocketLauncher();
+
+    virtual void OnFire() override;
+
+protected:
+    virtual void Tick(float DeltaTime) override;
+
+    virtual void PostInitializeComponents() override;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BasicDamage;
+
+    //UPROPERTY(EditDefaultsOnly, Category = "C++Property")
+    //TSubclassOf<AQLRocketProjectile> RocketProjectileClass;
 };

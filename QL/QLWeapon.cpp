@@ -26,15 +26,17 @@
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
-AQLWeapon::AQLWeapon() :
-WeaponName("None"),
-HitRange(10000.0f),
-RateOfFire(1.0f),
-bIsFireHeld(false),
-WeaponManager(nullptr)
+AQLWeapon::AQLWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+    WeaponName = "None";
+    HitRange = 10000.0f;
+    RateOfFire = 1.0f;
+    bIsFireHeld = false;
+    WeaponManager = nullptr;
+    bFireEnabled = true;
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(40.0f);
@@ -276,7 +278,7 @@ void AQLWeapon::OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherAc
         QLCharacter->SetCurrentWeapon(this->GetWeaponName());
     }
 
-    PlayFireSound("PickUpWeapon");
+    PlayFireSound("PickUp");
 }
 
 //------------------------------------------------------------

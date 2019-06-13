@@ -61,7 +61,7 @@ void AQLWeaponLightningGun::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFire()
 {
-    PlayFireSound(FName("ElectricZap"));
+    PlayFireSound(FName("Fire"));
 
     bIsFireHeld = true;
 

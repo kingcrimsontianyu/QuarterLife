@@ -79,7 +79,7 @@ void AQLWeaponRailGun::OnFire()
 
     PlayFireAnimation(FName("Fire"));
 
-    PlayFireSoundFireAndForget(FName("RailGunShot"));
+    PlayFireSoundFireAndForget(FName("Fire"));
 
     // create the transient beam actor
     UParticleSystemComponent* BeamComponentTemp = nullptr;
@@ -200,7 +200,7 @@ void AQLWeaponRailGun::OnAltFire()
     }
 
     // sound
-    PlayFireSound(FName("RailGunCharge"));
+    PlayFireSound(FName("Zoom"));
 }
 
 //------------------------------------------------------------
