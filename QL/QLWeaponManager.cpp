@@ -110,6 +110,19 @@ AQLWeapon* UQLWeaponManager::GetCurrentWeapon()
 //------------------------------------------------------------
 void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 {
+    // if the weapon is already in the list, do not add
+    if (WeaponList.Num() > 0)
+    {
+        for (auto& Item : WeaponList)
+        {
+            if (Item->GetWeaponName() == Weapon->GetWeaponName())
+            {
+                QLUtility::Log("UQLWeaponManager:: Weapon of the same type has already been added.");
+                return;
+            }
+        }
+    }
+
     WeaponList.Add(Weapon);
     Weapon->SetWeaponManager(this);
 

@@ -42,8 +42,10 @@ AQLCharacter::AQLCharacter()
     // Create a CameraComponent
     FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
     FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-    FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
+    //FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
+    FirstPersonCameraComponent->RelativeLocation = FVector(-10.0f, 1.75f, 64.f);
     FirstPersonCameraComponent->bUsePawnControlRotation = true;
+    FirstPersonCameraComponent->SetFieldOfView(100.0f);
 
     // Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
     FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
@@ -324,7 +326,7 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 
         if (Health <= 0.0f)
         {
-            Destroy();
+            Die();
         }
     }
 
@@ -431,4 +433,11 @@ void AQLCharacter::SwitchToRailGun()
 void AQLCharacter::SwitchToPortalGun()
 {
     SetCurrentWeapon(FName(TEXT("PortalGun")));
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::Die()
+{
+    Destroy();
 }

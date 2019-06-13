@@ -63,6 +63,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetCurrentWeapon(const FName& WeaponName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void Die();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
