@@ -21,6 +21,7 @@
 #include "QLPlayerController.h"
 #include "QLWeaponManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "QLUtility.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -44,6 +45,9 @@ WeaponManager(nullptr)
 
     GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunSkeletalMeshComponent"));
     GunSkeletalMeshComponent->SetupAttachment(RootComponent);
+    GunSkeletalMeshComponent->SetSimulatePhysics(false);
+    GunSkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GunSkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
     MuzzleSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
     MuzzleSceneComponent->SetupAttachment(GunSkeletalMeshComponent);
@@ -53,6 +57,9 @@ WeaponManager(nullptr)
 
     FireSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FireSoundComponent"));
     FireSoundComponent->SetupAttachment(RootComponent);
+
+    // built-in dynamic delegate
+    this->OnActorBeginOverlap.AddDynamic(this, &AQLWeapon::OnActorBeginOverlapImpl);
 }
 
 //------------------------------------------------------------
@@ -258,4 +265,14 @@ void AQLWeapon::PrepareForImpendingWeaponSwitch()
 {
 }
 
-
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherActor)
+{
+    AQLCharacter* QLCharacter = Cast<AQLCharacter>(OtherActor);
+    if (QLCharacter)
+    {
+        QLCharacter->AddWeapon(this);
+        QLCharacter->SetCurrentWeapon(this->GetWeaponName());
+    }
+}

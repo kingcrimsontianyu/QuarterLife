@@ -16,6 +16,7 @@
 #include "QLPlayerController.h"
 #include "QLHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SkeletalMeshComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -47,7 +48,7 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
     if (CurrentWeapon)
     {
         CurrentWeapon->PrepareForImpendingWeaponSwitch();
-        CurrentWeapon->SetActorHiddenInGame(true);
+        CurrentWeapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
     }
 
     // find if the named weapon is in the inventory
@@ -57,7 +58,7 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
         if (WeaponName == Item->GetWeaponName())
         {
             CurrentWeapon = Item;
-            CurrentWeapon->SetActorHiddenInGame(false);
+            CurrentWeapon->GetGunSkeletalMeshComponent()->SetVisibility(true);
             bFound = true;
         }
     }
@@ -66,8 +67,6 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
     {
         CurrentWeapon = nullptr;
         FString msg = "UQLWeaponManager: Not found " + WeaponName.ToString();
-        int result = WeaponList.Num();
-        msg += FString::FromInt(result);
         QLUtility::Log(msg);
         return;
     }
@@ -119,10 +118,13 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     gunMesh->CastShadow = false;
     gunMesh->bCastDynamicShadow = false;
 
-    Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-
-    Weapon->SetActorHiddenInGame(true);
+    Weapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
     Weapon->SetActorEnableCollision(false);
+
+    // attach actor to actor / component (Weapon->AttachToComponent) does not work
+    // this seems to be a long-standing bug
+    //Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    //Weapon->AttachToActor(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 }
 
 

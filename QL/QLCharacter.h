@@ -58,6 +58,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     AQLPlayerController* GetQLPlayerController();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void AddWeapon(AQLWeapon* Weapon);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCurrentWeapon(const FName& WeaponName);
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -111,12 +116,6 @@ protected:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetMaxArmor() const;
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void AddWeapon(AQLWeapon* Weapon);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCurrentWeapon(const FName& WeaponName);
 
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

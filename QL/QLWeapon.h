@@ -94,6 +94,9 @@ protected:
 
     virtual void PostInitializeComponents() override;
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnActorBeginOverlapImpl(AActor* OverlappedActor, AActor* OtherActor);
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UAudioComponent* FireSoundComponent;
 
