@@ -46,4 +46,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float KnockbackSpeedChange;
 };

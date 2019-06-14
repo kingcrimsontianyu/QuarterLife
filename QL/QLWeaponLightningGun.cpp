@@ -19,6 +19,8 @@
 #include "QLWeaponManager.h"
 #include "QLUmgUserWidget.h"
 #include "QLPlayerController.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -30,6 +32,7 @@ AQLWeaponLightningGun::AQLWeaponLightningGun()
     bIsFireHeld = false;
 
     BasicDamage = 6.0f;
+    KnockbackSpeedChange = 30.0f;
 }
 
 //------------------------------------------------------------
@@ -173,6 +176,15 @@ void AQLWeaponLightningGun::HitTarget()
 
     const float DamageAmount = BasicDamage;
     hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
+
+    // change victim velocity
+    UCharacterMovementComponent* CharacterMovementComponent = hitActor->GetCharacterMovement();
+    if (CharacterMovementComponent)
+    {
+        CharacterMovementComponent->AddImpulse(
+            -HitResult.ImpactNormal * KnockbackSpeedChange, // impulse vector
+            true); // velocity change (true) or impulse (false)
+    }
 
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
