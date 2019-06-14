@@ -88,54 +88,102 @@ void AQLRocketProjectile::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    // Only add impulse and destroy projectile if we hit a physics
+    // This function is guaranteed to be called only once,
+    // because even though the actor may overlaps several components,
+    // it is destroyed after the first overlap event.
     if (OtherActor)
     {
-        // get victims within the blast radius
-        FVector Epicenter = GetActorLocation();
-        TArray<FOverlapResult> OutOverlaps;
-        FCollisionObjectQueryParams CollisionObjectQueryParams(ECollisionChannel::ECC_Pawn);
-        FCollisionQueryParams CollisionQueryParams;
+        bool bDirectHit = HandleDirectHit(OtherActor);
 
-        GetWorld()->OverlapMultiByObjectType(OutOverlaps,
-            Epicenter,
-            FQuat(GetActorRotation()),
-            CollisionObjectQueryParams,
-            FCollisionShape::MakeSphere(BlastRadius),
-            CollisionQueryParams);
+        HandleSplashHit(OtherActor, bDirectHit);
 
-        // iterate victims
-        for (auto&& Result : OutOverlaps)
+        Destroy();
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
+{
+    bool bDirectHit = false;
+    AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
+    if (Character)
+    {
+        Character->TakeDamageQuakeStyle(BasicDamage);
+
+        // display damage
+        if (PlayerController)
         {
-            TWeakObjectPtr<UPrimitiveComponent> Comp = Result.Component;
-            AActor* Actor = Comp->GetOwner();
-            if (Actor)
+            PlayerController->ShowDamageOnScreen(BasicDamage, Character->GetActorLocation());
+        }
+
+        bDirectHit = true;
+    }
+
+    return bDirectHit;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
+{
+    // get victims within the blast radius
+    FVector Epicenter = GetActorLocation();
+    TArray<FOverlapResult> OutOverlaps;
+    FCollisionObjectQueryParams CollisionObjectQueryParams(ECollisionChannel::ECC_Pawn);
+    FCollisionQueryParams CollisionQueryParams;
+
+    GetWorld()->OverlapMultiByObjectType(OutOverlaps,
+        Epicenter,
+        FQuat(GetActorRotation()),
+        CollisionObjectQueryParams,
+        FCollisionShape::MakeSphere(BlastRadius),
+        CollisionQueryParams);
+
+    // iterate victims
+    for (auto&& Result : OutOverlaps)
+    {
+        TWeakObjectPtr<UPrimitiveComponent> Comp = Result.Component;
+        AActor* Actor = Comp->GetOwner();
+        if (Actor)
+        {
+            AQLCharacter* Character = Cast<AQLCharacter>(Actor);
+            if (Character)
             {
-                AQLCharacter* Character = Cast<AQLCharacter>(Actor);
-                if (Character)
+                // change victim velocity
+                UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
+                if (CharacterMovementComponent)
                 {
-                    // change victim velocity
-                    UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
-                    if (CharacterMovementComponent)
+                    // a less better approach is LaunchCharacter()
+                    // Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
+
+                    CharacterMovementComponent->AddRadialImpulse(
+                        GetActorLocation(),
+                        BlastRadius,
+                        BlastSpeedChange,
+                        ERadialImpulseFalloff::RIF_Linear,
+                        true); // velocity change (true) or impulse (false)
+                }
+
+                // inflict damage
+                // if direct hit damage has already been applied, skip to the next victim
+                if (bDirectHit && OtherActor == Actor)
+                {
+                    continue;
+                }
+
+                float DamageAmount = Character->TakeRadialDamage(Epicenter, BlastRadius, BasicDamage, 0.0);
+
+                // display positive damage
+                if (DamageAmount > 0.0f)
+                {
+                    if (PlayerController)
                     {
-                        // a less better approach is LaunchCharacter()
-                        // Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
-
-                        CharacterMovementComponent->AddRadialImpulse(
-                            GetActorLocation(),
-                            BlastRadius,
-                            BlastSpeedChange,
-                            ERadialImpulseFalloff::RIF_Linear,
-                            true); // velocity change (true) or impulse (false)
+                        PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
                     }
-
-                    // inflict damage
-                    InflictDamage(Character);
                 }
             }
         }
-
-        Destroy();
     }
 }
 
@@ -182,32 +230,4 @@ void AQLRocketProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AQLRocketProjectile::SetQLPlayerController(AQLPlayerController* PlayerControllerExt)
 {
     PlayerController = PlayerControllerExt;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLRocketProjectile::InflictDamage(AQLCharacter* Character)
-{
-    // damage victim
-    // create a damage event
-    TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
-    FDamageEvent DamageEvent(ValidDamageTypeClass);
-
-    const float DamageAmount = BasicDamage;
-    Character->TakeDamage(DamageAmount, DamageEvent, PlayerController, this);
-
-    // display damage
-    if (!PlayerController)
-    {
-        return;
-    }
-
-    UQLUmgUserWidget* UMG = PlayerController->GetUMG();
-    if (!UMG)
-    {
-        return;
-    }
-
-    int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
-    UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), Character->GetActorLocation());
 }

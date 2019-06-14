@@ -176,19 +176,10 @@ void AQLWeaponLightningGun::HitTarget()
 
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
-    if (!QLPlayerController)
+    if (QLPlayerController)
     {
-        return;
+        QLPlayerController->ShowDamageOnScreen(DamageAmount, HitResult.ImpactPoint);
     }
-
-    UQLUmgUserWidget* UMG = QLPlayerController->GetUMG();
-    if (!UMG)
-    {
-        return;
-    }
-
-    int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
-    UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), HitResult.ImpactPoint);
 }
 
 //------------------------------------------------------------

@@ -42,7 +42,8 @@ public:
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<UQLUmgUserWidget> UmgUserWidgetClass;
 
-
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void ShowDamageOnScreen(float DamageAmount, const FVector& WorldTextLocation);
 
 protected:
     //------------------------------------------------------------

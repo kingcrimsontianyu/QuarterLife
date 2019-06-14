@@ -291,6 +291,40 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 {
     const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+    TakeDamageQuakeStyle(ActualDamage);
+
+    return ActualDamage;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::TakeRadialDamage(const FVector& Epicenter, float BlastRadius, float MaxDamage, float MinDamage)
+{
+    FVector Temp = GetActorLocation() - Epicenter;
+    float Distance = Temp.Size();
+
+    // linear interpolation
+    // y = MaxDamage at x = 0
+    // y = MinDamage at x = BlastRadius
+    // y = ? at x = Distance
+    float ActualDamage = (MinDamage - MaxDamage) / BlastRadius * Distance + MaxDamage;
+
+    if (ActualDamage < 0.0f)
+    {
+        ActualDamage = 0.0f;
+    }
+    else
+    {
+        TakeDamageQuakeStyle(ActualDamage);
+    }
+
+    return ActualDamage;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::TakeDamageQuakeStyle(float ActualDamage)
+{
     if (ActualDamage > 0.0f)
     {
         const float HealthAbsorbingFraction = 0.33f;
@@ -330,8 +364,6 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
             Die();
         }
     }
-
-    return ActualDamage;
 }
 
 //------------------------------------------------------------

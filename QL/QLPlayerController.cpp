@@ -113,3 +113,17 @@ void AQLPlayerController::OnPossess(APawn* ControlledPawn)
         }
     }
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::ShowDamageOnScreen(float DamageAmount, const FVector& WorldTextLocation)
+{
+    if (!UmgUserWidget)
+    {
+        return;
+    }
+
+    int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
+    UmgUserWidget->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), WorldTextLocation);
+}
+
