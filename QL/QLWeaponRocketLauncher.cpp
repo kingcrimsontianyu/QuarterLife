@@ -18,6 +18,7 @@
 #include "QLRocketProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "QLPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -116,18 +117,17 @@ void AQLWeaponRocketLauncher::OnFire()
             return;
         }
 
-        FActorSpawnParameters ActorSpawnParams;
-        AQLRocketProjectile* Rocket = World->SpawnActor<AQLRocketProjectile>(RocketProjectileClass, SourceLocation, SourceRotation, ActorSpawnParams);
-        if (Rocket)
-        {
-            // change velocity
-            FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
-            Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
+        FTransform MyTransform(SourceRotation, SourceLocation, FVector(1.0f));
+        AQLRocketProjectile* Rocket = World->SpawnActorDeferred<AQLRocketProjectile>(RocketProjectileClass, MyTransform);
 
-            // pass controller to rocket as damage instigator
-            AController* Controller = User->GetController();
-            AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
-            Rocket->SetQLPlayerController(QLPlayerController);
-        }
+        // pass controller to rocket as damage instigator
+        AController* Controller = User->GetController();
+        AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
+        Rocket->SetQLPlayerController(QLPlayerController);
+        UGameplayStatics::FinishSpawningActor(Rocket, MyTransform);
+
+        // change velocity
+        FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
+        Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
 }

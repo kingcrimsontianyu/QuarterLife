@@ -58,6 +58,12 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
+    //------------------------------------------------------------
+    // Given input damage, reduce it and return the result
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float ReduceSelfDamage(const float InDamage);
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UProjectileMovementComponent* ProjectileMovementComponent;
 

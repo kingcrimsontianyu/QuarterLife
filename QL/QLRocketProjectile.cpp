@@ -29,9 +29,6 @@ AQLRocketProjectile::AQLRocketProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    RocketLifeSpan = 5.0f;
-    RocketSpeed = 2000.0f;
-
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(20.0f);
     RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -56,8 +53,10 @@ AQLRocketProjectile::AQLRocketProjectile()
 
     ExplosionParticleSystem = nullptr;
     ExplosionSound = nullptr;
+    RocketLifeSpan = 5.0f;
+    RocketSpeed = 2000.0f;
     BlastRadius = 400.0f;
-    BlastSpeedChange = 1500.0f;
+    BlastSpeedChange = 1200.0f;
     BasicDamage = 100.0f;
     PlayerController = nullptr;
 }
@@ -109,12 +108,19 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
     AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
     if (Character)
     {
-        Character->TakeDamageQuakeStyle(BasicDamage);
+        // reduce self damage
+        float DamageAmount = BasicDamage;
+        if (PlayerController && OtherActor == PlayerController->GetCharacter())
+        {
+            DamageAmount = ReduceSelfDamage(DamageAmount);
+        }
+
+        Character->TakeDamageQuakeStyle(DamageAmount);
 
         // display damage
         if (PlayerController)
         {
-            PlayerController->ShowDamageOnScreen(BasicDamage, Character->GetActorLocation());
+            PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
         }
 
         bDirectHit = true;
@@ -172,7 +178,15 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                     continue;
                 }
 
-                float DamageAmount = Character->TakeRadialDamage(Epicenter, BlastRadius, BasicDamage, 0.0);
+                // self splash damage (by rocket jump for example) is reduced by half
+                float DamageAmount = BasicDamage;
+
+                if (PlayerController && Character == PlayerController->GetCharacter())
+                {
+                    DamageAmount = ReduceSelfDamage(DamageAmount);
+                }
+
+                DamageAmount = Character->TakeRadialDamage(Epicenter, BlastRadius, DamageAmount, 0.0);
 
                 // display positive damage
                 if (DamageAmount > 0.0f)
@@ -230,4 +244,11 @@ void AQLRocketProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AQLRocketProjectile::SetQLPlayerController(AQLPlayerController* PlayerControllerExt)
 {
     PlayerController = PlayerControllerExt;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLRocketProjectile::ReduceSelfDamage(const float InDamage)
+{
+    return InDamage * 0.5;
 }
