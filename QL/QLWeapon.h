@@ -71,9 +71,6 @@ public:
     FName GetWeaponName();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void InflictDamage();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetHitRange(float HitRange);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

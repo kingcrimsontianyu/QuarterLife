@@ -112,6 +112,9 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
                     UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
                     if (CharacterMovementComponent)
                     {
+                        // a less better approach is LaunchCharacter()
+                        // Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
+
                         CharacterMovementComponent->AddRadialImpulse(
                             GetActorLocation(),
                             BlastRadius,
@@ -122,20 +125,6 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
                 }
             }
         }
-
-
-        //AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
-        //if (Character)
-        //{
-        //    //Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
-
-        //    Character->GetCharacterMovement()->AddRadialImpulse(
-        //        GetActorLocation(),
-        //        100.0f, // Radius
-        //        100.0f, // Strength
-        //        ERadialImpulseFalloff::RIF_Linear,
-        //        true); // velocity change (true) or impulse (false)
-        //}
 
         Destroy();
     }
