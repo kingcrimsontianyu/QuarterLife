@@ -16,6 +16,8 @@
 #include "QLUtility.h"
 #include "QLCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -52,6 +54,8 @@ AQLRocketProjectile::AQLRocketProjectile()
 
     ExplosionParticleSystem = nullptr;
     ExplosionSound = nullptr;
+    BlastRadius = 400.0f;
+    BlastSpeedChange = 1500.0f;
 }
 
 //------------------------------------------------------------
@@ -80,21 +84,57 @@ void AQLRocketProjectile::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    QLUtility::Log(OtherActor->GetName());
-
     // Only add impulse and destroy projectile if we hit a physics
     if (OtherActor)
     {
-        AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
-        if (Character)
+        // query victims within the blast radius
+        FVector Epicenter = GetActorLocation();
+        TArray<FOverlapResult> OutOverlaps;
+        FCollisionObjectQueryParams CollisionObjectQueryParams(ECollisionChannel::ECC_Pawn);
+        FCollisionQueryParams CollisionQueryParams;
+
+        GetWorld()->OverlapMultiByObjectType(OutOverlaps,
+            Epicenter,
+            FQuat(GetActorRotation()),
+            CollisionObjectQueryParams,
+            FCollisionShape::MakeSphere(BlastRadius),
+            CollisionQueryParams);
+
+        for (auto&& Result : OutOverlaps)
         {
-            Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
+            TWeakObjectPtr<UPrimitiveComponent> Comp = Result.Component;
+            AActor* Actor = Comp->GetOwner();
+            if (Actor)
+            {
+                AQLCharacter* Character = Cast<AQLCharacter>(Actor);
+                if (Character)
+                {
+                    UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
+                    if (CharacterMovementComponent)
+                    {
+                        CharacterMovementComponent->AddRadialImpulse(
+                            GetActorLocation(),
+                            BlastRadius,
+                            BlastSpeedChange,
+                            ERadialImpulseFalloff::RIF_Linear,
+                            true); // velocity change (true) or impulse (false)
+                    }
+                }
+            }
         }
 
-        //QLUtility::Log(OtherComp->GetClass()->GetFName().ToString());
-        //if (OtherComp && OtherComp->IsSimulatingPhysics())
+
+        //AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
+        //if (Character)
         //{
-        //    OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+        //    //Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
+
+        //    Character->GetCharacterMovement()->AddRadialImpulse(
+        //        GetActorLocation(),
+        //        100.0f, // Radius
+        //        100.0f, // Strength
+        //        ERadialImpulseFalloff::RIF_Linear,
+        //        true); // velocity change (true) or impulse (false)
         //}
 
         Destroy();

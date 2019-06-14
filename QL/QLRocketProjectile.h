@@ -64,6 +64,12 @@ protected:
     float RocketSpeed;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BlastRadius;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BlastSpeedChange;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     UParticleSystem* ExplosionParticleSystem;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
