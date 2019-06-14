@@ -24,7 +24,7 @@ Regarding this repository:
     + Unholy trinity (Quake Champions)
         + Lightning gun
         + Rail gun
-        + Rocket
+        + Rocket launcher
     + Gravity gun (Half life 2)
     + Portal gun (Portal 2)
     + Recycler grenade (Prey)
@@ -48,6 +48,9 @@ Regarding this repository:
 ------
 
 ## Clip
+
+### Unholy Trinity (lightning gun, rail gun, rocket launcher)
+<a href="https://youtu.be/kieULoIWyC4" target="_blank"><img src="http://i3.ytimg.com/vi/kieULoIWyC4/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Portal gun and gravity gun
 <a href="https://youtu.be/X8Xr5iMmvNs" target="_blank"><img src="http://i3.ytimg.com/vi/X8Xr5iMmvNs/hqdefault.jpg" width="480" height="360" border="10" /></a>
