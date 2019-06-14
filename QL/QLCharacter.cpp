@@ -21,16 +21,17 @@
 #include "QLUtility.h"
 #include "QLPlayerController.h"
 #include "Components/WidgetComponent.h"
+#include "QLPlayerController.h"
 
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
 AQLCharacter::AQLCharacter()
 {
-    Health = 100.0f;
-    MaxHealth = 100.0f;
+    Health = 150.0f;
+    MaxHealth = 200.0f;
     Armor = 100.0f;
-    MaxArmor = 100.0f;
+    MaxArmor = 150.0f;
 
     // Set size for collision capsule
     GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -347,6 +348,7 @@ void AQLCharacter::SetHealthArmorBarVisible(bool bFlag)
 //------------------------------------------------------------
 void AQLCharacter::UpdateHealth()
 {
+    // update health bar
     if (PlayerHealthArmorBarWidgetComponent)
     {
         UUserWidget* UUserWidgetResult = PlayerHealthArmorBarWidgetComponent->GetUserWidgetObject();
@@ -360,12 +362,20 @@ void AQLCharacter::UpdateHealth()
             }
         }
     }
+
+    // update umg
+    AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(GetController());
+    if (QLPlayerController)
+    {
+        QLPlayerController->GetUMG()->UpdateHealth(Health);
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLCharacter::UpdateArmor()
 {
+    // update armor bar
     if (PlayerHealthArmorBarWidgetComponent)
     {
         UUserWidget* UUserWidgetResult = PlayerHealthArmorBarWidgetComponent->GetUserWidgetObject();
@@ -378,6 +388,13 @@ void AQLCharacter::UpdateArmor()
                 Result->UpdateArmorBar(ArmorPercent);
             }
         }
+    }
+
+    // update umg
+    AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(GetController());
+    if (QLPlayerController)
+    {
+        QLPlayerController->GetUMG()->UpdateArmor(Armor);
     }
 }
 
@@ -441,3 +458,4 @@ void AQLCharacter::Die()
 {
     Destroy();
 }
+

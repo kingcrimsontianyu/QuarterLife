@@ -16,6 +16,7 @@
 
 class UProjectileMovementComponent;
 class USphereComponent;
+class AQLPlayerController;
 //------------------------------------------------------------
 // In Blueprint, set these properties
 // - explosion particle system
@@ -41,9 +42,15 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UProjectileMovementComponent* GetProjectileMovementComponent();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetQLPlayerController(AQLPlayerController* PlayerControllerExt);
 protected:
     UFUNCTION()
     void OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void InflictDamage(AQLCharacter* Character);
 
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -70,8 +77,14 @@ protected:
     float BlastSpeedChange;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BasicDamage;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     UParticleSystem* ExplosionParticleSystem;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     USoundBase* ExplosionSound;
+
+    UPROPERTY()
+    AQLPlayerController* PlayerController;
 };

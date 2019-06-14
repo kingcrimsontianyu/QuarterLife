@@ -90,8 +90,6 @@ void AQLPlayerController::PostInitializeComponents()
 void AQLPlayerController::BeginPlay()
 {
     Super::BeginPlay();
-
-    AddUMG();
 }
 
 //------------------------------------------------------------
@@ -105,5 +103,13 @@ void AQLPlayerController::OnPossess(APawn* ControlledPawn)
     {
         // controlled character does not see his own health and armor bar
         ControlledCharacter->SetHealthArmorBarVisible(false);
+
+        AddUMG();
+
+        if (UmgUserWidget)
+        {
+            UmgUserWidget->UpdateHealth(ControlledCharacter->GetHealth());
+            UmgUserWidget->UpdateArmor(ControlledCharacter->GetArmor());
+        }
     }
 }

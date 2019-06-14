@@ -17,6 +17,7 @@
 #include "Camera/CameraComponent.h"
 #include "QLRocketProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "QLPlayerController.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -120,9 +121,13 @@ void AQLWeaponRocketLauncher::OnFire()
         if (Rocket)
         {
             // change velocity
-
             FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
             Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
+
+            // pass controller to rocket as damage instigator
+            AController* Controller = User->GetController();
+            AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
+            Rocket->SetQLPlayerController(QLPlayerController);
         }
     }
 }

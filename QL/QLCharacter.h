@@ -66,6 +66,31 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Die();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetHealth() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetMaxHealth() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetArmor() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetMaxArmor() const;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float Health;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float MaxHealth;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float Armor;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float MaxArmor;
+
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -92,33 +117,9 @@ protected:
     // UPROPERTY(EditDefaultsOnly, Category = Projectile)
     // TSubclassOf<class ATestFirstPersonProjectile> ProjectileClass;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float Health;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float MaxHealth;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float Armor;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float MaxArmor;
-
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float GetHealth() const;
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float GetMaxHealth() const;
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float GetArmor() const;
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float GetMaxArmor() const;
 
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

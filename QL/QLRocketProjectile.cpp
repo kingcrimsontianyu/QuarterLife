@@ -18,6 +18,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/DamageType.h"
+#include "QLPlayerController.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -56,6 +58,8 @@ AQLRocketProjectile::AQLRocketProjectile()
     ExplosionSound = nullptr;
     BlastRadius = 400.0f;
     BlastSpeedChange = 1500.0f;
+    BasicDamage = 100.0f;
+    PlayerController = nullptr;
 }
 
 //------------------------------------------------------------
@@ -87,7 +91,7 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
     // Only add impulse and destroy projectile if we hit a physics
     if (OtherActor)
     {
-        // query victims within the blast radius
+        // get victims within the blast radius
         FVector Epicenter = GetActorLocation();
         TArray<FOverlapResult> OutOverlaps;
         FCollisionObjectQueryParams CollisionObjectQueryParams(ECollisionChannel::ECC_Pawn);
@@ -100,6 +104,7 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
             FCollisionShape::MakeSphere(BlastRadius),
             CollisionQueryParams);
 
+        // iterate victims
         for (auto&& Result : OutOverlaps)
         {
             TWeakObjectPtr<UPrimitiveComponent> Comp = Result.Component;
@@ -109,6 +114,7 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
                 AQLCharacter* Character = Cast<AQLCharacter>(Actor);
                 if (Character)
                 {
+                    // change victim velocity
                     UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
                     if (CharacterMovementComponent)
                     {
@@ -122,6 +128,9 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
                             ERadialImpulseFalloff::RIF_Linear,
                             true); // velocity change (true) or impulse (false)
                     }
+
+                    // inflict damage
+                    InflictDamage(Character);
                 }
             }
         }
@@ -166,4 +175,39 @@ void AQLRocketProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
             UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, GetActorLocation());
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRocketProjectile::SetQLPlayerController(AQLPlayerController* PlayerControllerExt)
+{
+    PlayerController = PlayerControllerExt;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRocketProjectile::InflictDamage(AQLCharacter* Character)
+{
+    // damage victim
+    // create a damage event
+    TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
+    FDamageEvent DamageEvent(ValidDamageTypeClass);
+
+    const float DamageAmount = BasicDamage;
+    Character->TakeDamage(DamageAmount, DamageEvent, PlayerController, this);
+
+    // display damage
+    if (!PlayerController)
+    {
+        return;
+    }
+
+    UQLUmgUserWidget* UMG = PlayerController->GetUMG();
+    if (!UMG)
+    {
+        return;
+    }
+
+    int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
+    UMG->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), Character->GetActorLocation());
 }

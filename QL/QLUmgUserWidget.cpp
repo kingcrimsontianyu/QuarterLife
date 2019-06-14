@@ -147,3 +147,17 @@ AQLPlayerController* UQLUmgUserWidget::GetQLPlayerController()
 {
     return QLPlayerController;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgUserWidget::UpdateHealth_Implementation(float Health)
+{
+    return Health;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgUserWidget::UpdateArmor_Implementation(float Armor)
+{
+    return Armor;
+}
