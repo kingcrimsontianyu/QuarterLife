@@ -18,6 +18,10 @@
 class AQLPlayerController;
 
 //------------------------------------------------------------
+// In Blueprint
+// - Add the identically named text blocks DamageText0 ...
+// - Add animation FadeAnimationBP0 ...
+// - Set FadeAnimationCPPP0 = FadeAnimationBP0 ...
 //------------------------------------------------------------
 UCLASS(Abstract)
 class QL_API UQLUmgUserWidget : public UUserWidget
