@@ -29,7 +29,7 @@ public:
     float GetFrameRate() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float GetControlledPawnVelocityLength() const;
+    float GetControlledPawnSpeed() const;
 
     virtual void Tick(float DeltaSeconds) override;
 

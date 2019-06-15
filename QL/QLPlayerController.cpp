@@ -32,7 +32,7 @@ float AQLPlayerController::GetFrameRate() const
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float AQLPlayerController::GetControlledPawnVelocityLength() const
+float AQLPlayerController::GetControlledPawnSpeed() const
 {
     APawn* ControlledPawn = GetPawn();
     if (ControlledPawn)
@@ -46,7 +46,6 @@ float AQLPlayerController::GetControlledPawnVelocityLength() const
     }
     else
     {
-        // UE_LOG();
         return 0.0f;
     }
 }
@@ -108,8 +107,8 @@ void AQLPlayerController::OnPossess(APawn* ControlledPawn)
 
         if (UmgUserWidget)
         {
-            UmgUserWidget->UpdateHealth(ControlledCharacter->GetHealth());
-            UmgUserWidget->UpdateArmor(ControlledCharacter->GetArmor());
+            UmgUserWidget->UpdateTextHealthValue(ControlledCharacter->GetHealth());
+            UmgUserWidget->UpdateTextArmorValue(ControlledCharacter->GetArmor());
         }
     }
 }

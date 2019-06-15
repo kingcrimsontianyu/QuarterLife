@@ -14,6 +14,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "QLPlayerController.h"
 #include "QLUtility.h"
+#include "Engine/World.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -147,14 +148,42 @@ AQLPlayerController* UQLUmgUserWidget::GetQLPlayerController()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateHealth_Implementation(float Health)
+float UQLUmgUserWidget::UpdateTextHealthValue_Implementation(float Health)
 {
     return Health;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateArmor_Implementation(float Armor)
+float UQLUmgUserWidget::UpdateTextArmorValue_Implementation(float Armor)
 {
     return Armor;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgUserWidget::UpdateTextFPSValue_Implementation()
+{
+    float FPS = 0.0f;
+
+    if (QLPlayerController.IsValid())
+    {
+        FPS = QLPlayerController->GetFrameRate();
+    }
+
+    return FPS;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgUserWidget::UpdateTextSpeedValue_Implementation()
+{
+    float Speed = 0.0f;
+
+    if (QLPlayerController.IsValid())
+    {
+        Speed = QLPlayerController->GetControlledPawnSpeed();
+    }
+
+    return Speed;
 }

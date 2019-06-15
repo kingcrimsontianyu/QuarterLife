@@ -53,10 +53,17 @@ public:
     AQLPlayerController* GetQLPlayerController();
 
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
-    float UpdateHealth(float Health);
+    float UpdateTextHealthValue(float Health);
 
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
-    float UpdateArmor(float Armor);
+    float UpdateTextArmorValue(float Armor);
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    float UpdateTextFPSValue();
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    float UpdateTextSpeedValue();
+
 protected:
     UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
     UTextBlock* DamageText0;

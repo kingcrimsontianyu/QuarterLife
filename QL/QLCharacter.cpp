@@ -399,7 +399,7 @@ void AQLCharacter::UpdateHealth()
     AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(GetController());
     if (QLPlayerController)
     {
-        QLPlayerController->GetUMG()->UpdateHealth(Health);
+        QLPlayerController->GetUMG()->UpdateTextHealthValue(Health);
     }
 }
 
@@ -426,7 +426,7 @@ void AQLCharacter::UpdateArmor()
     AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(GetController());
     if (QLPlayerController)
     {
-        QLPlayerController->GetUMG()->UpdateArmor(Armor);
+        QLPlayerController->GetUMG()->UpdateTextArmorValue(Armor);
     }
 }
 
