@@ -34,7 +34,8 @@ AQLCharacter::AQLCharacter()
     MaxArmor = 150.0f;
 
     // Set size for collision capsule
-    GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+    // original value: 55.f, 96.0f
+    GetCapsuleComponent()->InitCapsuleSize(30.0f, 85.0f);
 
     // set our turn rates for input
     BaseTurnRate = 45.0f;
