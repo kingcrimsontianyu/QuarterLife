@@ -50,11 +50,6 @@ AQLPortal::AQLPortal()
     SceneCaptureComponent->bCaptureEveryFrame = true;
     SceneCaptureComponent->TextureTarget = nullptr;
     SceneCaptureComponent->SetupAttachment(RootComponent);
-
-    RenderTarget = CreateDefaultSubobject<UTextureRenderTarget2D>(TEXT("RenderTarget"));
-    RenderTarget->InitAutoFormat(1920, 1080);
-    RenderTarget->AddressX = TextureAddress::TA_Wrap;
-    RenderTarget->AddressY = TextureAddress::TA_Wrap;
 }
 
 //------------------------------------------------------------
@@ -90,8 +85,16 @@ void AQLPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
+    RenderTarget = NewObject<UTextureRenderTarget2D>(this);
+    RenderTarget->InitAutoFormat(1920, 1080);
+    RenderTarget->AddressX = TextureAddress::TA_Wrap;
+    RenderTarget->AddressY = TextureAddress::TA_Wrap;
+
     // set up scene campture component and reder target
-    SceneCaptureComponent->TextureTarget = RenderTarget;
+    if (SceneCaptureComponent && RenderTarget)
+    {
+        SceneCaptureComponent->TextureTarget = RenderTarget;
+    }
 
     UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
     if (PortalMaterial)
