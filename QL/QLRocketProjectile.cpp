@@ -31,8 +31,7 @@ AQLRocketProjectile::AQLRocketProjectile()
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(20.0f);
-    RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
     RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLRocketProjectile::OnBeginOverlapForComponent);
     RootSphereComponent->SetEnableGravity(false);
     RootComponent = RootSphereComponent;
@@ -46,9 +45,7 @@ AQLRocketProjectile::AQLRocketProjectile()
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
     StaticMeshComponent->SetupAttachment(RootComponent);
-    StaticMeshComponent->SetSimulatePhysics(false);
-    StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    StaticMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
     StaticMeshComponent->SetEnableGravity(false);
 
     ExplosionParticleSystem = nullptr;

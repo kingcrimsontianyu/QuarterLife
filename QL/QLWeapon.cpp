@@ -40,8 +40,7 @@ AQLWeapon::AQLWeapon()
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(40.0f);
-    RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAll"));
     RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLWeapon::OnComponentBeginOverlapImpl);
     RootComponent = RootSphereComponent;
 

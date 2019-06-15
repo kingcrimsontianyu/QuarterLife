@@ -53,6 +53,7 @@ AQLCharacter::AQLCharacter()
     FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
     FirstPersonMesh->SetOnlyOwnerSee(true);
     FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
+    FirstPersonMesh->SetCollisionProfileName(TEXT("NoCollision"));
     FirstPersonMesh->CastShadow = false;
     FirstPersonMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
     FirstPersonMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
@@ -60,6 +61,7 @@ AQLCharacter::AQLCharacter()
     // third person
     ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
     ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
+    ThirdPersonMesh->SetCollisionProfileName(TEXT("NoCollision"));
     ThirdPersonMesh->bOwnerNoSee = true;
     ThirdPersonMesh->CastShadow = true;
     ThirdPersonMesh->bCastDynamicShadow = true;

@@ -32,20 +32,17 @@ AQLPortal::AQLPortal()
     RootComponent = BoxComponent;
     BoxComponent->InitBoxExtent(FVector(50.0f, 50.0f, 50.0f));
     BoxComponent->SetSimulatePhysics(false);
-    BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+    BoxComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
     FrameStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameStaticMesh"));
     FrameStaticMesh->SetupAttachment(RootComponent);
     FrameStaticMesh->SetSimulatePhysics(false);
-    FrameStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    FrameStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    FrameStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
     DisplayPlaneStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DisplayPlaneStaticMesh"));
     DisplayPlaneStaticMesh->SetupAttachment(RootComponent);
     DisplayPlaneStaticMesh->SetSimulatePhysics(false);
-    DisplayPlaneStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    DisplayPlaneStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    DisplayPlaneStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
     SceneCaptureComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent"));
     SceneCaptureComponent->SetRelativeLocation(FVector(200.0f, 0.0f, 0.0f));
