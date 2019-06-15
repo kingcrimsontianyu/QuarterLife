@@ -66,6 +66,9 @@ public:
     USkeletalMeshComponent* GetGunSkeletalMeshComponent();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    USphereComponent* GetRootSphereComponent();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     FVector GetMuzzleLocation();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

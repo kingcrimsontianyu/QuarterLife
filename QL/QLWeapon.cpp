@@ -48,7 +48,8 @@ AQLWeapon::AQLWeapon()
     GunSkeletalMeshComponent->SetupAttachment(RootComponent);
     GunSkeletalMeshComponent->SetSimulatePhysics(false);
     GunSkeletalMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
-    GunSkeletalMeshComponent->CastShadow = false;
+    GunSkeletalMeshComponent->CastShadow = true;
+    GunSkeletalMeshComponent->bCastDynamicShadow = true;
 
     MuzzleSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
     MuzzleSceneComponent->SetupAttachment(GunSkeletalMeshComponent);
@@ -203,6 +204,13 @@ void AQLWeapon::OnAltFireRelease()
 //------------------------------------------------------------
 void AQLWeapon::OnAltFireHold()
 {
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+USphereComponent* AQLWeapon::GetRootSphereComponent()
+{
+    return RootSphereComponent;
 }
 
 //------------------------------------------------------------

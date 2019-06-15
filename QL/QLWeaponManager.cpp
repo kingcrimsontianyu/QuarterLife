@@ -17,6 +17,7 @@
 #include "QLHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/SphereComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -138,6 +139,12 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     Weapon->SetWeaponManager(this);
 
     // set up the weapon
+    auto* RootSphereComponent = Weapon->GetRootSphereComponent();
+    if (RootSphereComponent)
+    {
+        RootSphereComponent->SetCollisionProfileName(TEXT("NoCollision"));
+    }
+
     auto* gunMesh = Weapon->GetGunSkeletalMeshComponent();
     gunMesh->CastShadow = false;
     gunMesh->bCastDynamicShadow = false;
