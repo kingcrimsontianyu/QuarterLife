@@ -19,8 +19,7 @@
 //------------------------------------------------------------
 //------------------------------------------------------------
 AQLColoredPortal::AQLColoredPortal() :
-PortalColor(EPortalColor::Invalid),
-EnlargeCurve(nullptr)
+PortalColor(EPortalColor::Invalid)
 {
     BoxComponent->InitBoxExtent(FVector(50.0f, 120.0f, 150.0f));
 
@@ -35,7 +34,7 @@ void AQLColoredPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    if (DynamicDisplayPlaneMaterial)
+    if (DynamicDisplayPlaneMaterial.IsValid())
     {
         DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", 0.1);
     }
@@ -92,12 +91,15 @@ void AQLColoredPortal::CleanUp()
     SetSpouse(nullptr);
     SetInactive();
 
-    auto* ThisSpouse = Cast<AQLColoredPortal>(Spouse);
-
-    if (ThisSpouse)
+    if (Spouse.IsValid())
     {
-        ThisSpouse->SetSpouse(nullptr);
-        ThisSpouse->SetInactive();
+        AQLColoredPortal* ThisSpouse = Cast<AQLColoredPortal>(Spouse.Get());
+
+        if (ThisSpouse)
+        {
+            ThisSpouse->SetSpouse(nullptr);
+            ThisSpouse->SetInactive();
+        }
     }
 }
 
@@ -105,35 +107,47 @@ void AQLColoredPortal::CleanUp()
 //------------------------------------------------------------
 void AQLColoredPortal::SetBlue()
 {
-    DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 0);
+    if (DynamicDisplayPlaneMaterial.IsValid())
+    {
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 0);
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLColoredPortal::SetOrange()
 {
-    DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 1);
+    if (DynamicDisplayPlaneMaterial.IsValid())
+    {
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 1);
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLColoredPortal::SetActive()
 {
-    DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 1);
+    if (DynamicDisplayPlaneMaterial.IsValid())
+    {
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 1);
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLColoredPortal::SetInactive()
 {
-    DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 0);
+    if (DynamicDisplayPlaneMaterial.IsValid())
+    {
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 0);
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLColoredPortal::EnlargeCallback(float Val)
 {
-    if (DynamicDisplayPlaneMaterial)
+    if (DynamicDisplayPlaneMaterial.IsValid())
     {
         DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", Val);
     }

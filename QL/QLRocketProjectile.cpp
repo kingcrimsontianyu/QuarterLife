@@ -110,7 +110,7 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
     {
         // reduce self damage
         float DamageAmount = BasicDamage;
-        if (PlayerController && OtherActor == PlayerController->GetCharacter())
+        if (PlayerController.IsValid() && OtherActor == PlayerController->GetCharacter())
         {
             DamageAmount = ReduceSelfDamage(DamageAmount);
         }
@@ -118,7 +118,7 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
         Character->TakeDamageQuakeStyle(DamageAmount);
 
         // display damage
-        if (PlayerController)
+        if (PlayerController.IsValid())
         {
             PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
         }
@@ -181,7 +181,7 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 // self splash damage (by rocket jump for example) is reduced by half
                 float DamageAmount = BasicDamage;
 
-                if (PlayerController && Character == PlayerController->GetCharacter())
+                if (PlayerController.IsValid() && Character == PlayerController->GetCharacter())
                 {
                     DamageAmount = ReduceSelfDamage(DamageAmount);
                 }
@@ -191,7 +191,7 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 // display positive damage
                 if (DamageAmount > 0.0f)
                 {
-                    if (PlayerController)
+                    if (PlayerController.IsValid())
                     {
                         PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
                     }
@@ -217,24 +217,24 @@ void AQLRocketProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
     if (EndPlayReason == EEndPlayReason::Destroyed)
     {
         // play explosion particle system
-        if (ExplosionParticleSystem)
+        if (ExplosionParticleSystem.IsValid())
         {
             FTransform Transform(FRotator::ZeroRotator,
                 GetActorLocation(),
                 FVector(4.0f)); // scale
 
             UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
-                ExplosionParticleSystem,
+                ExplosionParticleSystem.Get(),
                 Transform,
                 true, // auto destroy
                 EPSCPoolMethod::AutoRelease);
         }
 
         // play explosion sound
-        if (ExplosionSound)
+        if (ExplosionSound.IsValid())
         {
             // fire and forget
-            UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, GetActorLocation());
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound.Get(), GetActorLocation());
         }
     }
 }

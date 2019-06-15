@@ -27,7 +27,7 @@ void AQLHUD::DrawHUD()
 {
     Super::DrawHUD();
 
-    if (CrosshairTexture && Canvas)
+    if (CrosshairTexture.IsValid() && Canvas)
     {
         // Find the center of our canvas.
         FVector2D Center(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);

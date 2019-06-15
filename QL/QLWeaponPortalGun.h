@@ -46,10 +46,10 @@ protected:
     void CreatePortalIfConditionsAreMet(EPortalColor PortalColor);
 
     UPROPERTY()
-    AQLColoredPortal* BluePortal;
+    TWeakObjectPtr<AQLColoredPortal> BluePortal;
 
     UPROPERTY()
-    AQLColoredPortal* OrangePortal;
+    TWeakObjectPtr<AQLColoredPortal> OrangePortal;
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<AQLColoredPortal> PortalClass;

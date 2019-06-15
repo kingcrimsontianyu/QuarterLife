@@ -38,11 +38,11 @@ public:
 
     // Returns FirstPersonMesh subobject
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    class USkeletalMeshComponent* GetFirstPersonMesh();
+    USkeletalMeshComponent* GetFirstPersonMesh();
 
     // Returns FirstPersonCameraComponent subobject
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    class UCameraComponent* GetFirstPersonCameraComponent() const;
+    UCameraComponent* GetFirstPersonCameraComponent() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetHealthArmorBarVisible(bool bFlag);
@@ -104,15 +104,15 @@ protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USkeletalMeshComponent* FirstPersonMesh;
+    USkeletalMeshComponent* FirstPersonMesh;
 
     // Pawn mesh: 1st person view (arms; seen only by self)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USkeletalMeshComponent* ThirdPersonMesh;
+    USkeletalMeshComponent* ThirdPersonMesh;
 
     // First person camera
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property", meta = (AllowPrivateAccess = "true"))
-    class UCameraComponent* FirstPersonCameraComponent;
+    UCameraComponent* FirstPersonCameraComponent;
 
     // Base turn rate, in deg/sec. Other scaling may affect final turn rate.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")

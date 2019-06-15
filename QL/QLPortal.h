@@ -94,17 +94,18 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USceneCaptureComponent2D* SceneCaptureComponent;
+    USceneCaptureComponent2D* SceneCaptureComponent;
 
     //------------------------------------------------------------
     // The game and editor crash if UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property") is added
     //------------------------------------------------------------
+    UPROPERTY()
     UTextureRenderTarget2D* RenderTarget;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class UBoxComponent* BoxComponent;
+    UBoxComponent* BoxComponent;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -120,11 +121,11 @@ protected:
     // The pairing portal
     //------------------------------------------------------------
     UPROPERTY()
-    AQLPortal* Spouse;
+    TWeakObjectPtr<AQLPortal> Spouse;
 
     //------------------------------------------------------------
     // Points to the dynamic instanced material of DisplayPlaneStaticMesh
     //------------------------------------------------------------
     UPROPERTY()
-    UMaterialInstanceDynamic* DynamicDisplayPlaneMaterial;
+    TWeakObjectPtr <UMaterialInstanceDynamic> DynamicDisplayPlaneMaterial;
 };

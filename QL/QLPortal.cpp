@@ -23,8 +23,7 @@
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
-AQLPortal::AQLPortal() :
-Spouse(nullptr)
+AQLPortal::AQLPortal()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -81,7 +80,7 @@ void AQLPortal::Tick(float DeltaTime)
 }
 
 //------------------------------------------------------------
-// To list the availablematerial parameters, use:
+// To list the available material parameters, use:
 // TArray<FMaterialParameterInfo> outParamInfo;
 // TArray<FGuid> outParamIds;
 // DynamicDisplayPlaneMaterial->GetAllTextureParameterInfo(outParamInfo, outParamIds);
@@ -101,7 +100,10 @@ void AQLPortal::PostInitializeComponents()
     if (PortalMaterial)
     {
         DynamicDisplayPlaneMaterial = DisplayPlaneStaticMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, PortalMaterial);
-        DynamicDisplayPlaneMaterial->SetTextureParameterValue("PortalTexture", RenderTarget);
+        if (DynamicDisplayPlaneMaterial.IsValid())
+        {
+            DynamicDisplayPlaneMaterial->SetTextureParameterValue("PortalTexture", RenderTarget);
+        }
     }
 }
 
@@ -109,7 +111,7 @@ void AQLPortal::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLPortal::UpdateSCC()
 {
-    if (Spouse == nullptr)
+    if (!Spouse.IsValid())
     {
         return;
     }
@@ -144,7 +146,7 @@ void AQLPortal::SetSpouse(AQLPortal* SpouseExt)
 //------------------------------------------------------------
 FVector AQLPortal::ConvertDirectionToSpouseSpace(const FVector& OldDirection)
 {
-    if (Spouse == nullptr)
+    if (!Spouse.IsValid())
     {
         return OldDirection;
     }
@@ -166,7 +168,7 @@ FVector AQLPortal::ConvertDirectionToSpouseSpace(const FVector& OldDirection)
 //------------------------------------------------------------
 FVector AQLPortal::ConvertLocationToSpouseSpace(const FVector& OldLocation)
 {
-    if (Spouse == nullptr)
+    if (!Spouse.IsValid())
     {
         return OldLocation;
     }
@@ -182,7 +184,7 @@ FVector AQLPortal::ConvertLocationToSpouseSpace(const FVector& OldLocation)
 //------------------------------------------------------------
 FRotator AQLPortal::ConvertRotationToSpouseSpace(const FRotator& OldRotator)
 {
-    if (Spouse == nullptr)
+    if (!Spouse.IsValid())
     {
         return OldRotator;
     }

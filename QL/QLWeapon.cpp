@@ -36,7 +36,6 @@ AQLWeapon::AQLWeapon()
     HitRange = 10000.0f;
     RateOfFire = 1.0f;
     bIsFireHeld = false;
-    WeaponManager = nullptr;
     bFireEnabled = true;
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
@@ -105,8 +104,7 @@ void AQLWeapon::PlayFireSoundFireAndForget(const FName& FireSoundName)
     if (Result)
     {
         USoundBase* Sound = *Result;
-        AQLCharacter* User = GetWeaponManager()->GetUser();
-        if (Sound && User)
+        if (Sound)
         {
             UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
         }
@@ -121,8 +119,7 @@ void AQLWeapon::PlayFireSound(const FName& FireSoundName)
     if (Result)
     {
         USoundBase* Sound = *Result;
-        AQLCharacter* User = GetWeaponManager()->GetUser();
-        if (Sound && User)
+        if (Sound)
         {
             FireSoundComponent->SetSound(Sound);
             FireSoundComponent->Play(0.0f);
@@ -154,16 +151,19 @@ void AQLWeapon::PlayFireAnimation(const FName& FireAnimationName)
     if (Result)
     {
         UAnimMontage* Animation = *Result;
-        AQLCharacter* User = GetWeaponManager()->GetUser();
-        if (Animation && User)
+        if (Animation && WeaponManager.IsValid())
         {
-            USkeletalMeshComponent* ArmMesh = User->GetFirstPersonMesh();
-            if (ArmMesh)
+            AQLCharacter* User = WeaponManager->GetUser();
+            if (User)
             {
-                UAnimInstance* AnimInstance = ArmMesh->GetAnimInstance();
-                if (AnimInstance)
+                USkeletalMeshComponent* ArmMesh = User->GetFirstPersonMesh();
+                if (ArmMesh)
                 {
-                    AnimInstance->Montage_Play(Animation, 1.0f);
+                    UAnimInstance* AnimInstance = ArmMesh->GetAnimInstance();
+                    if (AnimInstance)
+                    {
+                        AnimInstance->Montage_Play(Animation, 1.0f);
+                    }
                 }
             }
         }
@@ -268,7 +268,7 @@ void AQLWeapon::SetWeaponManager(UQLWeaponManager* WeaponManagerExt)
 //------------------------------------------------------------
 UQLWeaponManager* AQLWeapon::GetWeaponManager()
 {
-    return WeaponManager;
+    return WeaponManager.Get();
 }
 
 //------------------------------------------------------------

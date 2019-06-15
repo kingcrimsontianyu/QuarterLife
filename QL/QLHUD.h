@@ -32,5 +32,5 @@ public:
 
 protected:
     UPROPERTY()
-    UTexture2D* CrosshairTexture;
+    TWeakObjectPtr<UTexture2D> CrosshairTexture;
 };

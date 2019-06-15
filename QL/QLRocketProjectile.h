@@ -89,11 +89,11 @@ protected:
     float BasicDamage;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    UParticleSystem* ExplosionParticleSystem;
+    TWeakObjectPtr<UParticleSystem> ExplosionParticleSystem;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    USoundBase* ExplosionSound;
+    TWeakObjectPtr<USoundBase> ExplosionSound;
 
     UPROPERTY()
-    AQLPlayerController* PlayerController;
+    TWeakObjectPtr<AQLPlayerController> PlayerController;
 };

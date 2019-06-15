@@ -173,7 +173,7 @@ void AQLWeaponRailGun::OnAltFire()
         else
         {
             // fov
-            if (WeaponManager)
+            if (WeaponManager.IsValid())
             {
                 AQLCharacter* QLCharacter = WeaponManager->GetUser();
                 if (QLCharacter)

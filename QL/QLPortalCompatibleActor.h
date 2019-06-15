@@ -14,6 +14,8 @@
 #include "GameFramework/Actor.h"
 #include "QLPortalCompatibleActor.generated.h"
 
+class UBoxComponent;
+
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -36,7 +38,7 @@ public:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class UBoxComponent* BoxComponent;
+    UBoxComponent* BoxComponent;
 
     //------------------------------------------------------------
     //------------------------------------------------------------

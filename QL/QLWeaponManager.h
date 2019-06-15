@@ -42,10 +42,11 @@ public:
 protected:
     // do not use UPROPERTY() here
     // it breaks the character weapon system
-    AQLCharacter* User;
+    // to do: need to understand why
+    TWeakObjectPtr<AQLCharacter> User;
 
     UPROPERTY()
-    AQLWeapon* CurrentWeapon;
+    TWeakObjectPtr<AQLWeapon> CurrentWeapon;
 
     UPROPERTY()
     TArray<AQLWeapon*> WeaponList;

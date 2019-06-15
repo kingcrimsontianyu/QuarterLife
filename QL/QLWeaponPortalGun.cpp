@@ -22,9 +22,7 @@
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
-AQLWeaponPortalGun::AQLWeaponPortalGun() :
-BluePortal(nullptr),
-OrangePortal(nullptr)
+AQLWeaponPortalGun::AQLWeaponPortalGun()
 {
     HitRange = 10000.0f;
 
@@ -68,6 +66,11 @@ void AQLWeaponPortalGun::OnAltFire()
 //------------------------------------------------------------
 void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor)
 {
+    if (!WeaponManager.IsValid())
+    {
+        return;
+    }
+
     AQLCharacter* User = GetWeaponManager()->GetUser();
     if (User == nullptr)
     {
@@ -101,7 +104,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     // remove portal of the same color generated elsewhere
     if (PortalColor == EPortalColor::Blue)
     {
-        if (BluePortal)
+        if (BluePortal.IsValid())
         {
             BluePortal->CleanUp();
             BluePortal->Destroy();
@@ -110,7 +113,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     }
     else
     {
-        if (OrangePortal)
+        if (OrangePortal.IsValid())
         {
             OrangePortal->CleanUp();
             OrangePortal->Destroy();
@@ -159,12 +162,12 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     // set the new portal's properties
     if (PortalColor == EPortalColor::Blue)
     {
-        Portal->Initialize(EPortalColor::Blue, OrangePortal);
+        Portal->Initialize(EPortalColor::Blue, OrangePortal.Get());
         BluePortal = Portal;
     }
     else
     {
-        Portal->Initialize(EPortalColor::Orange, BluePortal);
+        Portal->Initialize(EPortalColor::Orange, BluePortal.Get());
         OrangePortal = Portal;
     }
 

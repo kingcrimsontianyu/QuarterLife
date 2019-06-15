@@ -31,9 +31,6 @@ FadeAnimationCPP2(nullptr),
 FadeAnimationCPP3(nullptr),
 FadeAnimationCPP4(nullptr),
 FadeAnimationCPP5(nullptr),
-CurrentDamageText(nullptr),
-CurrentFadeAnimationCPP(nullptr),
-QLPlayerController(nullptr),
 Counter(0)
 {
 
@@ -106,7 +103,7 @@ void UQLUmgUserWidget::ShowDamageOnScreen(const FString& msg, const FVector& Loc
         return;
     }
 
-    if (!CurrentDamageText || !CurrentFadeAnimationCPP)
+    if (!CurrentDamageText.IsValid() || !CurrentFadeAnimationCPP.IsValid())
     {
         return;
     }
@@ -119,12 +116,12 @@ void UQLUmgUserWidget::ShowDamageOnScreen(const FString& msg, const FVector& Loc
     CanvasSlot->SetPosition(ScreenLocation);
 
     // display animation
-    if (!CurrentFadeAnimationCPP)
+    if (!CurrentFadeAnimationCPP.IsValid())
     {
         return;
     }
 
-    PlayAnimation(CurrentFadeAnimationCPP);
+    PlayAnimation(CurrentFadeAnimationCPP.Get());
 
     // update counter
     ++Counter;
@@ -145,7 +142,7 @@ void UQLUmgUserWidget::SetQLPlayerController(AQLPlayerController* QLPlayerContro
 //------------------------------------------------------------
 AQLPlayerController* UQLUmgUserWidget::GetQLPlayerController()
 {
-    return QLPlayerController;
+    return QLPlayerController.Get();
 }
 
 //------------------------------------------------------------

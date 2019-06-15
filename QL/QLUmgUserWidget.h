@@ -101,13 +101,13 @@ protected:
     TArray<UWidgetAnimation*> FadeAnimationCPPList;
 
     UPROPERTY()
-    UTextBlock* CurrentDamageText;
+    TWeakObjectPtr<UTextBlock> CurrentDamageText;
 
     UPROPERTY()
-    UWidgetAnimation* CurrentFadeAnimationCPP;
+    TWeakObjectPtr<UWidgetAnimation> CurrentFadeAnimationCPP;
 
     UPROPERTY()
-    AQLPlayerController* QLPlayerController;
+    TWeakObjectPtr<AQLPlayerController> QLPlayerController;
 
     int32 Counter;
 };

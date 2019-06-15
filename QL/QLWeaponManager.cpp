@@ -21,8 +21,7 @@
 //------------------------------------------------------------
 //------------------------------------------------------------
 UQLWeaponManager::UQLWeaponManager() :
-User(nullptr),
-CurrentWeapon(nullptr)
+User(nullptr)
 {
 }
 
@@ -37,7 +36,7 @@ void UQLWeaponManager::SetUser(AQLCharacter* Character)
 //------------------------------------------------------------
 AQLCharacter* UQLWeaponManager::GetUser()
 {
-    return User;
+    return User.Get();
 }
 
 //------------------------------------------------------------
@@ -63,7 +62,7 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
     }
 
     // if the current weapon exists, hide it
-    if (CurrentWeapon)
+    if (CurrentWeapon.IsValid())
     {
         CurrentWeapon->PrepareForImpendingWeaponSwitch();
         CurrentWeapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
@@ -81,6 +80,11 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& WeaponName)
 //------------------------------------------------------------
 void UQLWeaponManager::UpdateCrossHair()
 {
+    if (!User.IsValid())
+    {
+        return;
+    }
+
     AController* MyController = User->GetController();
     if (MyController)
     {
@@ -104,7 +108,7 @@ void UQLWeaponManager::UpdateCrossHair()
 //------------------------------------------------------------
 AQLWeapon* UQLWeaponManager::GetCurrentWeapon()
 {
-    return CurrentWeapon;
+    return CurrentWeapon.Get();
 }
 
 //------------------------------------------------------------
@@ -112,6 +116,11 @@ AQLWeapon* UQLWeaponManager::GetCurrentWeapon()
 //------------------------------------------------------------
 void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 {
+    if (!User.IsValid())
+    {
+        return;
+    }
+
     // if the weapon is already in the list, do not add
     if (WeaponList.Num() > 0)
     {

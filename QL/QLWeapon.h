@@ -16,6 +16,7 @@
 
 class AQLCharacter;
 class UAudioComponent;
+class USphereComponent;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -111,7 +112,7 @@ protected:
     TMap<FName, UAnimMontage*> FireAnimationList;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    class USphereComponent* RootSphereComponent;
+    USphereComponent* RootSphereComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USkeletalMeshComponent* GunSkeletalMeshComponent;
@@ -138,7 +139,7 @@ protected:
     bool bIsFireHeld;
 
     UPROPERTY()
-    UQLWeaponManager* WeaponManager;
+    TWeakObjectPtr<UQLWeaponManager> WeaponManager;
 
     FTimerHandle DisableFireTimerHandle;
 
