@@ -48,8 +48,8 @@ AQLWeapon::AQLWeapon()
     GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunSkeletalMeshComponent"));
     GunSkeletalMeshComponent->SetupAttachment(RootComponent);
     GunSkeletalMeshComponent->SetSimulatePhysics(false);
-    GunSkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    GunSkeletalMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    GunSkeletalMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+    GunSkeletalMeshComponent->CastShadow = false;
 
     MuzzleSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleSceneComponent"));
     MuzzleSceneComponent->SetupAttachment(GunSkeletalMeshComponent);

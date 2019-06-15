@@ -52,7 +52,6 @@ AQLCharacter::AQLCharacter()
     FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
     FirstPersonMesh->SetOnlyOwnerSee(true);
     FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
-    FirstPersonMesh->bCastDynamicShadow = false;
     FirstPersonMesh->CastShadow = false;
     FirstPersonMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
     FirstPersonMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
@@ -64,15 +63,8 @@ AQLCharacter::AQLCharacter()
     ThirdPersonMesh->CastShadow = true;
     ThirdPersonMesh->bCastDynamicShadow = true;
 
-    // Note: The ProjectileClass and the skeletal mesh/anim blueprints for FirstPersonMesh, GunMesh, and VR_Gun
-    // are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
-
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
-
-    // manager
-    WeaponManager = CreateDefaultSubobject<UQLWeaponManager>(TEXT("WeaponManager"));
-    WeaponManager->SetUser(this);
 
     // ui
     PlayerHealthArmorBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PlayerHealthArmorBarWidgetComponent"));
@@ -89,6 +81,20 @@ void AQLCharacter::BeginPlay()
 
     UpdateHealth();
     UpdateArmor();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+
+    // manager
+    // for some reason, if WeaponManager is instantiated in the constructor using CreateDefaultSubobject
+    // it may still be nullptr after BeginPlay
+    // to do: investigate
+    WeaponManager = NewObject<UQLWeaponManager>(this);
+    WeaponManager->SetUser(this);
 }
 
 //------------------------------------------------------------
@@ -160,6 +166,11 @@ void AQLCharacter::MoveRight(float Value)
 //------------------------------------------------------------
 void AQLCharacter::OnFire()
 {
+    if (!WeaponManager)
+    {
+        return;
+    }
+
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
@@ -171,6 +182,11 @@ void AQLCharacter::OnFire()
 //------------------------------------------------------------
 void AQLCharacter::OnFireRelease()
 {
+    if (!WeaponManager)
+    {
+        return;
+    }
+
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
@@ -182,6 +198,11 @@ void AQLCharacter::OnFireRelease()
 //------------------------------------------------------------
 void AQLCharacter::OnAltFire()
 {
+    if (!WeaponManager)
+    {
+        return;
+    }
+
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
@@ -193,6 +214,11 @@ void AQLCharacter::OnAltFire()
 //------------------------------------------------------------
 void AQLCharacter::OnAltFireRelease()
 {
+    if (!WeaponManager)
+    {
+        return;
+    }
+
     AQLWeapon* CurrentWeapon = WeaponManager->GetCurrentWeapon();
     if (CurrentWeapon)
     {
@@ -248,6 +274,11 @@ UCameraComponent* AQLCharacter::GetFirstPersonCameraComponent() const
 //------------------------------------------------------------
 void AQLCharacter::AddWeapon(AQLWeapon* Weapon)
 {
+    if (!WeaponManager)
+    {
+        return;
+    }
+
     WeaponManager->AddWeapon(Weapon);
 }
 
@@ -255,6 +286,11 @@ void AQLCharacter::AddWeapon(AQLWeapon* Weapon)
 //------------------------------------------------------------
 void AQLCharacter::SetCurrentWeapon(const FName& WeaponName)
 {
+    if (!WeaponManager)
+    {
+        return;
+    }
+
     WeaponManager->SetCurrentWeapon(WeaponName);
 }
 
