@@ -13,6 +13,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 #include "QLUmgUserWidget.generated.h"
 
 class AQLPlayerController;
@@ -64,7 +65,18 @@ public:
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
     float UpdateTextSpeedValue();
 
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    float UpdateQuadDamageProgress(float ProgressPercent);
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    float UpdateProtectionDamageProgress(float ProgressPercent);
 protected:
+    UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+    UImage* QuadDamageProgress;
+
+    UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+    UImage* ProtectionProgress;
+
     UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
     UTextBlock* DamageText0;
 

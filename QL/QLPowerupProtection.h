@@ -33,12 +33,16 @@ public:
     void Deactivate();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnEffectGone();
+    void OnEffectEnd();
 
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     virtual void PostInitializeComponents() override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void UpdateProgressOnUMG() override;
 
     //------------------------------------------------------------
     //------------------------------------------------------------

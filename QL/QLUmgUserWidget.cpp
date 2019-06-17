@@ -69,6 +69,26 @@ void UQLUmgUserWidget::NativeConstruct()
 
         CurrentFadeAnimationCPP = FadeAnimationCPPList[0];
     }
+
+    if (QuadDamageProgress)
+    {
+        auto* Material = QuadDamageProgress->GetDynamicMaterial();
+        if (Material)
+        {
+            Material->SetScalarParameterValue("Progress", 0.0f);
+            Material->SetVectorParameterValue("Color", FVector(1.0f, 0.0f, 1.0f));
+        }
+    }
+
+    if (ProtectionProgress)
+    {
+        auto* Material = ProtectionProgress->GetDynamicMaterial();
+        if (Material)
+        {
+            Material->SetScalarParameterValue("Progress", 0.0f);
+            Material->SetVectorParameterValue("Color", FVector(0.0f, 0.6f, 0.4f));
+        }
+    }
 }
 
 //------------------------------------------------------------
@@ -186,4 +206,36 @@ float UQLUmgUserWidget::UpdateTextSpeedValue_Implementation()
     }
 
     return Speed;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgUserWidget::UpdateQuadDamageProgress_Implementation(float ProgressPercent)
+{
+    if (QuadDamageProgress)
+    {
+        auto* Material = QuadDamageProgress->GetDynamicMaterial();
+        if (Material)
+        {
+            Material->SetScalarParameterValue("Progress", ProgressPercent);
+        }
+    }
+
+    return ProgressPercent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgUserWidget::UpdateProtectionDamageProgress_Implementation(float ProgressPercent)
+{
+    if (ProtectionProgress)
+    {
+        auto* Material = ProtectionProgress->GetDynamicMaterial();
+        if (Material)
+        {
+            Material->SetScalarParameterValue("Progress", ProgressPercent);
+        }
+    }
+
+    return ProgressPercent;
 }

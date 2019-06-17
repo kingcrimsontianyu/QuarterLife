@@ -15,6 +15,8 @@
 #include "QLUtility.h"
 #include "QLCharacter.h"
 #include "TimerManager.h"
+#include "QLUmgUserWidget.h"
+#include "QLPlayerController.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -55,6 +57,8 @@ void AQLPowerupProtection::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
 
             Deactivate();
 
+            TimeElapsed = 0.0f;
+
             // countdown of the next respawn
             GetWorldTimerManager().SetTimer(RespawnTimerHandle,
                 this,
@@ -64,9 +68,16 @@ void AQLPowerupProtection::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
                 RespawnInterval); // delay in second
 
             // take effect immediately
-            GetWorldTimerManager().SetTimer(EffectTimerHandle,
+            GetWorldTimerManager().SetTimer(EffectStartTimerHandle,
                 this,
-                &AQLPowerupProtection::OnEffectGone,
+                &AQLPowerupProtection::UpdateProgressOnUMG,
+                0.1f, // time interval in second
+                true, // loop
+                0.0f); // delay in second
+
+            GetWorldTimerManager().SetTimer(EffectEndTimerHandle,
+                this,
+                &AQLPowerupProtection::OnEffectEnd,
                 1.0f, // time interval in second
                 false, // loop
                 EffectDuration); // delay in second
@@ -84,6 +95,8 @@ void AQLPowerupProtection::Reactivate()
     {
         DynamicMaterial->SetScalarParameterValue("GlowIntensity", 5.0f);
     }
+
+    GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
 }
 
 //------------------------------------------------------------
@@ -101,7 +114,7 @@ void AQLPowerupProtection::Deactivate()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupProtection::OnEffectGone()
+void AQLPowerupProtection::OnEffectEnd()
 {
     // clean up
     if (Beneficiary.IsValid())
@@ -112,4 +125,28 @@ void AQLPowerupProtection::OnEffectGone()
 
     // reset the weak pointer
     Beneficiary.Reset();
+
+    GetWorldTimerManager().ClearTimer(EffectEndTimerHandle);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerupProtection::UpdateProgressOnUMG()
+{
+    TimeElapsed += 0.1f;
+    ProgressPercent = TimeElapsed / EffectDuration;
+    float DisplayedProgressPercent = 1.0f - ProgressPercent;
+
+    if (Beneficiary.IsValid())
+    {
+        auto* PlayerController = Cast<AQLPlayerController>(Beneficiary->GetController());
+        if (PlayerController)
+        {
+            auto* UMG = PlayerController->GetUMG();
+            if (UMG)
+            {
+                UMG->UpdateProtectionDamageProgress(DisplayedProgressPercent);
+            }
+        }
+    }
 }

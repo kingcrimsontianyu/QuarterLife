@@ -25,6 +25,11 @@ class QL_API AQLPowerup : public AQLPickup
 public:
     AQLPowerup();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetProgressPercent();
+
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -32,13 +37,22 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void UpdateProgressOnUMG();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float EffectDuration;
 
-    FTimerHandle EffectTimerHandle;
+    FTimerHandle EffectStartTimerHandle;
+    FTimerHandle EffectEndTimerHandle;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY()
     TWeakObjectPtr<AQLCharacter> Beneficiary;
+
+    float ProgressPercent;
+    float TimeElapsed;
 };

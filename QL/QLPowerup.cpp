@@ -10,6 +10,8 @@
 
 
 #include "QLPowerup.h"
+#include "QLPlayerController.h"
+#include "QLUmgUserWidget.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -25,4 +27,17 @@ AQLPowerup::AQLPowerup()
 void AQLPowerup::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::UpdateProgressOnUMG()
+{
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLPowerup::GetProgressPercent()
+{
+    return ProgressPercent;
 }
