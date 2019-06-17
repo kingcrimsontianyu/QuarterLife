@@ -33,6 +33,10 @@ Regarding this repository:
     + Mimic Matter (Prey)
     + Za Warudo (the world) (manga/anime JoJo's Bizarre Adventure)
 
++ Powerup
+    + Quad damage (Quake Champions)
+    + Pentagram Protection (Quake Champions)
+
 ------
 
 ## Roadmap
