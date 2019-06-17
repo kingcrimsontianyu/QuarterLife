@@ -12,6 +12,7 @@
 #include "QLPowerup.h"
 #include "QLPlayerController.h"
 #include "QLUmgUserWidget.h"
+#include "Components/SphereComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -20,6 +21,8 @@ AQLPowerup::AQLPowerup()
     bCanBeRespawned = true;
     RespawnInterval = 120.0f;
     EffectDuration = 30.0f;
+
+    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerup::OnComponentBeginOverlapImpl);
 }
 
 //------------------------------------------------------------
@@ -31,13 +34,109 @@ void AQLPowerup::PostInitializeComponents()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerup::UpdateProgressOnUMG()
+float AQLPowerup::GetProgressPercent()
+{
+    return ProgressPercent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    if (OtherActor)
+    {
+        AQLCharacter* QLCharacter = Cast<AQLCharacter>(OtherActor);
+        if (QLCharacter)
+        {
+            Beneficiary = QLCharacter;
+
+            if (!Beneficiary.IsValid())
+            {
+                return;
+            }
+
+            PlaySoundFireAndForget("PickUp");
+
+            PowerUpPlayer();
+
+            Deactivate();
+
+            TimeElapsed = 0.0f;
+
+            // until the next respawn
+            GetWorldTimerManager().SetTimer(RespawnTimerHandle,
+                this,
+                &AQLPowerup::Reactivate,
+                1.0f, // time interval in second
+                false, // loop
+                RespawnInterval); // delay in second
+
+            // once the effect starts, periodically update
+            GetWorldTimerManager().SetTimer(EffectStartTimerHandle,
+                this,
+                &AQLPowerup::UpdateProgressOnUMG,
+                0.1f, // time interval in second
+                true, // loop
+                0.0f); // delay in second
+
+            // once the effect ends
+            GetWorldTimerManager().SetTimer(EffectEndTimerHandle,
+                this,
+                &AQLPowerup::OnEffectEnd,
+                1.0f, // time interval in second
+                false, // loop
+                EffectDuration); // delay in second
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::PowerUpPlayer()
 {
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float AQLPowerup::GetProgressPercent()
+void AQLPowerup::Reactivate()
 {
-    return ProgressPercent;
+    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerup::OnComponentBeginOverlapImpl);
+
+    if (DynamicMaterial.IsValid())
+    {
+        DynamicMaterial->SetScalarParameterValue("GlowIntensity", 5.0f);
+    }
+
+    GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::Deactivate()
+{
+    // temporarily remove delegate until next time quad shows up
+    RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerup::OnComponentBeginOverlapImpl);
+
+    if (DynamicMaterial.IsValid())
+    {
+        DynamicMaterial->SetScalarParameterValue("GlowIntensity", 0.1f);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::OnEffectEnd()
+{
+    // reset the weak pointer
+    Beneficiary.Reset();
+
+    GetWorldTimerManager().ClearTimer(EffectEndTimerHandle);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::UpdateProgressOnUMG()
+{
+    TimeElapsed += 0.1f;
+    ProgressPercent = 1.0f - TimeElapsed / EffectDuration;
 }

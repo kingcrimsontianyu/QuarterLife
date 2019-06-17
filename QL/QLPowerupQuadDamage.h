@@ -27,15 +27,6 @@ class QL_API AQLPowerupQuadDamage : public AQLPowerup
 public:
     AQLPowerupQuadDamage();
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void Reactivate();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void Deactivate();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnEffectEnd();
-
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -43,12 +34,15 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    virtual void UpdateProgressOnUMG() override;
+    virtual void PowerUpPlayer() override;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+    virtual void OnEffectEnd() override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void UpdateProgressOnUMG() override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float DamageMultiplier;

@@ -22,9 +22,7 @@
 //------------------------------------------------------------
 AQLPowerupQuadDamage::AQLPowerupQuadDamage()
 {
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
-
-    DamageMultiplier = 4.0f;
+     DamageMultiplier = 4.0f;
 }
 
 //------------------------------------------------------------
@@ -32,84 +30,6 @@ AQLPowerupQuadDamage::AQLPowerupQuadDamage()
 void AQLPowerupQuadDamage::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-    if (OtherActor)
-    {
-        AQLCharacter* QLCharacter = Cast<AQLCharacter>(OtherActor);
-        if (QLCharacter)
-        {
-            Beneficiary = QLCharacter;
-
-            if (!Beneficiary.IsValid())
-            {
-                return;
-            }
-
-            PlaySoundFireAndForget("PickUp");
-
-            Beneficiary->SetDamageMultiplier(DamageMultiplier);
-            Beneficiary->StartGlow(GlowColor);
-
-            Deactivate();
-
-            TimeElapsed = 0.0f;
-
-            // countdown of the next respawn
-            GetWorldTimerManager().SetTimer(RespawnTimerHandle,
-                this,
-                &AQLPowerupQuadDamage::Reactivate,
-                1.0f, // time interval in second
-                false, // loop
-                RespawnInterval); // delay in second
-
-            // take effect immediately
-            GetWorldTimerManager().SetTimer(EffectStartTimerHandle,
-                this,
-                &AQLPowerupQuadDamage::UpdateProgressOnUMG,
-                0.1f, // time interval in second
-                true, // loop
-                0.0f); // delay in second
-
-            GetWorldTimerManager().SetTimer(EffectEndTimerHandle,
-                this,
-                &AQLPowerupQuadDamage::OnEffectEnd,
-                1.0f, // time interval in second
-                false, // loop
-                EffectDuration); // delay in second
-        }
-    }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLPowerupQuadDamage::Reactivate()
-{
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
-
-    if (DynamicMaterial.IsValid())
-    {
-        DynamicMaterial->SetScalarParameterValue("GlowIntensity", 5.0f);
-    }
-
-    GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLPowerupQuadDamage::Deactivate()
-{
-    // temporarily remove delegate until next time quad shows up
-    RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
-
-    if (DynamicMaterial.IsValid())
-    {
-        DynamicMaterial->SetScalarParameterValue("GlowIntensity", 0.1f);
-    }
 }
 
 //------------------------------------------------------------
@@ -123,19 +43,14 @@ void AQLPowerupQuadDamage::OnEffectEnd()
         Beneficiary->StopGlow();
     }
 
-    // reset the weak pointer
-    Beneficiary.Reset();
-
-    GetWorldTimerManager().ClearTimer(EffectEndTimerHandle);
+    Super::OnEffectEnd();
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLPowerupQuadDamage::UpdateProgressOnUMG()
 {
-    TimeElapsed += 0.1f;
-    ProgressPercent = TimeElapsed / EffectDuration;
-    float DisplayedProgressPercent = 1.0f - ProgressPercent;
+    Super::UpdateProgressOnUMG();
 
     if (Beneficiary.IsValid())
     {
@@ -145,8 +60,16 @@ void AQLPowerupQuadDamage::UpdateProgressOnUMG()
             auto* UMG = PlayerController->GetUMG();
             if (UMG)
             {
-                UMG->UpdateQuadDamageProgress(DisplayedProgressPercent);
+                UMG->UpdateQuadDamageProgress(ProgressPercent);
             }
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerupQuadDamage::PowerUpPlayer()
+{
+    Beneficiary->SetDamageMultiplier(DamageMultiplier);
+    Beneficiary->StartGlow(GlowColor);
 }
