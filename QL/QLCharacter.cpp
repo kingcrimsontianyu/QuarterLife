@@ -554,7 +554,7 @@ void AQLCharacter::SetDamageMultiplier(const float Value)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::StartGlow(const FColor& Color)
+void AQLCharacter::StartGlow(const FLinearColor& Color)
 {
     FVector ColorVector(Color.R, Color.G, Color.B);
 

@@ -51,6 +51,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PerformConstantRotation();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    USphereComponent* GetRootSphereComponent();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -64,7 +67,7 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UBoxComponent* BoxComponent;
+    USphereComponent* SphereComponent;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -95,4 +98,12 @@ protected:
     float RespawnInterval;
 
     FTimerHandle RespawnTimerHandle;
+
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterial;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FLinearColor GlowColor;
 };

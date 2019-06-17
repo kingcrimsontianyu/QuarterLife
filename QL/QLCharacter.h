@@ -92,7 +92,7 @@ public:
     void SetDamageMultiplier(const float Value);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void StartGlow(const FColor& Color);
+    void StartGlow(const FLinearColor& Color);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();

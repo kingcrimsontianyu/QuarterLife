@@ -38,11 +38,7 @@ AQLWeapon::AQLWeapon()
     bIsFireHeld = false;
     bFireEnabled = true;
 
-    RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
-    RootSphereComponent->InitSphereRadius(40.0f);
-    RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAll"));
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLWeapon::OnComponentBeginOverlapImpl);
-    RootComponent = RootSphereComponent;
+    SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLWeapon::OnComponentBeginOverlapImpl);
 
     GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunSkeletalMeshComponent"));
     GunSkeletalMeshComponent->SetupAttachment(RootComponent);
@@ -136,13 +132,6 @@ void AQLWeapon::OnAltFireRelease()
 //------------------------------------------------------------
 void AQLWeapon::OnAltFireHold()
 {
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-USphereComponent* AQLWeapon::GetRootSphereComponent()
-{
-    return RootSphereComponent;
 }
 
 //------------------------------------------------------------
@@ -274,7 +263,7 @@ void AQLWeapon::SetDamageMultiplier(float Value)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::StartGlow(const FColor& Color)
+void AQLWeapon::StartGlow(const FLinearColor& Color)
 {
     if (GunSkeletalMeshComponent && DynamicMaterialGun.IsValid())
     {

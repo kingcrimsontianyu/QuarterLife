@@ -33,11 +33,23 @@ AQLPickup::AQLPickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+    SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+    SphereComponent->InitSphereRadius(40.0f);
+    SphereComponent->SetSimulatePhysics(false);
+    SphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+    RootComponent = SphereComponent;
+
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+    StaticMeshComponent->SetupAttachment(RootComponent);
+    StaticMeshComponent->SetSimulatePhysics(false);
+    StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
     SoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SoundComponent"));
     SoundComponent->SetupAttachment(RootComponent);
 
     bCanBeRespawned = false;
     RespawnInterval = 0.0f;
+    GlowColor = FLinearColor(0.0f, 0.0f, 1.0f);
 }
 
 //------------------------------------------------------------
@@ -72,6 +84,13 @@ void AQLPickup::Tick(float DeltaTime)
 void AQLPickup::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    if (StaticMeshComponent)
+    {
+        UMaterialInterface* BasicMaterial = StaticMeshComponent->GetMaterial(0);
+        DynamicMaterial = StaticMeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BasicMaterial);
+        StaticMeshComponent->SetMaterial(0, DynamicMaterial.Get());
+    }
 }
 
 
@@ -162,4 +181,11 @@ void AQLPickup::PerformConstantRotation()
     FRotator Rotator = GetActorRotation();
     Rotator.Add(Increment.Pitch, Increment.Yaw, Increment.Roll);
     SetActorRotation(Rotator);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+USphereComponent* AQLPickup::GetRootSphereComponent()
+{
+    return SphereComponent;
 }

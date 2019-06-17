@@ -10,7 +10,7 @@
 
 
 #include "QLPowerupQuadDamage.h"
-#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "QLUtility.h"
 #include "QLCharacter.h"
@@ -20,18 +20,7 @@
 //------------------------------------------------------------
 AQLPowerupQuadDamage::AQLPowerupQuadDamage()
 {
-    BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("RootComponent"));
-    RootComponent = BoxComponent;
-    BoxComponent->InitBoxExtent(FVector(50.0f, 50.0f, 50.0f));
-    BoxComponent->SetSimulatePhysics(false);
-    BoxComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-
-    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-    StaticMeshComponent->SetupAttachment(RootComponent);
-    StaticMeshComponent->SetSimulatePhysics(false);
-    StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
-
-    BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
+    SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
 }
 
 //------------------------------------------------------------
@@ -50,6 +39,9 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
                 return;
             }
 
+
+
+            QLUtility::Log(OverlappedComp->GetName());
             PlaySoundFireAndForget("PickUp");
 
             constexpr float DamageMultiplier = 4.0f;
@@ -81,7 +73,7 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
 //------------------------------------------------------------
 void AQLPowerupQuadDamage::Reactivate()
 {
-    BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
+    SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
     SetActorHiddenInGame(false);
 }
 
@@ -90,7 +82,7 @@ void AQLPowerupQuadDamage::Reactivate()
 void AQLPowerupQuadDamage::Deactivate()
 {
     // temporarily remove delegate until next time quad shows up
-    BoxComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
+    SphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
 
     // hide quad as if it has been consumed by the player
     SetActorHiddenInGame(true);

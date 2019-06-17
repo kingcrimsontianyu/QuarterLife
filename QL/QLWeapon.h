@@ -57,9 +57,6 @@ public:
     USkeletalMeshComponent* GetGunSkeletalMeshComponent();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    USphereComponent* GetRootSphereComponent();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     FVector GetMuzzleLocation();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -84,7 +81,7 @@ public:
     virtual void SetDamageMultiplier(const float Value);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void StartGlow(const FColor& Color);
+    void StartGlow(const FLinearColor& Color);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();
@@ -103,9 +100,6 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, UTexture2D*> CrosshairTextureList;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    USphereComponent* RootSphereComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USkeletalMeshComponent* GunSkeletalMeshComponent;

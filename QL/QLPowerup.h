@@ -37,9 +37,4 @@ protected:
     //------------------------------------------------------------
     UPROPERTY()
     TWeakObjectPtr<AQLCharacter> Beneficiary;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FColor GlowColor;
 };
