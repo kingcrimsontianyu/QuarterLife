@@ -92,6 +92,9 @@ public:
     void SetDamageMultiplier(const float Value);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetProtectionMultiplier(const float Value);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StartGlow(const FLinearColor& Color);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -197,4 +200,7 @@ protected:
 
     UPROPERTY()
     UQLWeaponManager* WeaponManager;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float ProtectionMultiplier;
 };

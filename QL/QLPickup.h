@@ -67,7 +67,7 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    USphereComponent* SphereComponent;
+    USphereComponent* RootSphereComponent;
 
     //------------------------------------------------------------
     //------------------------------------------------------------

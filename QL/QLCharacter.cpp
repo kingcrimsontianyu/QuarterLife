@@ -33,6 +33,7 @@ AQLCharacter::AQLCharacter()
     MaxHealth = 200.0f;
     Armor = 100.0f;
     MaxArmor = 150.0f;
+    ProtectionMultiplier = 1.0f;
 
     // Set size for collision capsule
     // original value: 55.f, 96.0f
@@ -381,8 +382,10 @@ void AQLCharacter::TakeDamageQuakeStyle(float ActualDamage)
 {
     if (ActualDamage > 0.0f)
     {
-        const float HealthAbsorbingFraction = 0.33f;
-        const float ArmorAbsorbingFraction = 1.0f - HealthAbsorbingFraction;
+        ActualDamage *= ProtectionMultiplier;
+
+        constexpr float HealthAbsorbingFraction = 1.0f / 3.0f;
+        constexpr float ArmorAbsorbingFraction = 1.0f - HealthAbsorbingFraction;
         float HealthDamage = HealthAbsorbingFraction * ActualDamage;
         float ArmorDamage = ArmorAbsorbingFraction * ActualDamage;
 
@@ -550,6 +553,13 @@ void AQLCharacter::Die()
 void AQLCharacter::SetDamageMultiplier(const float Value)
 {
     WeaponManager->SetDamageMultiplier(Value);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetProtectionMultiplier(const float Value)
+{
+    ProtectionMultiplier = Value;
 }
 
 //------------------------------------------------------------

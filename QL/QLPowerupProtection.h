@@ -12,20 +12,19 @@
 
 #include "CoreMinimal.h"
 #include "QLPowerup.h"
-#include "QLCharacter.h"
-#include "QLPowerupQuadDamage.generated.h"
+#include "QLPowerupProtection.generated.h"
 
 class UPrimitiveComponent;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLPowerupQuadDamage : public AQLPowerup
+class QL_API AQLPowerupProtection : public AQLPowerup
 {
 	GENERATED_BODY()
 
 public:
-    AQLPowerupQuadDamage();
+    AQLPowerupProtection();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Reactivate();
@@ -47,5 +46,5 @@ protected:
     void OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float DamageMultiplier;
+    float ProtectionMultiplier;
 };

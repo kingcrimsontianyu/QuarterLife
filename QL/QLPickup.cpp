@@ -33,11 +33,11 @@ AQLPickup::AQLPickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-    SphereComponent->InitSphereRadius(40.0f);
-    SphereComponent->SetSimulatePhysics(false);
-    SphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-    RootComponent = SphereComponent;
+    RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
+    RootSphereComponent->InitSphereRadius(40.0f);
+    RootSphereComponent->SetSimulatePhysics(false);
+    RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+    RootComponent = RootSphereComponent;
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
     StaticMeshComponent->SetupAttachment(RootComponent);
@@ -187,5 +187,5 @@ void AQLPickup::PerformConstantRotation()
 //------------------------------------------------------------
 USphereComponent* AQLPickup::GetRootSphereComponent()
 {
-    return SphereComponent;
+    return RootSphereComponent;
 }

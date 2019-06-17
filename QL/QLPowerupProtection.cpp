@@ -9,7 +9,7 @@
 //------------------------------------------------------------
 
 
-#include "QLPowerupQuadDamage.h"
+#include "QLPowerupProtection.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "QLUtility.h"
@@ -18,23 +18,23 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-AQLPowerupQuadDamage::AQLPowerupQuadDamage()
+AQLPowerupProtection::AQLPowerupProtection()
 {
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
+    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupProtection::OnComponentBeginOverlapImpl);
 
-    DamageMultiplier = 4.0f;
+    ProtectionMultiplier = 0.3f;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupQuadDamage::PostInitializeComponents()
+void AQLPowerupProtection::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AQLPowerupProtection::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor)
     {
@@ -50,7 +50,7 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
 
             PlaySoundFireAndForget("PickUp");
 
-            Beneficiary->SetDamageMultiplier(DamageMultiplier);
+            Beneficiary->SetProtectionMultiplier(ProtectionMultiplier);
             Beneficiary->StartGlow(GlowColor);
 
             Deactivate();
@@ -58,7 +58,7 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
             // countdown of the next respawn
             GetWorldTimerManager().SetTimer(RespawnTimerHandle,
                 this,
-                &AQLPowerupQuadDamage::Reactivate,
+                &AQLPowerupProtection::Reactivate,
                 1.0f, // time interval in second
                 false, // loop
                 RespawnInterval); // delay in second
@@ -66,7 +66,7 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
             // take effect immediately
             GetWorldTimerManager().SetTimer(EffectTimerHandle,
                 this,
-                &AQLPowerupQuadDamage::OnEffectGone,
+                &AQLPowerupProtection::OnEffectGone,
                 1.0f, // time interval in second
                 false, // loop
                 EffectDuration); // delay in second
@@ -76,9 +76,9 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupQuadDamage::Reactivate()
+void AQLPowerupProtection::Reactivate()
 {
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
+    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupProtection::OnComponentBeginOverlapImpl);
 
     if (DynamicMaterial.IsValid())
     {
@@ -88,10 +88,10 @@ void AQLPowerupQuadDamage::Reactivate()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupQuadDamage::Deactivate()
+void AQLPowerupProtection::Deactivate()
 {
     // temporarily remove delegate until next time quad shows up
-    RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
+    RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerupProtection::OnComponentBeginOverlapImpl);
 
     if (DynamicMaterial.IsValid())
     {
@@ -101,12 +101,12 @@ void AQLPowerupQuadDamage::Deactivate()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupQuadDamage::OnEffectGone()
+void AQLPowerupProtection::OnEffectGone()
 {
     // clean up
     if (Beneficiary.IsValid())
     {
-        Beneficiary->SetDamageMultiplier(1.0f);
+        Beneficiary->SetProtectionMultiplier(1.0f);
         Beneficiary->StopGlow();
     }
 
