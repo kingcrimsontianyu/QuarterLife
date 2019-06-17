@@ -19,3 +19,10 @@ AQLPowerup::AQLPowerup()
     RespawnInterval = 120.0f;
     EffectDuration = 30.0f;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+}

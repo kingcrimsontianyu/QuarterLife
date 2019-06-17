@@ -28,6 +28,10 @@ public:
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
+    virtual void PostInitializeComponents() override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float EffectDuration;
 

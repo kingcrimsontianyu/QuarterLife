@@ -25,6 +25,13 @@ AQLPowerupQuadDamage::AQLPowerupQuadDamage()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void AQLPowerupQuadDamage::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor)
@@ -39,9 +46,6 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
                 return;
             }
 
-
-
-            QLUtility::Log(OverlappedComp->GetName());
             PlaySoundFireAndForget("PickUp");
 
             constexpr float DamageMultiplier = 4.0f;
@@ -74,7 +78,12 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
 void AQLPowerupQuadDamage::Reactivate()
 {
     SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
-    SetActorHiddenInGame(false);
+
+    if (DynamicMaterial.IsValid())
+    {
+        QLUtility::Log("DynamicMaterial");
+        DynamicMaterial->SetScalarParameterValue("GlowIntensity", 5.0f);
+    }
 }
 
 //------------------------------------------------------------
@@ -84,8 +93,10 @@ void AQLPowerupQuadDamage::Deactivate()
     // temporarily remove delegate until next time quad shows up
     SphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPowerupQuadDamage::OnComponentBeginOverlapImpl);
 
-    // hide quad as if it has been consumed by the player
-    SetActorHiddenInGame(true);
+    if (DynamicMaterial.IsValid())
+    {
+        DynamicMaterial->SetScalarParameterValue("GlowIntensity", 0.1f);
+    }
 }
 
 //------------------------------------------------------------
