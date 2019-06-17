@@ -87,8 +87,8 @@ void AQLRocketProjectile::Tick(float DeltaTime)
 void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     // This function is guaranteed to be called only once,
-    // because even though the actor may overlaps several components,
-    // it is destroyed after the first overlap event.
+    // because even though the actor may overlap several components,
+    // it is destroyed immediately after the first overlap event.
     if (OtherActor)
     {
         bool bDirectHit = HandleDirectHit(OtherActor);
@@ -159,7 +159,7 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
                 if (CharacterMovementComponent)
                 {
-                    // a less better approach is LaunchCharacter()
+                    // a less good approach is LaunchCharacter()
                     // Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
 
                     CharacterMovementComponent->AddRadialImpulse(
