@@ -29,7 +29,7 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float EffectInterval;
+    float EffectDuration;
 
     FTimerHandle EffectTimerHandle;
 
@@ -41,5 +41,5 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FVector GlowColor;
+    FColor GlowColor;
 };

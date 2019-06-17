@@ -42,7 +42,7 @@ public:
 
     void SetDamageMultiplier(const float Value);
 
-    void StartGlowWeapon(const FVector& Color);
+    void StartGlowWeapon(const FColor& Color);
 
     void StopGlowWeapon();
 protected:
@@ -64,5 +64,5 @@ protected:
     bool bIsGlowing;
 
     UPROPERTY()
-    FVector GlowColor;
+    FColor GlowColor;
 };

@@ -17,7 +17,7 @@ AQLPowerup::AQLPowerup()
 {
     bCanBeRespawned = true;
     RespawnInterval = 120.0f;
-    EffectInterval = 30.0f;
+    EffectDuration = 30.0f;
 
-    GlowColor = FVector(0.0f, 0.0f, 1.0f);
+    GlowColor = FColor(0.0f, 0.0f, 1.0f);
 }

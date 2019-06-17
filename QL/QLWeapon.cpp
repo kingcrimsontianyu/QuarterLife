@@ -274,7 +274,7 @@ void AQLWeapon::SetDamageMultiplier(float Value)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::StartGlow(const FVector& Color)
+void AQLWeapon::StartGlow(const FColor& Color)
 {
     if (GunSkeletalMeshComponent && DynamicMaterialGun.IsValid())
     {

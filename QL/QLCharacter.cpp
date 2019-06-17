@@ -554,20 +554,22 @@ void AQLCharacter::SetDamageMultiplier(const float Value)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::StartGlow(const FVector& Color)
+void AQLCharacter::StartGlow(const FColor& Color)
 {
+    FVector ColorVector(Color.R, Color.G, Color.B);
+
     // glow first person mesh
     if (FirstPersonMesh && DynamicMaterialFirstPersonMesh.IsValid())
     {
         DynamicMaterialFirstPersonMesh->SetScalarParameterValue("GlowEnabled", 1.0f);
-        DynamicMaterialFirstPersonMesh->SetVectorParameterValue("GlowColor", Color);
+        DynamicMaterialFirstPersonMesh->SetVectorParameterValue("GlowColor", ColorVector);
     }
 
     // glow third person mesh
     if (ThirdPersonMesh && DynamicMaterialThirdPersonMesh.IsValid())
     {
         DynamicMaterialThirdPersonMesh->SetScalarParameterValue("GlowEnabled", 1.0f);
-        DynamicMaterialThirdPersonMesh->SetVectorParameterValue("GlowColor", Color);
+        DynamicMaterialThirdPersonMesh->SetVectorParameterValue("GlowColor", ColorVector);
     }
 
     // glow weapon

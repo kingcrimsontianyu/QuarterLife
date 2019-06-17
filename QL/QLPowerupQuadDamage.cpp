@@ -72,7 +72,7 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
                 &AQLPowerupQuadDamage::OnEffectGone,
                 1.0f, // time interval in second
                 false, // loop
-                EffectInterval); // delay in second
+                EffectDuration); // delay in second
         }
     }
 }

@@ -175,7 +175,7 @@ void UQLWeaponManager::SetDamageMultiplier(const float Value)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLWeaponManager::StartGlowWeapon(const FVector& Color)
+void UQLWeaponManager::StartGlowWeapon(const FColor& Color)
 {
     GlowColor = Color;
 
