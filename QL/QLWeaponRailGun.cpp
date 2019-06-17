@@ -31,7 +31,6 @@ AQLWeaponRailGun::AQLWeaponRailGun()
 
     BasicDamage = 80.0f;
     ZoomDamage = 90.0f;
-    CurrentDamage = BasicDamage;
 
     bZoomedIn = false;
     FOVCached = 90.0f;
@@ -50,6 +49,9 @@ AQLWeaponRailGun::AQLWeaponRailGun()
 void AQLWeaponRailGun::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    SetDamageMultiplier(1.0f);
+    CurrentDamage = BasicDamageAdjusted;
 
     if (ZoomTimeline && ZoomCurve)
     {
@@ -77,9 +79,9 @@ void AQLWeaponRailGun::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    PlayFireAnimation(FName("Fire"));
+    PlayAnimation(FName("Fire"));
 
-    PlayFireSoundFireAndForget(FName("Fire"));
+    PlaySoundFireAndForget(FName("Fire"));
 
     // create the transient beam actor
     UParticleSystemComponent* BeamComponentTemp = nullptr;
@@ -159,7 +161,7 @@ void AQLWeaponRailGun::OnFire()
 void AQLWeaponRailGun::OnAltFire()
 {
     bZoomedIn = true;
-    CurrentDamage = ZoomDamage;
+    CurrentDamage = ZoomDamageAdjusted;
 
     // animation
     if (ZoomTimeline && ZoomCurve)
@@ -191,7 +193,7 @@ void AQLWeaponRailGun::OnAltFire()
     }
 
     // sound
-    PlayFireSound(FName("Zoom"));
+    PlaySound(FName("Zoom"));
 }
 
 //------------------------------------------------------------
@@ -199,7 +201,7 @@ void AQLWeaponRailGun::OnAltFire()
 void AQLWeaponRailGun::OnAltFireRelease()
 {
     bZoomedIn = false;
-    CurrentDamage = BasicDamage;
+    CurrentDamage = BasicDamageAdjusted;
 
     // animation
     if (ZoomTimeline && ZoomCurve)
@@ -213,7 +215,7 @@ void AQLWeaponRailGun::OnAltFireRelease()
     }
 
     // sound
-    StopFireSound();
+    StopSound();
 }
 
 //------------------------------------------------------------
@@ -255,4 +257,13 @@ void AQLWeaponRailGun::PrepareForImpendingWeaponSwitch()
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRailGun::SetDamageMultiplier(const float Value)
+{
+    Super::SetDamageMultiplier(Value);
 
+    BasicDamageAdjusted = Value * BasicDamage;
+    ZoomDamageAdjusted = Value * ZoomDamage;
+    CurrentDamage *= Value;
+}

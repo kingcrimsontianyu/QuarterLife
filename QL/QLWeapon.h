@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "QLPickup.h"
 #include "QLWeapon.generated.h"
 
 class AQLCharacter;
@@ -21,7 +22,7 @@ class USphereComponent;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLWeapon : public AActor
+class QL_API AQLWeapon : public AQLPickup
 {
 	GENERATED_BODY()
 
@@ -50,17 +51,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void OnAltFireHold();
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlayFireSoundFireAndForget(const FName& FireSoundName);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlayFireSound(const FName& FireSoundName);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void StopFireSound();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlayFireAnimation(const FName& FireAnimationName);
+    virtual void PlayAnimation(const FName& AnimationName) override;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     USkeletalMeshComponent* GetGunSkeletalMeshComponent();
@@ -89,6 +80,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void PrepareForImpendingWeaponSwitch();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void SetDamageMultiplier(const float Value);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void StartGlow(const FVector& Color);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void StopGlow();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -102,17 +101,8 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UAudioComponent* FireSoundComponent;
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, UTexture2D*> CrosshairTextureList;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    TMap<FName, USoundBase*> FireSoundList;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    TMap<FName, UAnimMontage*> FireAnimationList;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USphereComponent* RootSphereComponent;
@@ -126,6 +116,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UParticleSystemComponent* BeamComponent;
+
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialGun;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FName WeaponName;
@@ -148,4 +141,7 @@ protected:
 
     UPROPERTY()
     bool bFireEnabled;
+
+    UPROPERTY()
+    float DamageMultiplier;
 };

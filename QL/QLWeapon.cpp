@@ -13,10 +13,10 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "QLCharacter.h"
-#include "Animation/AnimMontage.h"
-#include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 #include "Components/AudioComponent.h"
 #include "QLPlayerController.h"
 #include "QLWeaponManager.h"
@@ -57,8 +57,7 @@ AQLWeapon::AQLWeapon()
     BeamComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("BeamComponent"));
     BeamComponent->SetupAttachment(MuzzleSceneComponent);
 
-    FireSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FireSoundComponent"));
-    FireSoundComponent->SetupAttachment(RootComponent);
+    DamageMultiplier = 1.0;
 }
 
 //------------------------------------------------------------
@@ -66,6 +65,13 @@ AQLWeapon::AQLWeapon()
 void AQLWeapon::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    if (GunSkeletalMeshComponent)
+    {
+        UMaterialInterface* BasicMaterial = GunSkeletalMeshComponent->GetMaterial(0);
+        DynamicMaterialGun = GunSkeletalMeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BasicMaterial);
+        GunSkeletalMeshComponent->SetMaterial(0, DynamicMaterialGun.Get());
+    }
 }
 
 //------------------------------------------------------------
@@ -94,80 +100,6 @@ void AQLWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeapon::PlayFireSoundFireAndForget(const FName& FireSoundName)
-{
-    USoundBase** Result = FireSoundList.Find(FireSoundName);
-    if (Result)
-    {
-        USoundBase* Sound = *Result;
-        if (Sound)
-        {
-            UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
-        }
-    }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeapon::PlayFireSound(const FName& FireSoundName)
-{
-    USoundBase** Result = FireSoundList.Find(FireSoundName);
-    if (Result)
-    {
-        USoundBase* Sound = *Result;
-        if (Sound)
-        {
-            FireSoundComponent->SetSound(Sound);
-            FireSoundComponent->Play(0.0f);
-
-            //// sound played using this function is fire and forget and does not travel with the actor
-            //UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
-        }
-    }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeapon::StopFireSound()
-{
-    if (FireSoundComponent)
-    {
-        if (FireSoundComponent->IsPlaying())
-        {
-            FireSoundComponent->Stop();
-        }
-    }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeapon::PlayFireAnimation(const FName& FireAnimationName)
-{
-    UAnimMontage** Result = FireAnimationList.Find(FireAnimationName);
-    if (Result)
-    {
-        UAnimMontage* Animation = *Result;
-        if (Animation && WeaponManager.IsValid())
-        {
-            AQLCharacter* User = WeaponManager->GetUser();
-            if (User)
-            {
-                USkeletalMeshComponent* ArmMesh = User->GetFirstPersonMesh();
-                if (ArmMesh)
-                {
-                    UAnimInstance* AnimInstance = ArmMesh->GetAnimInstance();
-                    if (AnimInstance)
-                    {
-                        AnimInstance->Montage_Play(Animation, 1.0f);
-                    }
-                }
-            }
-        }
-    }
 }
 
 //------------------------------------------------------------
@@ -293,7 +225,7 @@ void AQLWeapon::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp,
     {
         QLCharacter->AddWeapon(this);
         QLCharacter->SetCurrentWeapon(this->GetWeaponName());
-        PlayFireSound("PickUp");
+        PlaySound("PickUp");
     }
 }
 
@@ -304,4 +236,58 @@ void AQLWeapon::EnableFireCallBack()
     bFireEnabled = true;
 
     GetWorldTimerManager().ClearTimer(DisableFireTimerHandle);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PlayAnimation(const FName& AnimationName)
+{
+    UAnimMontage** Result = AnimationList.Find(AnimationName);
+    if (Result)
+    {
+        UAnimMontage* Animation = *Result;
+        if (Animation && WeaponManager.IsValid())
+        {
+            AQLCharacter* User = WeaponManager->GetUser();
+            if (User)
+            {
+                USkeletalMeshComponent* ArmMesh = User->GetFirstPersonMesh();
+                if (ArmMesh)
+                {
+                    UAnimInstance* AnimInstance = ArmMesh->GetAnimInstance();
+                    if (AnimInstance)
+                    {
+                        AnimInstance->Montage_Play(Animation, 1.0f);
+                    }
+                }
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::SetDamageMultiplier(float Value)
+{
+    DamageMultiplier = Value;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::StartGlow(const FVector& Color)
+{
+    if (GunSkeletalMeshComponent && DynamicMaterialGun.IsValid())
+    {
+        DynamicMaterialGun->SetScalarParameterValue("GlowEnabled", 1.0f);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::StopGlow()
+{
+    if (GunSkeletalMeshComponent && DynamicMaterialGun.IsValid())
+    {
+        DynamicMaterialGun->SetScalarParameterValue("GlowEnabled", 0.0f);
+    }
 }

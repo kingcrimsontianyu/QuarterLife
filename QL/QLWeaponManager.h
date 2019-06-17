@@ -39,6 +39,12 @@ public:
     void UpdateCrossHair();
 
     AQLWeapon* GetCurrentWeapon();
+
+    void SetDamageMultiplier(const float Value);
+
+    void StartGlowWeapon(const FVector& Color);
+
+    void StopGlowWeapon();
 protected:
     // do not use UPROPERTY() here
     // it breaks the character weapon system
@@ -50,4 +56,13 @@ protected:
 
     UPROPERTY()
     TArray<AQLWeapon*> WeaponList;
+
+    UPROPERTY()
+    float DamageMultiplier;
+
+    UPROPERTY()
+    bool bIsGlowing;
+
+    UPROPERTY()
+    FVector GlowColor;
 };

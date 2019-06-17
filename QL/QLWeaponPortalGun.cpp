@@ -84,7 +84,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: no hit");
-        PlayFireSound(FName("NoPortal"));
+        PlaySound(FName("NoPortal"));
         return;
     }
 
@@ -97,7 +97,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: not compatible");
-        PlayFireSound(FName("NoPortal"));
+        PlaySound(FName("NoPortal"));
         return;
     }
 
@@ -181,7 +181,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         SoundName = FName("FireOrange");
     }
-    PlayFireSound(SoundName);
-    PlayFireAnimation(FName("Fire"));
+    PlaySound(SoundName);
+    PlayAnimation(FName("Fire"));
 }
 

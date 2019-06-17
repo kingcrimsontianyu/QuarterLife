@@ -38,6 +38,8 @@ AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
 void AQLWeaponRocketLauncher::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    SetDamageMultiplier(1.0f);
 }
 
 //------------------------------------------------------------
@@ -67,9 +69,9 @@ void AQLWeaponRocketLauncher::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    PlayFireAnimation(FName("Fire"));
+    PlayAnimation(FName("Fire"));
 
-    PlayFireSoundFireAndForget(FName("Fire"));
+    PlaySoundFireAndForget(FName("Fire"));
 
     // ray tracing
     AQLCharacter* User = GetWeaponManager()->GetUser();
@@ -124,10 +126,20 @@ void AQLWeaponRocketLauncher::OnFire()
         AController* Controller = User->GetController();
         AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
         Rocket->SetQLPlayerController(QLPlayerController);
+        Rocket->SetDamageMultiplier(DamageMultiplier);
         UGameplayStatics::FinishSpawningActor(Rocket, MyTransform);
 
         // change velocity
         FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
         Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRocketLauncher::SetDamageMultiplier(const float Value)
+{
+    Super::SetDamageMultiplier(Value);
+
+    BasicDamageAdjusted = Value * BasicDamage;
 }

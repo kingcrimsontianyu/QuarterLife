@@ -27,6 +27,7 @@ public:
 
     virtual void OnFire() override;
 
+    virtual void SetDamageMultiplier(const float Value) override;
 protected:
     virtual void Tick(float DeltaTime) override;
 
@@ -34,6 +35,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
+
+    UPROPERTY()
+    float BasicDamageAdjusted;
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
     TSubclassOf<AQLRocketProjectile> RocketProjectileClass;

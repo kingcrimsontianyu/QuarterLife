@@ -5,7 +5,7 @@
 //
 //  (\-/)
 // (='.'=)
-// (")-(")o
+// (")-(")oc
 //------------------------------------------------------------
 
 #include "QLCharacter.h"
@@ -22,6 +22,7 @@
 #include "QLPlayerController.h"
 #include "Components/WidgetComponent.h"
 #include "QLPlayerController.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -98,6 +99,20 @@ void AQLCharacter::PostInitializeComponents()
     // to do: investigate
     WeaponManager = NewObject<UQLWeaponManager>(this);
     WeaponManager->SetUser(this);
+
+    if (FirstPersonMesh)
+    {
+        UMaterialInterface* BasicMaterial = FirstPersonMesh->GetMaterial(0);
+        DynamicMaterialFirstPersonMesh = FirstPersonMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BasicMaterial);
+        FirstPersonMesh->SetMaterial(0, DynamicMaterialFirstPersonMesh.Get());
+    }
+
+    if (ThirdPersonMesh)
+    {
+        UMaterialInterface* BasicMaterial = ThirdPersonMesh->GetMaterial(0);
+        DynamicMaterialThirdPersonMesh = ThirdPersonMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BasicMaterial);
+        ThirdPersonMesh->SetMaterial(0, DynamicMaterialThirdPersonMesh.Get());
+    }
 }
 
 //------------------------------------------------------------
@@ -530,3 +545,52 @@ void AQLCharacter::Die()
     Destroy();
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetDamageMultiplier(const float Value)
+{
+    WeaponManager->SetDamageMultiplier(Value);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::StartGlow(const FVector& Color)
+{
+    // glow first person mesh
+    if (FirstPersonMesh && DynamicMaterialFirstPersonMesh.IsValid())
+    {
+        DynamicMaterialFirstPersonMesh->SetScalarParameterValue("GlowEnabled", 1.0f);
+    }
+
+    // glow third person mesh
+    if (ThirdPersonMesh && DynamicMaterialThirdPersonMesh.IsValid())
+    {
+        DynamicMaterialThirdPersonMesh->SetScalarParameterValue("GlowEnabled", 1.0f);
+    }
+
+    // glow weapon
+    if (WeaponManager)
+    {
+        WeaponManager->StartGlowWeapon(Color);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::StopGlow()
+{
+    if (FirstPersonMesh && DynamicMaterialFirstPersonMesh.IsValid())
+    {
+        DynamicMaterialFirstPersonMesh->SetScalarParameterValue("GlowEnabled", 0.0f);
+    }
+
+    if (ThirdPersonMesh && DynamicMaterialThirdPersonMesh.IsValid())
+    {
+        DynamicMaterialThirdPersonMesh->SetScalarParameterValue("GlowEnabled", 0.0f);
+    }
+
+    if (WeaponManager)
+    {
+        WeaponManager->StopGlowWeapon();
+    }
+}

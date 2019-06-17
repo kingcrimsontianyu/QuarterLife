@@ -41,6 +41,8 @@ void AQLWeaponLightningGun::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
+    SetDamageMultiplier(1.0f);
+
     if (BeamComponent)
     {
         // BeamComponent->bAutoActivate = false does not work
@@ -64,7 +66,7 @@ void AQLWeaponLightningGun::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFire()
 {
-    PlayFireSound(FName("Fire"));
+    PlaySound(FName("Fire"));
 
     bIsFireHeld = true;
 
@@ -86,7 +88,7 @@ void AQLWeaponLightningGun::OnFire()
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFireRelease()
 {
-    StopFireSound();
+    StopSound();
 
     bIsFireHeld = false;
 
@@ -125,9 +127,9 @@ void AQLWeaponLightningGun::OnFireHold()
         }
 
         // repeat fire sound
-        if (!FireSoundComponent->IsPlaying())
+        if (!SoundComponent->IsPlaying())
         {
-            FireSoundComponent->Play();
+            SoundComponent->Play();
         }
     }
 }
@@ -174,7 +176,7 @@ void AQLWeaponLightningGun::HitTarget()
     TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
     FDamageEvent DamageEvent(ValidDamageTypeClass);
 
-    const float DamageAmount = BasicDamage;
+    const float DamageAmount = BasicDamageAdjusted;
     hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
 
     // change victim velocity
@@ -203,4 +205,13 @@ void AQLWeaponLightningGun::PrepareForImpendingWeaponSwitch()
     {
         OnFireRelease();
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponLightningGun::SetDamageMultiplier(const float Value)
+{
+    Super::SetDamageMultiplier(Value);
+
+    BasicDamageAdjusted = Value * BasicDamage;
 }

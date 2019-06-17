@@ -22,7 +22,9 @@
 //------------------------------------------------------------
 //------------------------------------------------------------
 UQLWeaponManager::UQLWeaponManager() :
-User(nullptr)
+User(nullptr),
+DamageMultiplier(1.0f),
+bIsGlowing(false)
 {
 }
 
@@ -123,15 +125,12 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     }
 
     // if the weapon is already in the list, do not add
-    if (WeaponList.Num() > 0)
+    for (auto& Item : WeaponList)
     {
-        for (auto& Item : WeaponList)
+        if (Item->GetWeaponName() == Weapon->GetWeaponName())
         {
-            if (Item->GetWeaponName() == Weapon->GetWeaponName())
-            {
-                QLUtility::Log("UQLWeaponManager:: Weapon of the same type has already been added.");
-                return;
-            }
+            QLUtility::Log("UQLWeaponManager:: Weapon of the same type has already been added.");
+            return;
         }
     }
 
@@ -152,8 +151,50 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     Weapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
     Weapon->SetActorEnableCollision(false);
     Weapon->DisableComponentsSimulatePhysics();
-
+    Weapon->DisableConstantRotation();
+    Weapon->SetDamageMultiplier(DamageMultiplier);
     Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+
+    if (bIsGlowing)
+    {
+        Weapon->StartGlow(GlowColor);
+    }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLWeaponManager::SetDamageMultiplier(const float Value)
+{
+    DamageMultiplier = Value;
 
+    for (auto& Item : WeaponList)
+    {
+        Item->SetDamageMultiplier(DamageMultiplier);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLWeaponManager::StartGlowWeapon(const FVector& Color)
+{
+    GlowColor = Color;
+
+    bIsGlowing = true;
+
+    for (auto& Item : WeaponList)
+    {
+        Item->StartGlow(GlowColor);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLWeaponManager::StopGlowWeapon()
+{
+    bIsGlowing = false;
+
+    for (auto& Item : WeaponList)
+    {
+        Item->StopGlow();
+    }
+}

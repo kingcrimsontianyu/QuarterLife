@@ -88,6 +88,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetMaxArmor() const;
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetDamageMultiplier(const float Value);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void StartGlow(const FVector& Color);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void StopGlow();
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float Health;
 
@@ -106,9 +115,15 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USkeletalMeshComponent* FirstPersonMesh;
 
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialFirstPersonMesh;
+
     // Pawn mesh: 1st person view (arms; seen only by self)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USkeletalMeshComponent* ThirdPersonMesh;
+
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialThirdPersonMesh;
 
     // First person camera
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property", meta = (AllowPrivateAccess = "true"))

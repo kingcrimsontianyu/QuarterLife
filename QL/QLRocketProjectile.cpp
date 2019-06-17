@@ -56,6 +56,8 @@ AQLRocketProjectile::AQLRocketProjectile()
     BlastSpeedChange = 1200.0f;
     BasicDamage = 100.0f;
     PlayerController = nullptr;
+    DamageMultiplier = 1.0f;
+    BasicDamageAdjusted = BasicDamage;
 }
 
 //------------------------------------------------------------
@@ -106,7 +108,7 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
     if (Character)
     {
         // reduce self damage
-        float DamageAmount = BasicDamage;
+        float DamageAmount = BasicDamageAdjusted;
         if (PlayerController.IsValid() && OtherActor == PlayerController->GetCharacter())
         {
             DamageAmount = ReduceSelfDamage(DamageAmount);
@@ -176,7 +178,7 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 }
 
                 // self splash damage (by rocket jump for example) is reduced by half
-                float DamageAmount = BasicDamage;
+                float DamageAmount = BasicDamageAdjusted;
 
                 if (PlayerController.IsValid() && Character == PlayerController->GetCharacter())
                 {
@@ -248,4 +250,13 @@ void AQLRocketProjectile::SetQLPlayerController(AQLPlayerController* PlayerContr
 float AQLRocketProjectile::ReduceSelfDamage(const float InDamage)
 {
     return InDamage * 0.5;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRocketProjectile::SetDamageMultiplier(const float Value)
+{
+    DamageMultiplier = Value;
+
+    BasicDamageAdjusted = Value * BasicDamage;
 }

@@ -36,7 +36,7 @@ void AQLColoredPortal::PostInitializeComponents()
 
     if (DynamicDisplayPlaneMaterial.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", 0.1);
+        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", 0.1f);
     }
 
     if (EnlargeTimeline && EnlargeCurve)

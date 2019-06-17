@@ -45,6 +45,8 @@ public:
     virtual void OnAltFireHold();
 
     virtual void PrepareForImpendingWeaponSwitch() override;
+
+    virtual void SetDamageMultiplier(const float Value) override;
 protected:
     virtual void Tick(float DeltaTime) override;
 
@@ -81,4 +83,10 @@ protected:
 
     UPROPERTY()
     UCameraComponent* CameraComponentCached;
+
+    UPROPERTY()
+    float BasicDamageAdjusted;
+
+    UPROPERTY()
+    float ZoomDamageAdjusted;
 };
