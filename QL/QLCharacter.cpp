@@ -560,12 +560,14 @@ void AQLCharacter::StartGlow(const FVector& Color)
     if (FirstPersonMesh && DynamicMaterialFirstPersonMesh.IsValid())
     {
         DynamicMaterialFirstPersonMesh->SetScalarParameterValue("GlowEnabled", 1.0f);
+        DynamicMaterialFirstPersonMesh->SetVectorParameterValue("GlowColor", Color);
     }
 
     // glow third person mesh
     if (ThirdPersonMesh && DynamicMaterialThirdPersonMesh.IsValid())
     {
         DynamicMaterialThirdPersonMesh->SetScalarParameterValue("GlowEnabled", 1.0f);
+        DynamicMaterialThirdPersonMesh->SetVectorParameterValue("GlowColor", Color);
     }
 
     // glow weapon

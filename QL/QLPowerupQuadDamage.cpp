@@ -54,7 +54,7 @@ void AQLPowerupQuadDamage::OnComponentBeginOverlapImpl(UPrimitiveComponent* Over
 
             constexpr float DamageMultiplier = 4.0f;
             Beneficiary->SetDamageMultiplier(DamageMultiplier);
-            Beneficiary->StartGlow(FVector(1.0f, 0.0f, 1.0f));
+            Beneficiary->StartGlow(GlowColor);
 
             Deactivate();
 

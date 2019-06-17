@@ -279,6 +279,7 @@ void AQLWeapon::StartGlow(const FVector& Color)
     if (GunSkeletalMeshComponent && DynamicMaterialGun.IsValid())
     {
         DynamicMaterialGun->SetScalarParameterValue("GlowEnabled", 1.0f);
+        DynamicMaterialGun->SetVectorParameterValue("GlowColor", Color);
     }
 }
 

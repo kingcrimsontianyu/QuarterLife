@@ -216,24 +216,24 @@ void AQLRocketProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
     if (EndPlayReason == EEndPlayReason::Destroyed)
     {
         // play explosion particle system
-        if (ExplosionParticleSystem.IsValid())
+        if (ExplosionParticleSystem)
         {
             FTransform Transform(FRotator::ZeroRotator,
                 GetActorLocation(),
                 FVector(4.0f)); // scale
 
             UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
-                ExplosionParticleSystem.Get(),
+                ExplosionParticleSystem,
                 Transform,
                 true, // auto destroy
                 EPSCPoolMethod::AutoRelease);
         }
 
         // play explosion sound
-        if (ExplosionSound.IsValid())
+        if (ExplosionSound)
         {
             // fire and forget
-            UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound.Get(), GetActorLocation());
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, GetActorLocation());
         }
     }
 }

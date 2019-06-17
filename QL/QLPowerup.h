@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "QLPickup.h"
+#include "QLCharacter.h"
 #include "QLPowerup.generated.h"
 
 //------------------------------------------------------------
@@ -25,8 +26,20 @@ public:
     AQLPowerup();
 
 protected:
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float EffectInterval;
 
     FTimerHandle EffectTimerHandle;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY()
+    TWeakObjectPtr<AQLCharacter> Beneficiary;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FVector GlowColor;
 };
