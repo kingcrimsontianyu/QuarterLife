@@ -18,6 +18,7 @@
 class AQLWeapon;
 class UQLWeaponManager;
 class UWidgetComponent;
+class UQLPowerupManager;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -74,6 +75,12 @@ public:
     void SetCurrentWeapon(const FName& WeaponName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool AddPowerup(AQLPowerup* Powerup);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void RemovePowerup(AQLPowerup* Powerup);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Die();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -95,7 +102,7 @@ public:
     void SetProtectionMultiplier(const float Value);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void StartGlow(const FLinearColor& Color);
+    void StartGlow();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();
@@ -200,6 +207,9 @@ protected:
 
     UPROPERTY()
     UQLWeaponManager* WeaponManager;
+
+    UPROPERTY()
+    UQLPowerupManager* PowerupManager;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ProtectionMultiplier;

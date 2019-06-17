@@ -22,6 +22,7 @@
 //------------------------------------------------------------
 AQLPowerupProtection::AQLPowerupProtection()
 {
+    PowerupName = FName(TEXT("Protection"));
     ProtectionMultiplier = 0.3f;
 }
 
@@ -36,14 +37,17 @@ void AQLPowerupProtection::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLPowerupProtection::OnEffectEnd()
 {
+    Super::OnEffectEnd();
+
     // clean up
     if (Beneficiary.IsValid())
     {
         Beneficiary->SetProtectionMultiplier(1.0f);
         Beneficiary->StopGlow();
-    }
 
-    Super::OnEffectEnd();
+        // reset the weak pointer
+        Beneficiary.Reset();
+    }
 }
 
 //------------------------------------------------------------
@@ -71,5 +75,5 @@ void AQLPowerupProtection::UpdateProgressOnUMG()
 void AQLPowerupProtection::PowerUpPlayer()
 {
     Beneficiary->SetProtectionMultiplier(ProtectionMultiplier);
-    Beneficiary->StartGlow(GlowColor);
+    Beneficiary->StartGlow();
 }

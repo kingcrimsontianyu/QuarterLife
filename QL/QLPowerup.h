@@ -12,8 +12,10 @@
 
 #include "CoreMinimal.h"
 #include "QLPickup.h"
-#include "QLCharacter.h"
 #include "QLPowerup.generated.h"
+
+class AQLCharacter;
+class UQLPowerupManager;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -30,6 +32,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetProgressPercent();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetPowerupManager(UQLPowerupManager* PowerupManagerExt);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FName GetPowerupName();
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -78,6 +87,12 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<AQLCharacter> Beneficiary;
 
+    UPROPERTY()
+    TWeakObjectPtr<UQLPowerupManager> PowerupManager;
+
     float ProgressPercent;
     float TimeElapsed;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FName PowerupName;
 };

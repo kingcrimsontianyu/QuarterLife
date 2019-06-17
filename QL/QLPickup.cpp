@@ -192,3 +192,10 @@ USphereComponent* AQLPickup::GetRootSphereComponent()
 {
     return RootSphereComponent;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FLinearColor AQLPickup::GetGlowColor()
+{
+    return GlowColor;
+}

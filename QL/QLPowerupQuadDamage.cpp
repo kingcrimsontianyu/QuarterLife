@@ -22,7 +22,8 @@
 //------------------------------------------------------------
 AQLPowerupQuadDamage::AQLPowerupQuadDamage()
 {
-     DamageMultiplier = 4.0f;
+    PowerupName = FName(TEXT("QuadDamage"));
+    DamageMultiplier = 4.0f;
 }
 
 //------------------------------------------------------------
@@ -36,14 +37,17 @@ void AQLPowerupQuadDamage::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLPowerupQuadDamage::OnEffectEnd()
 {
+    Super::OnEffectEnd();
+
     // clean up
     if (Beneficiary.IsValid())
     {
         Beneficiary->SetDamageMultiplier(1.0f);
         Beneficiary->StopGlow();
-    }
 
-    Super::OnEffectEnd();
+        // reset the weak pointer
+        Beneficiary.Reset();
+    }
 }
 
 //------------------------------------------------------------
@@ -71,5 +75,5 @@ void AQLPowerupQuadDamage::UpdateProgressOnUMG()
 void AQLPowerupQuadDamage::PowerUpPlayer()
 {
     Beneficiary->SetDamageMultiplier(DamageMultiplier);
-    Beneficiary->StartGlow(GlowColor);
+    Beneficiary->StartGlow();
 }

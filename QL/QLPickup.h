@@ -54,6 +54,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     USphereComponent* GetRootSphereComponent();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FLinearColor GetGlowColor();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

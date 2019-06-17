@@ -15,14 +15,16 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "Kismet/GameplayStatics.h"
-#include "QLWeaponPortalGun.h" // to be modified
 #include "DrawDebugHelpers.h"
+#include "QLWeapon.h"
 #include "QLWeaponManager.h"
+#include "QLPowerupManager.h"
 #include "QLUtility.h"
 #include "QLPlayerController.h"
 #include "Components/WidgetComponent.h"
 #include "QLPlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "QLPowerup.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -100,6 +102,9 @@ void AQLCharacter::PostInitializeComponents()
     // to do: investigate
     WeaponManager = NewObject<UQLWeaponManager>(this);
     WeaponManager->SetUser(this);
+
+    PowerupManager = NewObject<UQLPowerupManager>(this);
+    PowerupManager->SetUser(this);
 
     if (FirstPersonMesh)
     {
@@ -299,6 +304,30 @@ void AQLCharacter::AddWeapon(AQLWeapon* Weapon)
     }
 
     WeaponManager->AddWeapon(Weapon);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::AddPowerup(AQLPowerup* Powerup)
+{
+    if (!PowerupManager)
+    {
+        return false;
+    }
+
+    return PowerupManager->AddPowerup(Powerup);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::RemovePowerup(AQLPowerup* Powerup)
+{
+    if (!PowerupManager)
+    {
+        return;
+    }
+
+    return PowerupManager->RemovePowerup(Powerup);
 }
 
 //------------------------------------------------------------
@@ -564,8 +593,20 @@ void AQLCharacter::SetProtectionMultiplier(const float Value)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::StartGlow(const FLinearColor& Color)
+void AQLCharacter::StartGlow()
 {
+    if (!PowerupManager)
+    {
+        return;
+    }
+
+    auto* TopPowerup = PowerupManager->GetTopPowerup();
+    if (!TopPowerup)
+    {
+        return;
+    }
+
+    const FLinearColor Color = TopPowerup->GetGlowColor();
     FVector ColorVector(Color.R, Color.G, Color.B);
 
     // glow first person mesh
@@ -593,6 +634,19 @@ void AQLCharacter::StartGlow(const FLinearColor& Color)
 //------------------------------------------------------------
 void AQLCharacter::StopGlow()
 {
+    if (!PowerupManager)
+    {
+        return;
+    }
+
+    auto* TopPowerup = PowerupManager->GetTopPowerup();
+    if (TopPowerup)
+    {
+        StartGlow();
+        return;
+    }
+
+    // when no top powerup is left
     if (FirstPersonMesh && DynamicMaterialFirstPersonMesh.IsValid())
     {
         DynamicMaterialFirstPersonMesh->SetScalarParameterValue("GlowEnabled", 0.0f);

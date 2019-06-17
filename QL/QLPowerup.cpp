@@ -11,7 +11,9 @@
 
 #include "QLPowerup.h"
 #include "QLPlayerController.h"
+#include "QLCharacter.h"
 #include "QLUmgUserWidget.h"
+#include "QLPowerupManager.h"
 #include "Components/SphereComponent.h"
 
 //------------------------------------------------------------
@@ -51,6 +53,13 @@ void AQLPowerup::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp
             Beneficiary = QLCharacter;
 
             if (!Beneficiary.IsValid())
+            {
+                return;
+            }
+
+            bool bSuccessful = Beneficiary->AddPowerup(this);
+
+            if (!bSuccessful)
             {
                 return;
             }
@@ -127,10 +136,9 @@ void AQLPowerup::Deactivate()
 //------------------------------------------------------------
 void AQLPowerup::OnEffectEnd()
 {
-    // reset the weak pointer
-    Beneficiary.Reset();
-
     GetWorldTimerManager().ClearTimer(EffectEndTimerHandle);
+
+    Beneficiary->RemovePowerup(this);
 }
 
 //------------------------------------------------------------
@@ -139,4 +147,18 @@ void AQLPowerup::UpdateProgressOnUMG()
 {
     TimeElapsed += 0.1f;
     ProgressPercent = 1.0f - TimeElapsed / EffectDuration;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerup::SetPowerupManager(UQLPowerupManager* PowerupManagerExt)
+{
+    PowerupManager = PowerupManagerExt;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FName AQLPowerup::GetPowerupName()
+{
+    return PowerupName;
 }
