@@ -36,7 +36,10 @@ AQLPickup::AQLPickup()
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(40.0f);
     RootSphereComponent->SetSimulatePhysics(false);
-    RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+    RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    RootSphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+    RootSphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
     RootComponent = RootSphereComponent;
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
