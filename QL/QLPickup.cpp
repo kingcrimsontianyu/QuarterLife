@@ -51,6 +51,7 @@ AQLPickup::AQLPickup()
     SoundComponent->SetupAttachment(RootComponent);
 
     bCanBeRespawned = false;
+    bConstantlyRotating = true;
     RespawnInterval = 0.0f;
     GlowColor = FLinearColor(0.0f, 0.0f, 1.0f);
 }
@@ -62,7 +63,7 @@ void AQLPickup::BeginPlay()
 {
 	Super::BeginPlay();
 
-    EnableConstantRotation();
+    SetConstantRotationEnabled(true);
 }
 
 //------------------------------------------------------------
@@ -80,6 +81,19 @@ void AQLPickup::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AQLPickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+    // constant rotation
+    if (bConstantlyRotating)
+    {
+        // derivation:
+        // rotation rate [degree / sec] = angle per tick / time per tick
+        // so angle per tick = rotation rate * time per tick
+
+        FRotator Increment(RotationRate.Pitch * DeltaTime, RotationRate.Yaw * DeltaTime, RotationRate.Roll * DeltaTime);
+        FRotator Rotator = GetActorRotation();
+        Rotator.Add(Increment.Pitch, Increment.Yaw, Increment.Roll);
+        SetActorRotation(Rotator);
+    }
 }
 
 //------------------------------------------------------------
@@ -153,37 +167,9 @@ void AQLPickup::StopSound()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPickup::EnableConstantRotation()
+void AQLPickup::SetConstantRotationEnabled(const bool bFlag)
 {
-    GetWorldTimerManager().SetTimer(ConstantRotationTimerHandle,
-        this,
-        &AQLPickup::PerformConstantRotation,
-        FApp::GetDeltaTime(), // time interval in second
-        true, // loop
-        0.0f); // delay in second
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLPickup::DisableConstantRotation()
-{
-    GetWorldTimerManager().ClearTimer(ConstantRotationTimerHandle);
-}
-
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLPickup::PerformConstantRotation()
-{
-    // derivation:
-    // rotation rate [degree / sec] = angle per tick / time per tick
-    // so angle per tick = rotation rate * time per tick
-
-    float DeltaTime = FApp::GetDeltaTime();
-    FRotator Increment(RotationRate.Pitch * DeltaTime, RotationRate.Yaw * DeltaTime, RotationRate.Roll * DeltaTime);
-    FRotator Rotator = GetActorRotation();
-    Rotator.Add(Increment.Pitch, Increment.Yaw, Increment.Roll);
-    SetActorRotation(Rotator);
+    bConstantlyRotating = bFlag;
 }
 
 //------------------------------------------------------------

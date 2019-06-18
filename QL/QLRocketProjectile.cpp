@@ -107,14 +107,15 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
     AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
     if (Character)
     {
-        // reduce self damage
+        // reduce self direct damage (e.g. rocket jump)
         float DamageAmount = BasicDamageAdjusted;
         if (PlayerController.IsValid() && OtherActor == PlayerController->GetCharacter())
         {
             DamageAmount = ReduceSelfDamage(DamageAmount);
         }
 
-        Character->TakeDamageQuakeStyle(DamageAmount);
+        const FPointDamageEvent DamageEvent;
+        DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
 
         // display damage
         if (PlayerController.IsValid())
@@ -177,7 +178,7 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                     continue;
                 }
 
-                // self splash damage (by rocket jump for example) is reduced by half
+                // reduce self splash damage (e.g. rocket jump)
                 float DamageAmount = BasicDamageAdjusted;
 
                 if (PlayerController.IsValid() && Character == PlayerController->GetCharacter())
@@ -185,7 +186,12 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                     DamageAmount = ReduceSelfDamage(DamageAmount);
                 }
 
-                DamageAmount = Character->TakeRadialDamage(Epicenter, BlastRadius, DamageAmount, 0.0);
+                FRadialDamageEvent DamageEvent;
+                DamageEvent.Params.BaseDamage = DamageAmount;
+                DamageEvent.Params.OuterRadius = BlastRadius;
+                DamageEvent.Params.MinimumDamage = 0.0;
+
+                DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
 
                 // display positive damage
                 if (DamageAmount > 0.0f)

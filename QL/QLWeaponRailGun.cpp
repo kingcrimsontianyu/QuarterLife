@@ -143,8 +143,7 @@ void AQLWeaponRailGun::OnFire()
     }
 
     // create a damage event
-    TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
-    FDamageEvent DamageEvent(ValidDamageTypeClass);
+    const FPointDamageEvent DamageEvent;
 
     hitActor->TakeDamage(CurrentDamage, DamageEvent, User->GetController(), this);
 

@@ -373,31 +373,37 @@ FHitResult AQLCharacter::RayTraceFromCharacterPOV(float rayTraceRange)
 //------------------------------------------------------------
 float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-    const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+    float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-    TakeDamageQuakeStyle(ActualDamage);
-
-    return ActualDamage;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-float AQLCharacter::TakeRadialDamage(const FVector& Epicenter, float BlastRadius, float MaxDamage, float MinDamage)
-{
-    FVector Temp = GetActorLocation() - Epicenter;
-    float Distance = Temp.Size();
-
-    // linear interpolation
-    // y = MaxDamage at x = 0
-    // y = MinDamage at x = BlastRadius
-    // y = ? at x = Distance
-    float ActualDamage = (MinDamage - MaxDamage) / BlastRadius * Distance + MaxDamage;
-
-    if (ActualDamage < 0.0f)
+    // handle point damage
+    if (DamageEvent.GetTypeID() == FPointDamageEvent::ClassID)
     {
-        ActualDamage = 0.0f;
+        // adjust damage according to ProtectionMultiplier
+        ActualDamage *= ProtectionMultiplier;
     }
-    else
+    // handle radial damage
+    else if (DamageEvent.GetTypeID() == FRadialDamageEvent::ClassID)
+    {
+        FRadialDamageEvent const* RadialDamageEventPtr = static_cast<FRadialDamageEvent const*>(&DamageEvent);
+
+        FVector Temp = DamageCauser->GetActorLocation() - GetActorLocation();
+        float Distance = Temp.Size();
+
+        // linear interpolation
+        // y = MaxDamage at x = 0
+        // y = MinDamage at x = BlastRadius
+        // y = ? at x = Distance
+        float MinDamage = ProtectionMultiplier * RadialDamageEventPtr->Params.MinimumDamage;
+        float MaxDamage = RadialDamageEventPtr->Params.BaseDamage;
+        ActualDamage = (MinDamage - MaxDamage) / RadialDamageEventPtr->Params.OuterRadius * Distance + MaxDamage;
+
+        if (ActualDamage < 0.0f)
+        {
+            ActualDamage = 0.0f;
+        }
+    }
+
+    if (ActualDamage > 0.0f)
     {
         TakeDamageQuakeStyle(ActualDamage);
     }
@@ -411,8 +417,6 @@ void AQLCharacter::TakeDamageQuakeStyle(float ActualDamage)
 {
     if (ActualDamage > 0.0f)
     {
-        ActualDamage *= ProtectionMultiplier;
-
         constexpr float HealthAbsorbingFraction = 1.0f / 3.0f;
         constexpr float ArmorAbsorbingFraction = 1.0f - HealthAbsorbingFraction;
         float HealthDamage = HealthAbsorbingFraction * ActualDamage;

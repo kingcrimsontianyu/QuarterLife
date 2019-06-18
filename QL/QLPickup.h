@@ -44,13 +44,7 @@ public:
     virtual void PlayAnimation(const FName& AnimationName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void EnableConstantRotation();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void DisableConstantRotation();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PerformConstantRotation();
+    void SetConstantRotationEnabled(const bool bFlag);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     USphereComponent* GetRootSphereComponent();
@@ -92,10 +86,11 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, UAnimMontage*> AnimationList;
 
-    FTimerHandle ConstantRotationTimerHandle;
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     bool bCanBeRespawned;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool bConstantlyRotating;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float RespawnInterval;

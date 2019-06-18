@@ -173,8 +173,7 @@ void AQLWeaponLightningGun::HitTarget()
     }
 
     // create a damage event
-    TSubclassOf<UDamageType> const ValidDamageTypeClass = TSubclassOf<UDamageType>(UDamageType::StaticClass());
-    FDamageEvent DamageEvent(ValidDamageTypeClass);
+    const FPointDamageEvent DamageEvent;
 
     const float DamageAmount = BasicDamageAdjusted;
     hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);

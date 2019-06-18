@@ -151,7 +151,7 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     Weapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
     Weapon->SetActorEnableCollision(false);
     Weapon->DisableComponentsSimulatePhysics();
-    Weapon->DisableConstantRotation();
+    Weapon->SetConstantRotationEnabled(false);
     Weapon->SetDamageMultiplier(DamageMultiplier);
     Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 

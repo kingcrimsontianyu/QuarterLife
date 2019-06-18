@@ -50,12 +50,6 @@ public:
 
     virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-    //------------------------------------------------------------
-    // to do: change to UE4's damage system
-    //------------------------------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    float TakeRadialDamage(const FVector& Epicenter, float BlastRadius, float MaxDamage, float MinDamage);
-
     UFUNCTION()
     void TakeDamageQuakeStyle(float ActualDamage);
 
