@@ -19,7 +19,7 @@ Regarding this repository:
 
 ------
 
-## Work in progress
+## Work-in-progress features
 + Weapon
     + Unholy trinity (Quake Champions)
         + Lightning gun
@@ -35,19 +35,35 @@ Regarding this repository:
 
 + Powerup
     + Quad damage (Quake Champions)
-    + Pentagram Protection (Quake Champions)
+    + Pentagram of Protection (Quake Champions)
+
++ Miscellaneous
+    + Floating health bar and armor bar
+    + Floating damage numbers
 
 ------
 
-## Roadmap
+## Planned features
 
++ Weapon
+	+ Big Fucking Gun (BFG) (Doom)
+	
 + Ability
-    + Healing rain 愈雨
+    + Healing rain 愈雨 (Shadow Warrior)
     + Ghost walk 鬼影 (Quake Champions)
     + Dire orb 瞬殺 (Quake Champions)
+    + Acid spit 毒蝕 (Quake Champions)
+    + Flame strike 冥火 (Quake Champions)
+    + Dual wield 雙剎 (Quake Champions)
+    + Piercing sight 透視 (Quake Champions)
+    + Barrier shield 天盾 (Quake Champions)
 
 + Movement
     + Strafe jump (Quake Champions)
+
++ Quest system
+
++ Bot
 
 ------
 
