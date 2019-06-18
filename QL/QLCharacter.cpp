@@ -393,6 +393,8 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
         // y = MaxDamage at x = 0
         // y = MinDamage at x = BlastRadius
         // y = ? at x = Distance
+        // also adjust damage according to ProtectionMultiplier
+
         float MinDamage = ProtectionMultiplier * RadialDamageEventPtr->Params.MinimumDamage;
         float MaxDamage = RadialDamageEventPtr->Params.BaseDamage;
         ActualDamage = (MinDamage - MaxDamage) / RadialDamageEventPtr->Params.OuterRadius * Distance + MaxDamage;

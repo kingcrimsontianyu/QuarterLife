@@ -53,6 +53,9 @@ Regarding this repository:
 
 ## Clip
 
+### Quad damage and Pentagram Protection powerups
+<a href="https://youtu.be/SsTtHaeNi3s" target="_blank"><img src="http://i3.ytimg.com/vi/SsTtHaeNi3s/hqdefault.jpg" width="480" height="360" border="10" /></a>
+
 ### Unholy Trinity (lightning gun, rail gun, rocket launcher)
 <a href="https://youtu.be/kieULoIWyC4" target="_blank"><img src="http://i3.ytimg.com/vi/kieULoIWyC4/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
