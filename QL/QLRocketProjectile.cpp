@@ -86,12 +86,19 @@ void AQLRocketProjectile::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    // This function is guaranteed to be called only once,
+    // This function avoids the case of self direct hit. When it happens, the function returns immediately to ignore the current overlap event.
+    // When self direct hit does not happen, this function is guaranteed to be called only once,
     // because even though the actor may overlap several components,
     // it is destroyed immediately after the first overlap event.
     if (OtherActor)
     {
-        bool bDirectHit = HandleDirectHit(OtherActor);
+        bool bSelfDirectHit = false;
+        bool bDirectHit = false;
+        HandleDirectHit(OtherActor, bSelfDirectHit, bDirectHit);
+        if (bSelfDirectHit)
+        {
+            return;
+        }
 
         HandleSplashHit(OtherActor, bDirectHit);
 
@@ -101,19 +108,22 @@ void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overla
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
+void AQLRocketProjectile::HandleDirectHit(AActor* OtherActor, bool& bSelfDirectHit, bool& bDirectHit)
 {
-    bool bDirectHit = false;
+    bDirectHit = false;
+    bSelfDirectHit = false;
+
     AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
     if (Character)
     {
-        // reduce self direct damage (e.g. rocket jump)
-        float DamageAmount = BasicDamageAdjusted;
+        // prevent self direct hit from happening
         if (PlayerController.IsValid() && OtherActor == PlayerController->GetCharacter())
         {
-            DamageAmount = ReduceSelfDamage(DamageAmount);
+            bSelfDirectHit = true;
+            return;
         }
 
+        float DamageAmount = BasicDamageAdjusted;
         const FPointDamageEvent DamageEvent;
         DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
 
@@ -125,8 +135,6 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
 
         bDirectHit = true;
     }
-
-    return bDirectHit;
 }
 
 //------------------------------------------------------------

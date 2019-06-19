@@ -111,7 +111,7 @@ void AQLWeaponRocketLauncher::OnFire()
 
     // spawn and launch a rocket
     UWorld* const World = GetWorld();
-    GetMuzzleLocation();
+
     if (RocketProjectileClass && World && WeaponManager.IsValid())
     {
         if (!User || !CameraComponent)

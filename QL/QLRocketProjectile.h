@@ -53,7 +53,7 @@ protected:
     void OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    bool HandleDirectHit(AActor* OtherActor);
+    void HandleDirectHit(AActor* OtherActor, bool& bSelfDirectHit, bool& bDirectHit);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void HandleSplashHit(AActor* OtherActor, bool bDirectHit);

@@ -147,7 +147,6 @@ void AQLWeaponRailGun::OnFire()
 
     float DamageAmount = hitActor->TakeDamage(CurrentDamage, DamageEvent, User->GetController(), this);
 
-    QLUtility::Log(FString::SanitizeFloat(DamageAmount));
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
     if (DamageAmount > 0.0f && QLPlayerController)
