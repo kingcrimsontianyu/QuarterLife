@@ -9,7 +9,7 @@
 //------------------------------------------------------------
 
 
-#include "QLUmgUserWidget.h"
+#include "QLUmgFirstPerson.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CanvasPanelSlot.h"
 #include "QLPlayerController.h"
@@ -18,7 +18,7 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UQLUmgUserWidget::UQLUmgUserWidget(const FObjectInitializer& ObjectInitializer) :
+UQLUmgFirstPerson::UQLUmgFirstPerson(const FObjectInitializer& ObjectInitializer) :
 Super(ObjectInitializer),
 DamageText0(nullptr),
 DamageText1(nullptr),
@@ -39,7 +39,7 @@ Counter(0)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgUserWidget::NativeConstruct()
+void UQLUmgFirstPerson::NativeConstruct()
 {
     // Do some custom setup
 
@@ -93,7 +93,7 @@ void UQLUmgUserWidget::NativeConstruct()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UQLUmgFirstPerson::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     // Make sure to call the base class's NativeTick function
     Super::NativeTick(MyGeometry, InDeltaTime);
@@ -103,7 +103,7 @@ void UQLUmgUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgUserWidget::ShowDamageOnScreen(const FString& msg, const FVector& Location)
+void UQLUmgFirstPerson::ShowDamageOnScreen(const FString& msg, const FVector& Location)
 {
     // update pointer
     CurrentDamageText = DamageTextList[Counter];
@@ -154,35 +154,35 @@ void UQLUmgUserWidget::ShowDamageOnScreen(const FString& msg, const FVector& Loc
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgUserWidget::SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt)
+void UQLUmgFirstPerson::SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt)
 {
     QLPlayerController = QLPlayerControllerExt;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-AQLPlayerController* UQLUmgUserWidget::GetQLPlayerController()
+AQLPlayerController* UQLUmgFirstPerson::GetQLPlayerController()
 {
     return QLPlayerController.Get();
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateTextHealthValue_Implementation(float Health)
+float UQLUmgFirstPerson::UpdateTextHealthValue_Implementation(float Health)
 {
     return Health;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateTextArmorValue_Implementation(float Armor)
+float UQLUmgFirstPerson::UpdateTextArmorValue_Implementation(float Armor)
 {
     return Armor;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateTextFPSValue_Implementation()
+float UQLUmgFirstPerson::UpdateTextFPSValue_Implementation()
 {
     float FPS = 0.0f;
 
@@ -196,7 +196,7 @@ float UQLUmgUserWidget::UpdateTextFPSValue_Implementation()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateTextSpeedValue_Implementation()
+float UQLUmgFirstPerson::UpdateTextSpeedValue_Implementation()
 {
     float Speed = 0.0f;
 
@@ -210,7 +210,7 @@ float UQLUmgUserWidget::UpdateTextSpeedValue_Implementation()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateQuadDamageProgress_Implementation(float ProgressPercent)
+float UQLUmgFirstPerson::UpdateQuadDamageProgress_Implementation(float ProgressPercent)
 {
     if (QuadDamageProgress)
     {
@@ -226,7 +226,7 @@ float UQLUmgUserWidget::UpdateQuadDamageProgress_Implementation(float ProgressPe
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-float UQLUmgUserWidget::UpdateProtectionDamageProgress_Implementation(float ProgressPercent)
+float UQLUmgFirstPerson::UpdateProtectionDamageProgress_Implementation(float ProgressPercent)
 {
     if (ProtectionProgress)
     {

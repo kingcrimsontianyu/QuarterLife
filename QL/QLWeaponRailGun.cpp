@@ -18,7 +18,7 @@
 #include "GameFramework/DamageType.h"
 #include "Components/AudioComponent.h"
 #include "QLWeaponManager.h"
-#include "QLUmgUserWidget.h"
+#include "QLUmgFirstPerson.h"
 #include "QLPlayerController.h"
 
 //------------------------------------------------------------

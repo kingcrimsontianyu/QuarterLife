@@ -376,6 +376,12 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 {
     float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+    // if the character is already dead, no further damage
+    if (Health <= 0.0f)
+    {
+        return 0.0f;
+    }
+
     // handle point damage
     if (DamageEvent.GetTypeID() == FPointDamageEvent::ClassID)
     {
@@ -586,9 +592,6 @@ void AQLCharacter::Die()
     // get animation length
     float ActualAnimationLength = Animation->SequenceLength / Animation->RateScale;
     float DurationBeforeDestroyed = ActualAnimationLength + 3.0f;
-
-    GetCapsuleComponent()->SetCollisionProfileName(TEXT("NoCollision"));
-    GetCapsuleComponent()->SetEnableGravity(false);
 
     // destroy the character
     GetWorldTimerManager().SetTimer(DieTimerHandle,

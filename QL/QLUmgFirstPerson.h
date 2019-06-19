@@ -14,7 +14,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
-#include "QLUmgUserWidget.generated.h"
+#include "QLUmgFirstPerson.generated.h"
 
 class AQLPlayerController;
 
@@ -25,12 +25,12 @@ class AQLPlayerController;
 // - Set FadeAnimationCPPP0 = FadeAnimationBP0 ...
 //------------------------------------------------------------
 UCLASS(Abstract)
-class QL_API UQLUmgUserWidget : public UUserWidget
+class QL_API UQLUmgFirstPerson : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
-    UQLUmgUserWidget(const FObjectInitializer& ObjectInitializer);
+    UQLUmgFirstPerson(const FObjectInitializer& ObjectInitializer);
 
     // Optionally override the Blueprint "Event Construct" event
     virtual void NativeConstruct() override;

@@ -19,8 +19,8 @@ AQLPlayerController::AQLPlayerController() :
 FPS(0.0f)
 {
     // ui
-    UmgUserWidgetClass = UQLUmgUserWidget::StaticClass();
-    UmgUserWidget = nullptr;
+    UmgFirstPersonClass = UQLUmgFirstPerson::StaticClass();
+    UmgFirstPerson = nullptr;
 }
 
 //------------------------------------------------------------
@@ -63,18 +63,18 @@ void AQLPlayerController::Tick(float DeltaSeconds)
 //------------------------------------------------------------
 void AQLPlayerController::AddUMG()
 {
-    UmgUserWidget = CreateWidget<UQLUmgUserWidget>(GetWorld(), UmgUserWidgetClass, FName("UmgUserWidget"));
-    UmgUserWidget->SetQLPlayerController(this);
-    UmgUserWidget->AddToViewport();
+    UmgFirstPerson = CreateWidget<UQLUmgFirstPerson>(GetWorld(), UmgFirstPersonClass, FName("UmgFirstPerson"));
+    UmgFirstPerson->SetQLPlayerController(this);
+    UmgFirstPerson->AddToViewport();
     bShowMouseCursor = false;
     SetInputMode(FInputModeGameOnly());
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UQLUmgUserWidget* AQLPlayerController::GetUMG()
+UQLUmgFirstPerson* AQLPlayerController::GetUMG()
 {
-    return UmgUserWidget;
+    return UmgFirstPerson;
 }
 
 //------------------------------------------------------------
@@ -105,10 +105,10 @@ void AQLPlayerController::OnPossess(APawn* ControlledPawn)
 
         AddUMG();
 
-        if (UmgUserWidget)
+        if (UmgFirstPerson)
         {
-            UmgUserWidget->UpdateTextHealthValue(ControlledCharacter->GetHealth());
-            UmgUserWidget->UpdateTextArmorValue(ControlledCharacter->GetArmor());
+            UmgFirstPerson->UpdateTextHealthValue(ControlledCharacter->GetHealth());
+            UmgFirstPerson->UpdateTextArmorValue(ControlledCharacter->GetArmor());
         }
     }
 }
@@ -117,12 +117,12 @@ void AQLPlayerController::OnPossess(APawn* ControlledPawn)
 //------------------------------------------------------------
 void AQLPlayerController::ShowDamageOnScreen(float DamageAmount, const FVector& WorldTextLocation)
 {
-    if (!UmgUserWidget)
+    if (!UmgFirstPerson)
     {
         return;
     }
 
     int32 DamageAmountInt = FMath::RoundToInt(DamageAmount);
-    UmgUserWidget->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), WorldTextLocation);
+    UmgFirstPerson->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), WorldTextLocation);
 }
 

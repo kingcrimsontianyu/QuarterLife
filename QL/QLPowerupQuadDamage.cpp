@@ -15,7 +15,7 @@
 #include "QLUtility.h"
 #include "QLCharacter.h"
 #include "TimerManager.h"
-#include "QLUmgUserWidget.h"
+#include "QLUmgFirstPerson.h"
 #include "QLPlayerController.h"
 
 //------------------------------------------------------------

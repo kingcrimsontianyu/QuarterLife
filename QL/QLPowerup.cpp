@@ -12,7 +12,7 @@
 #include "QLPowerup.h"
 #include "QLPlayerController.h"
 #include "QLCharacter.h"
-#include "QLUmgUserWidget.h"
+#include "QLUmgFirstPerson.h"
 #include "QLPowerupManager.h"
 #include "Components/SphereComponent.h"
 
