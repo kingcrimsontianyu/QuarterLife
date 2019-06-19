@@ -118,7 +118,7 @@ bool AQLRocketProjectile::HandleDirectHit(AActor* OtherActor)
         DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
 
         // display damage
-        if (PlayerController.IsValid())
+        if (DamageAmount > 0.0f && PlayerController.IsValid())
         {
             PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
         }
@@ -194,12 +194,9 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
 
                 // display positive damage
-                if (DamageAmount > 0.0f)
+                if (DamageAmount > 0.0f && PlayerController.IsValid())
                 {
-                    if (PlayerController.IsValid())
-                    {
-                        PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
-                    }
+                    PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
                 }
             }
         }

@@ -175,8 +175,8 @@ void AQLWeaponLightningGun::HitTarget()
     // create a damage event
     const FPointDamageEvent DamageEvent;
 
-    const float DamageAmount = BasicDamageAdjusted;
-    hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
+    float DamageAmount = BasicDamageAdjusted;
+    DamageAmount = hitActor->TakeDamage(DamageAmount, DamageEvent, User->GetController(), this);
 
     // change victim velocity
     UCharacterMovementComponent* CharacterMovementComponent = hitActor->GetCharacterMovement();
@@ -189,7 +189,7 @@ void AQLWeaponLightningGun::HitTarget()
 
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
-    if (QLPlayerController)
+    if (DamageAmount > 0.0f && QLPlayerController)
     {
         QLPlayerController->ShowDamageOnScreen(DamageAmount, HitResult.ImpactPoint);
     }

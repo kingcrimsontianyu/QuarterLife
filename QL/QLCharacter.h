@@ -82,6 +82,9 @@ public:
     void OnDie();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool IsAlive();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetHealth() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

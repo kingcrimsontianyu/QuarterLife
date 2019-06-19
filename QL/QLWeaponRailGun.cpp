@@ -145,13 +145,14 @@ void AQLWeaponRailGun::OnFire()
     // create a damage event
     const FPointDamageEvent DamageEvent;
 
-    hitActor->TakeDamage(CurrentDamage, DamageEvent, User->GetController(), this);
+    float DamageAmount = hitActor->TakeDamage(CurrentDamage, DamageEvent, User->GetController(), this);
 
+    QLUtility::Log(FString::SanitizeFloat(DamageAmount));
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
-    if (QLPlayerController)
+    if (DamageAmount > 0.0f && QLPlayerController)
     {
-        QLPlayerController->ShowDamageOnScreen(CurrentDamage, HitResult.ImpactPoint);
+        QLPlayerController->ShowDamageOnScreen(DamageAmount, HitResult.ImpactPoint);
     }
 }
 

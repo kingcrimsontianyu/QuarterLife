@@ -727,3 +727,17 @@ void AQLCharacter::StopGlow()
         WeaponManager->StopGlowWeapon();
     }
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::IsAlive()
+{
+    if (Health > 0.0f)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
