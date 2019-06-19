@@ -182,6 +182,6 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
         SoundName = FName("FireOrange");
     }
     PlaySound(SoundName);
-    PlayAnimation(FName("Fire"));
+    PlayAnimationMontage(FName("Fire"));
 }
 

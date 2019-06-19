@@ -79,7 +79,7 @@ void AQLWeaponRailGun::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    PlayAnimation(FName("Fire"));
+    PlayAnimationMontage(FName("Fire"));
 
     PlaySoundFireAndForget(FName("Fire"));
 

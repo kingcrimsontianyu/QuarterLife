@@ -24,6 +24,7 @@
 #include "Components/WidgetComponent.h"
 #include "QLPlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "QLPowerup.h"
 
 //------------------------------------------------------------
@@ -580,7 +581,62 @@ void AQLCharacter::SwitchToPortalGun()
 //------------------------------------------------------------
 void AQLCharacter::Die()
 {
+    UAnimSequence* Animation = PlayAnimationSequence("Death1");
+
+    // get animation length
+    float ActualAnimationLength = Animation->SequenceLength / Animation->RateScale;
+    float DurationBeforeDestroyed = ActualAnimationLength + 3.0f;
+
+    GetCapsuleComponent()->SetCollisionProfileName(TEXT("NoCollision"));
+    GetCapsuleComponent()->SetEnableGravity(false);
+
+    // destroy the character
+    GetWorldTimerManager().SetTimer(DieTimerHandle,
+        this,
+        &AQLCharacter::OnDie,
+        1.0f, // time interval in second
+        false, // loop
+        DurationBeforeDestroyed); // delay in second
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnDie()
+{
     Destroy();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UAnimSequence* AQLCharacter::PlayAnimationSequence(const FName& AnimationSequenceName)
+{
+    UAnimSequence** Result = AnimationSequenceList.Find(AnimationSequenceName);
+    if (!Result)
+    {
+        return nullptr;
+    }
+
+    UAnimSequence* Animation = *Result;
+    if (!Animation)
+    {
+        return nullptr;
+    }
+
+    if (!ThirdPersonMesh)
+    {
+        return nullptr;
+    }
+
+    // prevent animation jitters
+    UPawnMovementComponent* PawnMovementComponent = GetMovementComponent();
+    UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(PawnMovementComponent);
+    if (CharacterMovementComponent)
+    {
+        CharacterMovementComponent->bOrientRotationToMovement = false;
+    }
+
+    ThirdPersonMesh->PlayAnimation(Animation, false);
+    return Animation;
 }
 
 //------------------------------------------------------------

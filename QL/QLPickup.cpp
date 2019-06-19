@@ -113,7 +113,7 @@ void AQLPickup::PostInitializeComponents()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPickup::PlayAnimation(const FName& AnimationName)
+void AQLPickup::PlayAnimationMontage(const FName& AnimationMontageName)
 {
 }
 

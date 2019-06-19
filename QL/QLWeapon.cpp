@@ -229,9 +229,9 @@ void AQLWeapon::EnableFireCallBack()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::PlayAnimation(const FName& AnimationName)
+void AQLWeapon::PlayAnimationMontage(const FName& AnimationMontageName)
 {
-    UAnimMontage** Result = AnimationList.Find(AnimationName);
+    UAnimMontage** Result = AnimationMontageList.Find(AnimationMontageName);
     if (Result)
     {
         UAnimMontage* Animation = *Result;

@@ -51,7 +51,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void OnAltFireHold();
 
-    virtual void PlayAnimation(const FName& AnimationName) override;
+    virtual void PlayAnimationMontage(const FName& AnimationName) override;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     USkeletalMeshComponent* GetGunSkeletalMeshComponent();

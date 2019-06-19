@@ -41,7 +41,7 @@ public:
     void StopSound();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void PlayAnimation(const FName& AnimationName);
+    virtual void PlayAnimationMontage(const FName& AnimationMontageName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetConstantRotationEnabled(const bool bFlag);
@@ -84,7 +84,7 @@ protected:
     TMap<FName, USoundBase*> SoundList;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    TMap<FName, UAnimMontage*> AnimationList;
+    TMap<FName, UAnimMontage*> AnimationMontageList;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     bool bCanBeRespawned;

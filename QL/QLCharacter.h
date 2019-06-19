@@ -13,6 +13,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "QLPlayerHealthArmorBarUserWidget.h"
+#include "Components/TimelineComponent.h"
 #include "QLCharacter.generated.h"
 
 class AQLWeapon;
@@ -78,6 +79,9 @@ public:
     void Die();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnDie();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetHealth() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -100,6 +104,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual UAnimSequence* PlayAnimationSequence(const FName& AnimationSequenceName);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float Health;
@@ -207,4 +214,13 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ProtectionMultiplier;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, UAnimMontage*> AnimationMontageList;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, UAnimSequence*> AnimationSequenceList;
+
+
+    FTimerHandle DieTimerHandle;
 };

@@ -69,7 +69,7 @@ void AQLWeaponRocketLauncher::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    PlayAnimation(FName("Fire"));
+    PlayAnimationMontage(FName("Fire"));
 
     PlaySoundFireAndForget(FName("Fire"));
 
