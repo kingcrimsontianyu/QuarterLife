@@ -86,10 +86,12 @@ void AQLRocketProjectile::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLRocketProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    // This function avoids the case of self direct hit. When it happens, the function returns immediately to ignore the current overlap event.
-    // When self direct hit does not happen, this function is guaranteed to be called only once,
-    // because even though the actor may overlap several components,
-    // it is destroyed immediately after the first overlap event.
+    // This function avoids self direct hit. Such case can happen, for example, when the player is
+    // firing the rocket laucher down, and the rocket overlaps with the player's vertical capsule immediately.
+    // When such case happens, the function returns to ignore the current overlap event.
+    // When such case does not happen, this function is guaranteed to be called only once,
+    // because even though the rocket may overlap several components,
+    // it is destroyed instantly upon the first overlap event.
     if (OtherActor)
     {
         bool bSelfDirectHit = false;
