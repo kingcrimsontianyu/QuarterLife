@@ -12,6 +12,9 @@
 #include "QLPlayerController.h"
 #include "QLUtility.h"
 #include "QLCharacter.h"
+#include "QLUmgFirstPerson.h"
+#include "QLUmgAbility.h"
+#include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -21,6 +24,9 @@ FPS(0.0f)
     // ui
     UmgFirstPersonClass = UQLUmgFirstPerson::StaticClass();
     UmgFirstPerson = nullptr;
+
+    UmgAbilityClass = UQLUmgAbility::StaticClass();
+    UmgAbility = nullptr;
 }
 
 //------------------------------------------------------------
@@ -68,6 +74,9 @@ void AQLPlayerController::AddUMG()
     UmgFirstPerson->AddToViewport();
     bShowMouseCursor = false;
     SetInputMode(FInputModeGameOnly());
+
+    UmgAbility = CreateWidget<UQLUmgAbility>(GetWorld(), UmgAbilityClass, FName("UmgAbility"));
+    UmgAbility->SetQLPlayerController(this);
 }
 
 //------------------------------------------------------------
@@ -126,3 +135,30 @@ void AQLPlayerController::ShowDamageOnScreen(float DamageAmount, const FVector& 
     UmgFirstPerson->ShowDamageOnScreen(FString::FromInt(DamageAmountInt), WorldTextLocation);
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::ShowAbilityMenu()
+{
+    if (UmgAbility && !UmgAbility->IsInViewport())
+    {
+        UmgAbility->AddToViewport();
+
+        bShowMouseCursor = true;
+        SetInputMode(FInputModeUIOnly());
+        UmgAbility->bIsFocusable = true;
+        UmgAbility->SetKeyboardFocus();
+
+        // slow down time
+        float TimeDilation = 0.2f;
+        UGameplayStatics::SetGlobalTimeDilation(GetWorld(), TimeDilation);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::SetupInputComponent()
+{
+    Super::SetupInputComponent();
+
+    InputComponent->BindAction("AbilityMenu", EInputEvent::IE_Pressed, this, &AQLPlayerController::ShowAbilityMenu);
+}

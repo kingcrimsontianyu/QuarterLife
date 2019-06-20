@@ -26,6 +26,8 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "QLPowerup.h"
+#include "QLUmgFirstPerson.h"
+#include "QLUmgAbility.h"
 
 //------------------------------------------------------------
 // Sets default values
