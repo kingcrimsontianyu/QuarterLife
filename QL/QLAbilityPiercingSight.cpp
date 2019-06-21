@@ -27,8 +27,11 @@ AQLAbilityPiercingSight::AQLAbilityPiercingSight()
     // animation
     ScanEffectTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("ScanEffectTimeline"));
     ScanEffectTimelineInterpFunction.BindUFunction(this, FName(TEXT("ScanEffectCallback")));
+    OnScanEffectEndCallback.BindUFunction(this, FName(TEXT("OnScanEffectEnd")));
 
     ScanSpeed = 5000.0f;
+    ScanTimes = 4;
+    Counter = 0;
 }
 
 //------------------------------------------------------------
@@ -46,11 +49,20 @@ void AQLAbilityPiercingSight::PostInitializeComponents()
 
     if (PostProcessComponent)
     {
-        if (MaterialPiercingSight)
+        if (MaterialScanEffect)
         {
             FWeightedBlendable WeightedBlendable;
-            DynamicMaterialPiercingSight = UKismetMaterialLibrary::CreateDynamicMaterialInstance(this, MaterialPiercingSight);
-            WeightedBlendable.Object = DynamicMaterialPiercingSight.Get();
+            DynamicMaterialScanEffect = UKismetMaterialLibrary::CreateDynamicMaterialInstance(this, MaterialScanEffect);
+            WeightedBlendable.Object = DynamicMaterialScanEffect.Get();
+            WeightedBlendable.Weight = 1.0f;
+            PostProcessComponent->Settings.WeightedBlendables.Array.Add(WeightedBlendable);
+        }
+
+        if (MaterialXRayEffect)
+        {
+            FWeightedBlendable WeightedBlendable;
+            DynamicMaterialXRayEffect = UKismetMaterialLibrary::CreateDynamicMaterialInstance(this, MaterialXRayEffect);
+            WeightedBlendable.Object = DynamicMaterialXRayEffect.Get();
             WeightedBlendable.Weight = 1.0f;
             PostProcessComponent->Settings.WeightedBlendables.Array.Add(WeightedBlendable);
         }
@@ -59,6 +71,7 @@ void AQLAbilityPiercingSight::PostInitializeComponents()
     if (ScanEffectTimeline && ScanEffectCurve)
     {
         ScanEffectTimeline->AddInterpFloat(ScanEffectCurve, ScanEffectTimelineInterpFunction, FName(TEXT("ScanEffect")));
+        ScanEffectTimeline->SetTimelineFinishedFunc(OnScanEffectEndCallback);
     }
 }
 
@@ -66,19 +79,12 @@ void AQLAbilityPiercingSight::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLAbilityPiercingSight::OnUse()
 {
+    Counter = 0;
     PostProcessComponent->bEnabled = true;
 
     if (ScanEffectTimeline && ScanEffectCurve)
     {
         ScanEffectTimeline->PlayFromStart();
-
-        // once the effect starts, periodically update
-        GetWorldTimerManager().SetTimer(ScanEffectEndTimerHandle,
-            this,
-            &AQLAbilityPiercingSight::OnScanEffectEnd,
-            0.1f, // time interval in second
-            false, // loop
-            ScanEffectTimeline->GetTimelineLength()); // delay in second
     }
 }
 
@@ -86,11 +92,11 @@ void AQLAbilityPiercingSight::OnUse()
 //------------------------------------------------------------
 void AQLAbilityPiercingSight::ScanEffectCallback(float Val)
 {
-    if (DynamicMaterialPiercingSight.IsValid())
+    if (DynamicMaterialScanEffect.IsValid())
     {
         float InnerRadius = 200.0f + ScanSpeed * Val;
-        DynamicMaterialPiercingSight->SetScalarParameterValue("InnerRadius", InnerRadius);
-        DynamicMaterialPiercingSight->SetScalarParameterValue("OuterRadius", InnerRadius + 50.0f);
+        DynamicMaterialScanEffect->SetScalarParameterValue("ScanEffectInnerRadius", InnerRadius);
+        DynamicMaterialScanEffect->SetScalarParameterValue("ScanEffectOuterRadius", InnerRadius + 50.0f);
     }
 }
 
@@ -98,5 +104,14 @@ void AQLAbilityPiercingSight::ScanEffectCallback(float Val)
 //------------------------------------------------------------
 void AQLAbilityPiercingSight::OnScanEffectEnd()
 {
-    PostProcessComponent->bEnabled = false;
+    ++Counter;
+
+    if (Counter >= 4)
+    {
+        PostProcessComponent->bEnabled = false;
+    }
+    else
+    {
+        ScanEffectTimeline->PlayFromStart();
+    }
 }

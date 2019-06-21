@@ -58,6 +58,7 @@ AQLRocketProjectile::AQLRocketProjectile()
     PlayerController = nullptr;
     DamageMultiplier = 1.0f;
     BasicDamageAdjusted = BasicDamage;
+    BlastSpeedChangeSelfDamageScale = 1.25f;
 }
 
 //------------------------------------------------------------
@@ -173,10 +174,16 @@ void AQLRocketProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                     // a less good approach is LaunchCharacter()
                     // Character->LaunchCharacter(FVector(0.0f, 0.0f, 100.0f), true, true);
 
+                    float ActualBlastSpeedChange = BlastSpeedChange;
+                    if (PlayerController.IsValid() && Character == PlayerController->GetCharacter())
+                    {
+                        ActualBlastSpeedChange *= BlastSpeedChangeSelfDamageScale;
+                    }
+
                     CharacterMovementComponent->AddRadialImpulse(
                         GetActorLocation(),
                         BlastRadius,
-                        BlastSpeedChange,
+                        ActualBlastSpeedChange,
                         ERadialImpulseFalloff::RIF_Linear,
                         true); // velocity change (true) or impulse (false)
                 }

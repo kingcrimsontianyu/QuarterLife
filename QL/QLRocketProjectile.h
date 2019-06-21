@@ -89,6 +89,9 @@ protected:
     float BlastSpeedChange;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BlastSpeedChangeSelfDamageScale;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;
 
     UPROPERTY()

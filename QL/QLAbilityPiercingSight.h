@@ -44,14 +44,22 @@ protected:
     UFUNCTION()
     void OnScanEffectEnd();
 
+    FOnTimelineEventStatic OnScanEffectEndCallback;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
     UPostProcessComponent* PostProcessComponent;
 
     UPROPERTY()
-    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialPiercingSight;
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialScanEffect;
+
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialXRayEffect;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    UMaterialInterface* MaterialPiercingSight;
+    UMaterialInterface* MaterialScanEffect;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    UMaterialInterface* MaterialXRayEffect;
 
     UPROPERTY()
     UTimelineComponent* ScanEffectTimeline;
@@ -61,11 +69,14 @@ protected:
 
     FOnTimelineFloat ScanEffectTimelineInterpFunction;
 
-    FTimerHandle ScanEffectEndTimerHandle;
-
     UFUNCTION()
     void ScanEffectCallback(float Val);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ScanSpeed;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    int32 ScanTimes;
+
+    int32 Counter;
 };
