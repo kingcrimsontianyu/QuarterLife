@@ -89,9 +89,11 @@ void AQLWeaponRailGun::OnFire()
 
     if (RailBeamClass)
     {
+        // to do: destroy this actor!!!
         RailBeamTemp = GetWorld()->SpawnActor<AQLRailBeam>(RailBeamClass, GetMuzzleLocation(), FRotator::ZeroRotator);
         if (RailBeamTemp)
         {
+            RailBeamTemp->SetActorEnableCollision(false);
             BeamComponentTemp = RailBeamTemp->GetBeamComponent();
             if (BeamComponentTemp)
             {

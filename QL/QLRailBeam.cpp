@@ -22,10 +22,13 @@ AQLRailBeam::AQLRailBeam()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    RootComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
+    auto* RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
+    RootSphereComponent->SetCollisionProfileName("NoCollision");
+    RootComponent = RootSphereComponent;
 
     BeamComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("BeamComponent"));
     BeamComponent->SetupAttachment(RootComponent);
+    BeamComponent->SetCollisionProfileName("NoCollision");
 }
 
 //------------------------------------------------------------
