@@ -29,6 +29,7 @@ public:
     AQLAbilityPiercingSight();
 
     virtual void OnUse() override;
+
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned

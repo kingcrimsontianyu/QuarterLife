@@ -52,10 +52,8 @@ void AQLPowerupProtection::OnEffectEnd()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupProtection::UpdateProgressOnUMG()
+void AQLPowerupProtection::UpdateProgressOnUMGInternal(const float Value)
 {
-    Super::UpdateProgressOnUMG();
-
     if (Beneficiary.IsValid())
     {
         auto* PlayerController = Cast<AQLPlayerController>(Beneficiary->GetController());
@@ -64,7 +62,34 @@ void AQLPowerupProtection::UpdateProgressOnUMG()
             auto* UMG = PlayerController->GetUMG();
             if (UMG)
             {
-                UMG->UpdateProtectionDamageProgress(ProgressPercent);
+                UMG->UpdateProtectionDamageProgress(Value);
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerupProtection::UpdateProgressOnUMG()
+{
+    Super::UpdateProgressOnUMG();
+
+    UpdateProgressOnUMGInternal(ProgressPercent);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerupProtection::SetUMGVisibility(const bool bFlag)
+{
+    if (Beneficiary.IsValid())
+    {
+        auto* PlayerController = Cast<AQLPlayerController>(Beneficiary->GetController());
+        if (PlayerController)
+        {
+            auto* UMG = PlayerController->GetUMG();
+            if (UMG)
+            {
+                UMG->SetProtectionProgressVisibility(bFlag);
             }
         }
     }

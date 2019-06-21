@@ -41,7 +41,15 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
+    virtual void UpdateProgressOnUMGInternal(const float Value) override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     virtual void UpdateProgressOnUMG() override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void SetUMGVisibility(const bool bFlag) override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ProtectionMultiplier;

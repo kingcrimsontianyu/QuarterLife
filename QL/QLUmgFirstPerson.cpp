@@ -89,6 +89,16 @@ void UQLUmgFirstPerson::NativeConstruct()
             Material->SetVectorParameterValue("Color", FVector(0.0f, 0.6f, 0.4f));
         }
     }
+
+    if (AbilityCooldownProgress)
+    {
+        auto* Material = AbilityCooldownProgress->GetDynamicMaterial();
+        if (Material)
+        {
+            Material->SetScalarParameterValue("Progress", 0.0f);
+            Material->SetVectorParameterValue("Color", FVector(1.0f, 0.84f, 0.0f));
+        }
+    }
 }
 
 //------------------------------------------------------------
@@ -238,4 +248,62 @@ float UQLUmgFirstPerson::UpdateProtectionDamageProgress_Implementation(float Pro
     }
 
     return ProgressPercent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float UQLUmgFirstPerson::UpdateAbilityCooldownProgress_Implementation(float ProgressPercent)
+{
+    if (AbilityCooldownProgress)
+    {
+        auto* Material = AbilityCooldownProgress->GetDynamicMaterial();
+        if (Material)
+        {
+            Material->SetScalarParameterValue("Progress", ProgressPercent);
+        }
+    }
+
+    return ProgressPercent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLUmgFirstPerson::SetQuadDamageProgressVisibility_Implementation(const bool bFlag)
+{
+    if (QuadDamageProgress)
+    {
+        ESlateVisibility Temp;
+
+        if (bFlag)
+        {
+            Temp = ESlateVisibility::Visible;
+        }
+        else
+        {
+            Temp = ESlateVisibility::Hidden;
+        }
+
+        QuadDamageProgress->SetVisibility(Temp);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLUmgFirstPerson::SetProtectionProgressVisibility_Implementation(const bool bFlag)
+{
+    if (ProtectionProgress)
+    {
+        ESlateVisibility Temp;
+
+        if (bFlag)
+        {
+            Temp = ESlateVisibility::Visible;
+        }
+        else
+        {
+            Temp = ESlateVisibility::Hidden;
+        }
+
+        ProtectionProgress->SetVisibility(Temp);
+    }
 }

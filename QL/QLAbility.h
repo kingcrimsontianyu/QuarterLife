@@ -37,6 +37,30 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void OnUse();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void UpdateProgressOnUMGInternal(const float Value);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void UpdateProgressOnUMG();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void Reactivate();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void Deactivate();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool IsActive();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,4 +75,20 @@ protected:
 
     UPROPERTY()
     TWeakObjectPtr<UQLAbilityManager> AbilityManager;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool bCanBeUsed;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float CooldownDuration;
+
+    float CooldownTimeElapsed;
+
+    FTimerHandle CooldownDurationTimerHandle;
+
+    FTimerHandle CooldownTimeElapsedTimerHandle;
+
+    float CooldownUpdateTimeIncrement;
+
+    float CooldownPercent;
 };

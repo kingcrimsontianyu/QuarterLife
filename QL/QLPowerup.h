@@ -51,8 +51,17 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
+    virtual void UpdateProgressOnUMGInternal(const float Value);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void UpdateProgressOnUMG();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void SetUMGVisibility(const bool bFlag);
 
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -92,6 +101,7 @@ protected:
 
     float ProgressPercent;
     float TimeElapsed;
+    float ProgressUpdateTimeIncrement;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FName PowerupName;

@@ -52,10 +52,8 @@ void AQLPowerupQuadDamage::OnEffectEnd()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPowerupQuadDamage::UpdateProgressOnUMG()
+void AQLPowerupQuadDamage::UpdateProgressOnUMGInternal(const float Value)
 {
-    Super::UpdateProgressOnUMG();
-
     if (Beneficiary.IsValid())
     {
         auto* PlayerController = Cast<AQLPlayerController>(Beneficiary->GetController());
@@ -64,7 +62,34 @@ void AQLPowerupQuadDamage::UpdateProgressOnUMG()
             auto* UMG = PlayerController->GetUMG();
             if (UMG)
             {
-                UMG->UpdateQuadDamageProgress(ProgressPercent);
+                UMG->UpdateQuadDamageProgress(Value);
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerupQuadDamage::UpdateProgressOnUMG()
+{
+    Super::UpdateProgressOnUMG();
+
+    UpdateProgressOnUMGInternal(ProgressPercent);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPowerupQuadDamage::SetUMGVisibility(const bool bFlag)
+{
+    if (Beneficiary.IsValid())
+    {
+        auto* PlayerController = Cast<AQLPlayerController>(Beneficiary->GetController());
+        if (PlayerController)
+        {
+            auto* UMG = PlayerController->GetUMG();
+            if (UMG)
+            {
+                UMG->SetQuadDamageProgressVisibility(bFlag);
             }
         }
     }

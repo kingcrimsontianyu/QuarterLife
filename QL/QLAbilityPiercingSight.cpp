@@ -15,6 +15,7 @@
 #include "QLUtility.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "QLAbilityManager.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -79,6 +80,13 @@ void AQLAbilityPiercingSight::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLAbilityPiercingSight::OnUse()
 {
+    Super::OnUse();
+
+    if (!IsActive())
+    {
+        return;
+    }
+
     Counter = 0;
     PostProcessComponent->bEnabled = true;
     PlaySound(FName("Scan"));
@@ -87,6 +95,8 @@ void AQLAbilityPiercingSight::OnUse()
     {
         ScanEffectTimeline->PlayFromStart();
     }
+
+    Deactivate();
 }
 
 //------------------------------------------------------------

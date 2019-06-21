@@ -70,12 +70,24 @@ public:
 
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
     float UpdateProtectionDamageProgress(float ProgressPercent);
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    float UpdateAbilityCooldownProgress(float ProgressPercent);
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    void SetQuadDamageProgressVisibility(const bool bFlag);
+
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    void SetProtectionProgressVisibility(const bool bFlag);
 protected:
     UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
     UImage* QuadDamageProgress;
 
     UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
     UImage* ProtectionProgress;
+
+    UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+    UImage* AbilityCooldownProgress;
 
     UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
     UTextBlock* DamageText0;
