@@ -25,7 +25,7 @@ PortalColor(EPortalColor::Invalid)
 
     // animation
     EnlargeTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("EnlargeTimeline"));
-    EnlargeTimelineInterpFunction.BindUFunction(this, FName{ TEXT("EnlargeCallback") });
+    EnlargeTimelineInterpFunction.BindUFunction(this, FName(TEXT("EnlargeCallback")));
 }
 
 //------------------------------------------------------------

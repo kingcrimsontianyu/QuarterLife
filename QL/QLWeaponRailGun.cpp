@@ -25,7 +25,7 @@
 //------------------------------------------------------------
 AQLWeaponRailGun::AQLWeaponRailGun()
 {
-    WeaponName = FName("RailGun");
+    QLName = FName("RailGun");
     HitRange = 1e5f;
     RateOfFire = 1.5f;
 

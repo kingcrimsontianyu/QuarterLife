@@ -11,7 +11,6 @@
 
 #include "QLWeapon.h"
 #include "Components/SphereComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "QLCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -32,7 +31,7 @@ AQLWeapon::AQLWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    WeaponName = "None";
+    QLName = "None";
     HitRange = 10000.0f;
     RateOfFire = 1.0f;
     bIsFireHeld = false;
@@ -158,13 +157,6 @@ FVector AQLWeapon::GetMuzzleLocation()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-FName AQLWeapon::GetWeaponName()
-{
-    return WeaponName;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
 void AQLWeapon::SetHitRange(float HitRangeExt)
 {
     HitRange = HitRangeExt;
@@ -213,7 +205,7 @@ void AQLWeapon::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp,
     if (QLCharacter)
     {
         QLCharacter->AddWeapon(this);
-        QLCharacter->SetCurrentWeapon(this->GetWeaponName());
+        QLCharacter->SetCurrentWeapon(this->GetQLName());
         PlaySound("PickUp");
     }
 }

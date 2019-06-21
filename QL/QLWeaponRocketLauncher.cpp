@@ -24,7 +24,7 @@
 //------------------------------------------------------------
 AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
 {
-    WeaponName = FName("RocketLauncher");
+    QLName = FName("RocketLauncher");
     RateOfFire = 0.8f;
 
     BasicDamage = 100.0f;

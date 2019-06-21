@@ -11,7 +11,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "QLPickup.h"
 #include "QLWeapon.generated.h"
 
@@ -58,9 +57,6 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     FVector GetMuzzleLocation();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    FName GetWeaponName();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetHitRange(float HitRange);
@@ -113,9 +109,6 @@ protected:
 
     UPROPERTY()
     TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialGun;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FName WeaponName;
 
     FTimerHandle HeldDownFireTimerHandle;
 

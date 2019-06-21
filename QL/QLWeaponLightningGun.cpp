@@ -26,7 +26,7 @@
 //------------------------------------------------------------
 AQLWeaponLightningGun::AQLWeaponLightningGun()
 {
-    WeaponName = FName("LightningGun");
+    QLName = FName("LightningGun");
     HitRange = 1200.0f;
     RateOfFire = 0.05f;
     bIsFireHeld = false;

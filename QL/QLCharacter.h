@@ -18,6 +18,8 @@
 
 class AQLWeapon;
 class UQLWeaponManager;
+class AQLAbility;
+class UQLAbilityManager;
 class UWidgetComponent;
 class UQLPowerupManager;
 
@@ -67,7 +69,13 @@ public:
     void AddWeapon(AQLWeapon* Weapon);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCurrentWeapon(const FName& WeaponName);
+    void SetCurrentWeapon(const FName& QLName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void AddAbility(AQLAbility* Ability);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCurrentAbility(const FName& QLName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool AddPowerup(AQLPowerup* Powerup);
@@ -204,6 +212,10 @@ protected:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SwitchToPortalGun();
+
+    // Fires a projectile.
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnUseAbility();
 protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
@@ -211,6 +223,9 @@ protected:
 
     UPROPERTY()
     UQLWeaponManager* WeaponManager;
+
+    UPROPERTY()
+    UQLAbilityManager* AbilityManager;
 
     UPROPERTY()
     UQLPowerupManager* PowerupManager;

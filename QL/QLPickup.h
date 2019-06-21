@@ -51,6 +51,13 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     FLinearColor GetGlowColor();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FName GetQLName();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UStaticMeshComponent* GetStaticMeshComponent();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -104,4 +111,7 @@ protected:
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FLinearColor GlowColor;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FName QLName;
 };

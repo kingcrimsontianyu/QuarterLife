@@ -18,6 +18,8 @@
 #include "DrawDebugHelpers.h"
 #include "QLWeapon.h"
 #include "QLWeaponManager.h"
+#include "QLAbility.h"
+#include "QLAbilityManager.h"
 #include "QLPowerupManager.h"
 #include "QLUtility.h"
 #include "QLPlayerController.h"
@@ -106,6 +108,9 @@ void AQLCharacter::PostInitializeComponents()
     WeaponManager = NewObject<UQLWeaponManager>(this);
     WeaponManager->SetUser(this);
 
+    AbilityManager = NewObject<UQLAbilityManager>(this);
+    AbilityManager->SetUser(this);
+
     PowerupManager = NewObject<UQLPowerupManager>(this);
     PowerupManager->SetUser(this);
 
@@ -155,6 +160,8 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("SwitchToPortalGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToPortalGun);
 
     PlayerInputComponent->BindAction("RestartLevel", EInputEvent::IE_Pressed, this, &AQLCharacter::OnRestartLevel);
+
+    PlayerInputComponent->BindAction("UseAbility", EInputEvent::IE_Pressed, this, &AQLCharacter::OnUseAbility);
 
     // Bind movement events
     PlayerInputComponent->BindAxis("MoveForward", this, &AQLCharacter::MoveForward);
@@ -311,6 +318,18 @@ void AQLCharacter::AddWeapon(AQLWeapon* Weapon)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void AQLCharacter::AddAbility(AQLAbility* Ability)
+{
+    if (!AbilityManager)
+    {
+        return;
+    }
+
+    AbilityManager->AddAbility(Ability);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 bool AQLCharacter::AddPowerup(AQLPowerup* Powerup)
 {
     if (!PowerupManager)
@@ -335,14 +354,26 @@ void AQLCharacter::RemovePowerup(AQLPowerup* Powerup)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::SetCurrentWeapon(const FName& WeaponName)
+void AQLCharacter::SetCurrentWeapon(const FName& QLName)
 {
     if (!WeaponManager)
     {
         return;
     }
 
-    WeaponManager->SetCurrentWeapon(WeaponName);
+    WeaponManager->SetCurrentWeapon(QLName);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetCurrentAbility(const FName& QLName)
+{
+    if (!AbilityManager)
+    {
+        return;
+    }
+
+    AbilityManager->SetCurrentAbility(QLName);
 }
 
 //------------------------------------------------------------
@@ -741,5 +772,21 @@ bool AQLCharacter::IsAlive()
     else
     {
         return false;
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnUseAbility()
+{
+    if (!AbilityManager)
+    {
+        return;
+    }
+
+    AQLAbility* CurrentAbility = AbilityManager->GetCurrentAbility();
+    if (CurrentAbility)
+    {
+        CurrentAbility->OnUse();
     }
 }

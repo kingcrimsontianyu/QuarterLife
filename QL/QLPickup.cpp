@@ -185,3 +185,17 @@ FLinearColor AQLPickup::GetGlowColor()
 {
     return GlowColor;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FName AQLPickup::GetQLName()
+{
+    return QLName;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UStaticMeshComponent* AQLPickup::GetStaticMeshComponent()
+{
+    return StaticMeshComponent;
+}

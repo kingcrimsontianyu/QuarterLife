@@ -14,9 +14,8 @@
 #include "QLAbility.h"
 #include "QLAbilityHealingRain.generated.h"
 
-/**
- *
- */
+//------------------------------------------------------------
+//------------------------------------------------------------
 UCLASS()
 class QL_API AQLAbilityHealingRain : public AQLAbility
 {
