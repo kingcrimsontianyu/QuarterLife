@@ -81,6 +81,7 @@ void AQLAbilityPiercingSight::OnUse()
 {
     Counter = 0;
     PostProcessComponent->bEnabled = true;
+    PlaySound(FName("Scan"));
 
     if (ScanEffectTimeline && ScanEffectCurve)
     {
@@ -106,7 +107,7 @@ void AQLAbilityPiercingSight::OnScanEffectEnd()
 {
     ++Counter;
 
-    if (Counter >= 4)
+    if (Counter >= ScanTimes)
     {
         PostProcessComponent->bEnabled = false;
     }
