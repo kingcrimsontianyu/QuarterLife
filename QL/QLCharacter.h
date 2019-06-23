@@ -216,6 +216,15 @@ protected:
     // Fires a projectile.
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnUseAbility();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlaySoundFireAndForget(const FName& SoundName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlaySound(const FName& SoundName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void StopSound();
 protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
@@ -239,6 +248,11 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, UAnimSequence*> AnimationSequenceList;
 
-
     FTimerHandle DieTimerHandle;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UAudioComponent* SoundComponent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, USoundBase*> SoundList;
 };

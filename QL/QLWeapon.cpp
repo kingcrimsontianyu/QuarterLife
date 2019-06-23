@@ -37,8 +37,6 @@ AQLWeapon::AQLWeapon()
     bIsFireHeld = false;
     bFireEnabled = true;
 
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLWeapon::OnComponentBeginOverlapImpl);
-
     GunSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunSkeletalMeshComponent"));
     GunSkeletalMeshComponent->SetupAttachment(RootComponent);
     GunSkeletalMeshComponent->SetSimulatePhysics(false);

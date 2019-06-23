@@ -30,6 +30,7 @@
 #include "QLPowerup.h"
 #include "QLUmgFirstPerson.h"
 #include "QLUmgAbility.h"
+#include "Components/AudioComponent.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -628,6 +629,8 @@ void AQLCharacter::Die()
     float ActualAnimationLength = Animation->SequenceLength / Animation->RateScale;
     float DurationBeforeDestroyed = ActualAnimationLength + 3.0f;
 
+    PlaySoundFireAndForget(FName(TEXT("Die")));
+
     // destroy the character
     GetWorldTimerManager().SetTimer(DieTimerHandle,
         this,
@@ -790,5 +793,52 @@ void AQLCharacter::OnUseAbility()
     if (CurrentAbility)
     {
         CurrentAbility->OnUse();
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::PlaySoundFireAndForget(const FName& SoundName)
+{
+    USoundBase** Result = SoundList.Find(SoundName);
+    if (Result)
+    {
+        USoundBase* Sound = *Result;
+        if (Sound)
+        {
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::PlaySound(const FName& SoundName)
+{
+    USoundBase** Result = SoundList.Find(SoundName);
+    if (Result)
+    {
+        USoundBase* Sound = *Result;
+        if (Sound)
+        {
+            SoundComponent->SetSound(Sound);
+            SoundComponent->Play(0.0f);
+
+            //// sound played using this function is fire and forget and does not travel with the actor
+            //UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::StopSound()
+{
+    if (SoundComponent)
+    {
+        if (SoundComponent->IsPlaying())
+        {
+            SoundComponent->Stop();
+        }
     }
 }

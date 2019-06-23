@@ -26,7 +26,7 @@
 //------------------------------------------------------------
 AQLWeaponLightningGun::AQLWeaponLightningGun()
 {
-    QLName = FName("LightningGun");
+    QLName = FName(TEXT("LightningGun"));
     HitRange = 1200.0f;
     RateOfFire = 0.05f;
     bIsFireHeld = false;
@@ -66,7 +66,7 @@ void AQLWeaponLightningGun::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFire()
 {
-    PlaySound(FName("Fire"));
+    PlaySound(FName(TEXT("Fire")));
 
     bIsFireHeld = true;
 

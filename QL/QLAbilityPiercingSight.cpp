@@ -21,7 +21,7 @@
 //------------------------------------------------------------
 AQLAbilityPiercingSight::AQLAbilityPiercingSight()
 {
-    QLName = FName("PiercingSight");
+    QLName = FName(TEXT("PiercingSight"));
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
 
@@ -89,7 +89,7 @@ void AQLAbilityPiercingSight::OnUse()
 
     Counter = 0;
     PostProcessComponent->bEnabled = true;
-    PlaySound(FName("Scan"));
+    PlaySound(FName(TEXT("Scan")));
 
     if (ScanEffectTimeline && ScanEffectCurve)
     {

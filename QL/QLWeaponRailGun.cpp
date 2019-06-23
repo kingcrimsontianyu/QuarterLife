@@ -25,7 +25,7 @@
 //------------------------------------------------------------
 AQLWeaponRailGun::AQLWeaponRailGun()
 {
-    QLName = FName("RailGun");
+    QLName = FName(TEXT("RailGun"));
     HitRange = 1e5f;
     RateOfFire = 1.5f;
 
@@ -79,9 +79,9 @@ void AQLWeaponRailGun::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    PlayAnimationMontage(FName("Fire"));
+    PlayAnimationMontage(FName(TEXT("Fire")));
 
-    PlaySoundFireAndForget(FName("Fire"));
+    PlaySoundFireAndForget(FName(TEXT("Fire")));
 
     // create the transient beam actor
     UParticleSystemComponent* BeamComponentTemp = nullptr;
@@ -194,7 +194,7 @@ void AQLWeaponRailGun::OnAltFire()
     }
 
     // sound
-    PlaySound(FName("Zoom"));
+    PlaySound(FName(TEXT("Zoom")));
 }
 
 //------------------------------------------------------------

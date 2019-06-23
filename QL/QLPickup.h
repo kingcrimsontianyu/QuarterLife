@@ -70,6 +70,11 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     USphereComponent* RootSphereComponent;
 

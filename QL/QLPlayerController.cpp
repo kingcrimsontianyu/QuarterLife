@@ -69,13 +69,13 @@ void AQLPlayerController::Tick(float DeltaSeconds)
 //------------------------------------------------------------
 void AQLPlayerController::AddUMG()
 {
-    UmgFirstPerson = CreateWidget<UQLUmgFirstPerson>(GetWorld(), UmgFirstPersonClass, FName("UmgFirstPerson"));
+    UmgFirstPerson = CreateWidget<UQLUmgFirstPerson>(GetWorld(), UmgFirstPersonClass, FName(TEXT("UmgFirstPerson")));
     UmgFirstPerson->SetQLPlayerController(this);
     UmgFirstPerson->AddToViewport();
     bShowMouseCursor = false;
     SetInputMode(FInputModeGameOnly());
 
-    UmgAbility = CreateWidget<UQLUmgAbility>(GetWorld(), UmgAbilityClass, FName("UmgAbility"));
+    UmgAbility = CreateWidget<UQLUmgAbility>(GetWorld(), UmgAbilityClass, FName(TEXT("UmgAbility")));
     UmgAbility->SetQLPlayerController(this);
 }
 

@@ -30,11 +30,9 @@ AQLAbility::AQLAbility()
 
     QLName = "None";
 
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLAbility::OnComponentBeginOverlapImpl);
-
     DamageMultiplier = 1.0;
     bCanBeUsed = true;
-    CooldownDuration = 10.0f;
+    CooldownDuration = 20.0f;
     CooldownTimeElapsed = 0.0f;
     CooldownUpdateTimeIncrement = 0.1f;
     CooldownPercent = 0.0f;

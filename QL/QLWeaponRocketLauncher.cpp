@@ -24,7 +24,7 @@
 //------------------------------------------------------------
 AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
 {
-    QLName = FName("RocketLauncher");
+    QLName = FName(TEXT("RocketLauncher"));
     RateOfFire = 0.8f;
 
     BasicDamage = 100.0f;
@@ -69,9 +69,9 @@ void AQLWeaponRocketLauncher::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
-    PlayAnimationMontage(FName("Fire"));
+    PlayAnimationMontage(FName(TEXT("Fire")));
 
-    PlaySoundFireAndForget(FName("Fire"));
+    PlaySoundFireAndForget(FName(TEXT("Fire")));
 
     // ray tracing
     AQLCharacter* User = GetWeaponManager()->GetUser();

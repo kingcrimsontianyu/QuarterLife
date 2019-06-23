@@ -24,7 +24,6 @@ AQLPowerup::AQLPowerup()
     RespawnInterval = 120.0f;
     EffectDuration = 30.0f;
     ProgressUpdateTimeIncrement = 0.1f;
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPowerup::OnComponentBeginOverlapImpl);
 }
 
 //------------------------------------------------------------

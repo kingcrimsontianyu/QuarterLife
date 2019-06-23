@@ -26,7 +26,7 @@ AQLWeaponPortalGun::AQLWeaponPortalGun()
 {
     HitRange = 10000.0f;
 
-    QLName = FName("PortalGun");
+    QLName = FName(TEXT("PortalGun"));
 
     PortalClass = AQLColoredPortal::StaticClass();
 }
@@ -84,7 +84,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: no hit");
-        PlaySound(FName("NoPortal"));
+        PlaySound(FName(TEXT("NoPortal")));
         return;
     }
 
@@ -97,7 +97,7 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: not compatible");
-        PlaySound(FName("NoPortal"));
+        PlaySound(FName(TEXT("NoPortal")));
         return;
     }
 
@@ -175,13 +175,13 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     FName SoundName;
     if (PortalColor == EPortalColor::Blue)
     {
-        SoundName = FName("FireBlue");
+        SoundName = FName(TEXT("FireBlue"));
     }
     else
     {
-        SoundName = FName("FireOrange");
+        SoundName = FName(TEXT("FireOrange"));
     }
     PlaySound(SoundName);
-    PlayAnimationMontage(FName("Fire"));
+    PlayAnimationMontage(FName(TEXT("Fire")));
 }
 
