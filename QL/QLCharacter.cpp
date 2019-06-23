@@ -96,6 +96,16 @@ void AQLCharacter::BeginPlay()
 
     UpdateHealth();
     UpdateArmor();
+
+    if (WeaponManager)
+    {
+        WeaponManager->CreateAndAddAllWeapons(WeaponClassList);
+    }
+
+    if (AbilityManager)
+    {
+        AbilityManager->CreateAndAddAllAbilities(AbilityClassList);
+    }
 }
 
 //------------------------------------------------------------

@@ -138,9 +138,11 @@ void AQLPowerup::OnEffectEnd()
     GetWorldTimerManager().ClearTimer(EffectEndTimerHandle);
     GetWorldTimerManager().ClearTimer(EffectStartTimerHandle);
 
-    Beneficiary->RemovePowerup(this);
-
-    UpdateProgressOnUMGInternal(0.0f);
+    if (Beneficiary.IsValid())
+    {
+        Beneficiary->RemovePowerup(this);
+        UpdateProgressOnUMGInternal(0.0f);
+    }
 }
 
 //------------------------------------------------------------

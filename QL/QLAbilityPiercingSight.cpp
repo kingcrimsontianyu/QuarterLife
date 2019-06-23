@@ -89,7 +89,8 @@ void AQLAbilityPiercingSight::OnUse()
 
     Counter = 0;
     PostProcessComponent->bEnabled = true;
-    PlaySound(FName(TEXT("Scan")));
+    PlaySoundFireAndForget(FName(TEXT("Voiceline")));
+    PlaySoundFireAndForget(FName(TEXT("Scan")));
 
     if (ScanEffectTimeline && ScanEffectCurve)
     {

@@ -255,4 +255,10 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TMap<FName, USoundBase*> SoundList;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TArray<TSubclassOf<AQLWeapon>> WeaponClassList;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TArray<TSubclassOf<AQLAbility>> AbilityClassList;
 };

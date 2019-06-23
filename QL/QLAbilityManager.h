@@ -31,6 +31,7 @@ public:
 
     void SetDamageMultiplier(const float Value);
 
+    void CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbility>>& AbilityClassList);
 protected:
     TWeakObjectPtr<AQLCharacter> User;
 

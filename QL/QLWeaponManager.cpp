@@ -201,3 +201,20 @@ void UQLWeaponManager::StopGlowWeapon()
         Item->StopGlow();
     }
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLWeaponManager::CreateAndAddAllWeapons(const TArray<TSubclassOf<AQLWeapon>>& WeaponClassList)
+{
+    if (!User.IsValid())
+    {
+        return;
+    }
+
+    for (const auto& Item : WeaponClassList)
+    {
+        auto* Weapon = GetWorld()->SpawnActor<AQLWeapon>(Item, FVector::ZeroVector, FRotator::ZeroRotator);
+        AddWeapon(Weapon);
+    }
+}
+

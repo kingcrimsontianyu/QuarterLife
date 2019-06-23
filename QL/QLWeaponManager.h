@@ -45,6 +45,8 @@ public:
     void StartGlowWeapon(const FLinearColor& Color);
 
     void StopGlowWeapon();
+
+    void CreateAndAddAllWeapons(const TArray<TSubclassOf<AQLWeapon>>& WeaponClassList);
 protected:
     // do not use UPROPERTY() here
     // it breaks the character weapon system

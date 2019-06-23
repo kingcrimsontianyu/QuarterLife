@@ -114,6 +114,7 @@ void AQLAbility::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp
     {
         QLCharacter->AddAbility(this);
         QLCharacter->SetCurrentAbility(this->GetQLName());
+        UpdateProgressOnUMGInternal(1.0f);
         PlaySound("PickUp");
     }
 }
@@ -169,7 +170,7 @@ void AQLAbility::Reactivate()
     bCanBeUsed = true;
 
     // reset
-    UpdateProgressOnUMGInternal(0.0f);
+    UpdateProgressOnUMGInternal(1.0f);
 
     GetWorldTimerManager().ClearTimer(CooldownDurationTimerHandle);
     GetWorldTimerManager().ClearTimer(CooldownTimeElapsedTimerHandle);

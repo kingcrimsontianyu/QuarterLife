@@ -142,4 +142,21 @@ void UQLAbilityManager::SetDamageMultiplier(const float Value)
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLAbilityManager::CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbility>>& AbilityClassList)
+{
+    if (!User.IsValid())
+    {
+        return;
+    }
+
+    for (const auto& Item : AbilityClassList)
+    {
+        auto* Ability = GetWorld()->SpawnActor<AQLAbility>(Item, FVector::ZeroVector, FRotator::ZeroRotator);
+        AddAbility(Ability);
+        User->SetCurrentAbility(Ability->GetQLName());
+        Ability->UpdateProgressOnUMGInternal(1.0f);
+    }
+}
 
