@@ -66,6 +66,7 @@ void UQLAbilityManager::SetCurrentAbility(const FName& QLName)
     // if it is not, do nothing
     if (!AbilityWanted)
     {
+        QLUtility::Log("Named ability not found : " + QLName.ToString());
         return;
     }
 

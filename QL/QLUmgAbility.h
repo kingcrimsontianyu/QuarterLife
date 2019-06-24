@@ -40,6 +40,11 @@ public:
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     AQLPlayerController* GetQLPlayerController();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    int SetCurrentAbility(const FName& QLName);
 protected:
     virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent);
 

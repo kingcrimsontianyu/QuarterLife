@@ -101,3 +101,20 @@ FReply UQLUmgAbility::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEve
 
     return FReply::Handled();
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+int UQLUmgAbility::SetCurrentAbility_Implementation(const FName& QLName)
+{
+    if (QLPlayerController.IsValid())
+    {
+        auto* Pawn = QLPlayerController->GetPawn();
+        auto* Character = Cast<AQLCharacter>(Pawn);
+        if (Character)
+        {
+            Character->SetCurrentAbility(QLName);
+        }
+    }
+
+    return 1;
+}
