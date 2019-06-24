@@ -30,6 +30,8 @@ Regarding this repository:
     + Recycler grenade (Prey)
 
 + Ability
+    + Ghost walk 鬼影 (Quake Champions)
+    + Piercing sight 透視 (Quake Champions)
     + Mimic Matter (Prey)
     + Za Warudo (the world) (manga/anime JoJo's Bizarre Adventure)
 
@@ -46,16 +48,14 @@ Regarding this repository:
 ## Planned features
 
 + Weapon
-	+ Big Fucking Gun (BFG) (Doom)
-	
+    + Big Fucking Gun (BFG) (Doom)
+
 + Ability
     + Healing rain 愈雨 (Shadow Warrior)
-    + Ghost walk 鬼影 (Quake Champions)
     + Dire orb 瞬殺 (Quake Champions)
     + Acid spit 毒蝕 (Quake Champions)
     + Flame strike 冥火 (Quake Champions)
     + Dual wield 雙剎 (Quake Champions)
-    + Piercing sight 透視 (Quake Champions)
     + Barrier shield 天盾 (Quake Champions)
 
 + Movement
@@ -68,6 +68,9 @@ Regarding this repository:
 ------
 
 ## Clip
+
+### Piercing Sight and Ghost Walk abilities
+<a href="https://youtu.be/tGoB7L8ij78" target="_blank"><img src="http://i3.ytimg.com/vi/tGoB7L8ij78/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Quad damage and Pentagram Protection powerups
 <a href="https://youtu.be/SsTtHaeNi3s" target="_blank"><img src="http://i3.ytimg.com/vi/SsTtHaeNi3s/hqdefault.jpg" width="480" height="360" border="10" /></a>
