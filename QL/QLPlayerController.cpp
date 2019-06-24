@@ -149,7 +149,7 @@ void AQLPlayerController::ShowAbilityMenu()
         UmgAbility->SetKeyboardFocus();
 
         // slow down time
-        float TimeDilation = 0.2f;
+        float TimeDilation = 0.1f;
         UGameplayStatics::SetGlobalTimeDilation(GetWorld(), TimeDilation);
     }
 }

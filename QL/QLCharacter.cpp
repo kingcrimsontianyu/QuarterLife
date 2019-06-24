@@ -43,6 +43,9 @@ AQLCharacter::AQLCharacter()
     MaxArmor = 150.0f;
     ProtectionMultiplier = 1.0f;
 
+    bCanFireAndAltFire = true;
+    bCanSwitchWeapon = true;
+
     // Set size for collision capsule
     // original value: 55.f, 96.0f
     GetCapsuleComponent()->InitCapsuleSize(30.0f, 85.0f);
@@ -213,6 +216,11 @@ void AQLCharacter::MoveRight(float Value)
 //------------------------------------------------------------
 void AQLCharacter::OnFire()
 {
+    if (!bCanFireAndAltFire)
+    {
+        return;
+    }
+
     if (!WeaponManager)
     {
         return;
@@ -229,6 +237,11 @@ void AQLCharacter::OnFire()
 //------------------------------------------------------------
 void AQLCharacter::OnFireRelease()
 {
+    if (!bCanFireAndAltFire)
+    {
+        return;
+    }
+
     if (!WeaponManager)
     {
         return;
@@ -245,6 +258,11 @@ void AQLCharacter::OnFireRelease()
 //------------------------------------------------------------
 void AQLCharacter::OnAltFire()
 {
+    if (!bCanFireAndAltFire)
+    {
+        return;
+    }
+
     if (!WeaponManager)
     {
         return;
@@ -261,6 +279,11 @@ void AQLCharacter::OnAltFire()
 //------------------------------------------------------------
 void AQLCharacter::OnAltFireRelease()
 {
+    if (!bCanFireAndAltFire)
+    {
+        return;
+    }
+
     if (!WeaponManager)
     {
         return;
@@ -307,6 +330,13 @@ float AQLCharacter::GetMaxArmor() const
 USkeletalMeshComponent* AQLCharacter::GetFirstPersonMesh()
 {
     return FirstPersonMesh;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+USkeletalMeshComponent* AQLCharacter::GetThirdPersonMesh()
+{
+    return ThirdPersonMesh;
 }
 
 //------------------------------------------------------------
@@ -605,28 +635,40 @@ AQLPlayerController* AQLCharacter::GetQLPlayerController()
 //------------------------------------------------------------
 void AQLCharacter::SwitchToRocketLauncher()
 {
-    SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLCharacter::SwitchToLightningGun()
 {
-    SetCurrentWeapon(FName(TEXT("LightningGun")));
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("LightningGun")));
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLCharacter::SwitchToRailGun()
 {
-    SetCurrentWeapon(FName(TEXT("RailGun")));
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("RailGun")));
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLCharacter::SwitchToPortalGun()
 {
-    SetCurrentWeapon(FName(TEXT("PortalGun")));
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("PortalGun")));
+    }
 }
 
 //------------------------------------------------------------
@@ -640,6 +682,9 @@ void AQLCharacter::Die()
     float DurationBeforeDestroyed = ActualAnimationLength + 3.0f;
 
     PlaySoundFireAndForget(FName(TEXT("Die")));
+
+    // avoid blocking living characters
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
     // destroy the character
     GetWorldTimerManager().SetTimer(DieTimerHandle,
@@ -778,6 +823,16 @@ void AQLCharacter::StopGlow()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void AQLCharacter::SetCurrentWeaponVisibility(const bool bFlag)
+{
+    if (WeaponManager)
+    {
+        WeaponManager->SetCurrentWeaponVisibility(bFlag);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 bool AQLCharacter::IsAlive()
 {
     if (Health > 0.0f)
@@ -851,4 +906,18 @@ void AQLCharacter::StopSound()
             SoundComponent->Stop();
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetFireEnabled(const bool bFlag)
+{
+    bCanFireAndAltFire = bFlag;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetSwitchWeaponEnabled(const bool bFlag)
+{
+    bCanSwitchWeapon = bFlag;
 }

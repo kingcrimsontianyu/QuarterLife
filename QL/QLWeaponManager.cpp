@@ -218,3 +218,13 @@ void UQLWeaponManager::CreateAndAddAllWeapons(const TArray<TSubclassOf<AQLWeapon
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLWeaponManager::SetCurrentWeaponVisibility(const bool bFlag)
+{
+    if (CurrentWeapon.IsValid())
+    {
+        CurrentWeapon->GetGunSkeletalMeshComponent()->SetVisibility(bFlag);
+    }
+}
+

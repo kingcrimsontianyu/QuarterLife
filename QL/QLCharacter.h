@@ -44,6 +44,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     USkeletalMeshComponent* GetFirstPersonMesh();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    USkeletalMeshComponent* GetThirdPersonMesh();
+
     // Returns FirstPersonCameraComponent subobject
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UCameraComponent* GetFirstPersonCameraComponent() const;
@@ -115,6 +118,15 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetFireEnabled(const bool bFlag);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetSwitchWeaponEnabled(const bool bFlag);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCurrentWeaponVisibility(const bool bFlag);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual UAnimSequence* PlayAnimationSequence(const FName& AnimationSequenceName);
@@ -261,4 +273,10 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TArray<TSubclassOf<AQLAbility>> AbilityClassList;
+
+    UPROPERTY()
+    bool bCanFireAndAltFire;
+
+    UPROPERTY()
+    bool bCanSwitchWeapon;
 };

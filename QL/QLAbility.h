@@ -37,6 +37,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void OnUse();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void OnAbilityEnd();
+
     //------------------------------------------------------------
     //------------------------------------------------------------
     virtual void UpdateProgressOnUMGInternal(const float Value);
@@ -87,7 +90,12 @@ protected:
 
     FTimerHandle CooldownTimeElapsedTimerHandle;
 
+    FTimerHandle AbilityDurationTimerHandle;
+
     float CooldownUpdateTimeIncrement;
 
     float CooldownPercent;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float AbilityDuration;
 };

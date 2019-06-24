@@ -47,6 +47,8 @@ public:
     void StopGlowWeapon();
 
     void CreateAndAddAllWeapons(const TArray<TSubclassOf<AQLWeapon>>& WeaponClassList);
+
+    void SetCurrentWeaponVisibility(const bool bFlag);
 protected:
     // do not use UPROPERTY() here
     // it breaks the character weapon system

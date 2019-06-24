@@ -36,6 +36,7 @@ AQLAbility::AQLAbility()
     CooldownTimeElapsed = 0.0f;
     CooldownUpdateTimeIncrement = 0.1f;
     CooldownPercent = 0.0f;
+    AbilityDuration = 10.0f;
 }
 
 //------------------------------------------------------------
@@ -74,7 +75,7 @@ void AQLAbility::OnUse()
 
     CooldownTimeElapsed = 0.0f;
 
-    // until the next reactivate
+    // what happens after the cooldown time has elapsed: reactivate
     GetWorldTimerManager().SetTimer(CooldownDurationTimerHandle,
         this,
         &AQLAbility::Reactivate,
@@ -82,13 +83,21 @@ void AQLAbility::OnUse()
         false, // loop
         CooldownDuration); // delay in second
 
-    // once the effect starts, periodically update
+    // what happens periodically during the ability
     GetWorldTimerManager().SetTimer(CooldownTimeElapsedTimerHandle,
         this,
         &AQLAbility::UpdateProgressOnUMG,
         CooldownUpdateTimeIncrement, // time interval in second
         true, // loop
         0.0f); // delay in second
+
+    // what happens after the ability ends
+    GetWorldTimerManager().SetTimer(AbilityDurationTimerHandle,
+        this,
+        &AQLAbility::OnAbilityEnd,
+        1.0f, // time interval in second
+        false, // loop
+        AbilityDuration); // delay in second
 }
 
 //------------------------------------------------------------
@@ -188,4 +197,10 @@ void AQLAbility::Deactivate()
 bool AQLAbility::IsActive()
 {
     return bCanBeUsed;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAbility::OnAbilityEnd()
+{
 }
