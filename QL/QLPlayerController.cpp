@@ -13,7 +13,7 @@
 #include "QLUtility.h"
 #include "QLCharacter.h"
 #include "QLUmgFirstPerson.h"
-#include "QLUmgAbility.h"
+#include "QLUmgInventory.h"
 #include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
@@ -25,8 +25,8 @@ FPS(0.0f)
     UmgFirstPersonClass = UQLUmgFirstPerson::StaticClass();
     UmgFirstPerson = nullptr;
 
-    UmgAbilityClass = UQLUmgAbility::StaticClass();
-    UmgAbility = nullptr;
+    UmgInventoryClass = UQLUmgInventory::StaticClass();
+    UmgInventory = nullptr;
 }
 
 //------------------------------------------------------------
@@ -75,8 +75,8 @@ void AQLPlayerController::AddUMG()
     bShowMouseCursor = false;
     SetInputMode(FInputModeGameOnly());
 
-    UmgAbility = CreateWidget<UQLUmgAbility>(GetWorld(), UmgAbilityClass, FName(TEXT("UmgAbility")));
-    UmgAbility->SetQLPlayerController(this);
+    UmgInventory = CreateWidget<UQLUmgInventory>(GetWorld(), UmgInventoryClass, FName(TEXT("UmgInventory")));
+    UmgInventory->SetQLPlayerController(this);
 }
 
 //------------------------------------------------------------
@@ -139,14 +139,14 @@ void AQLPlayerController::ShowDamageOnScreen(float DamageAmount, const FVector& 
 //------------------------------------------------------------
 void AQLPlayerController::ShowAbilityMenu()
 {
-    if (UmgAbility && !UmgAbility->IsInViewport())
+    if (UmgInventory && !UmgInventory->IsInViewport())
     {
-        UmgAbility->AddToViewport();
+        UmgInventory->AddToViewport();
 
         bShowMouseCursor = true;
         SetInputMode(FInputModeUIOnly());
-        UmgAbility->bIsFocusable = true;
-        UmgAbility->SetKeyboardFocus();
+        UmgInventory->bIsFocusable = true;
+        UmgInventory->SetKeyboardFocus();
 
         // slow down time
         float TimeDilation = 0.1f;

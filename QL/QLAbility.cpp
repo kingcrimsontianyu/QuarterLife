@@ -83,7 +83,7 @@ void AQLAbility::OnUse()
         false, // loop
         CooldownDuration); // delay in second
 
-    // what happens periodically during the ability
+    // what happens periodically during the cooldown time
     GetWorldTimerManager().SetTimer(CooldownTimeElapsedTimerHandle,
         this,
         &AQLAbility::UpdateProgressOnUMG,

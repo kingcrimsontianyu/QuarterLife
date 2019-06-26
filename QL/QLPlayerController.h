@@ -15,7 +15,7 @@
 #include "QLPlayerController.generated.h"
 
 class UQLUmgFirstPerson;
-class UQLUmgAbility;
+class UQLUmgInventory;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -45,7 +45,7 @@ public:
     TSubclassOf<UQLUmgFirstPerson> UmgFirstPersonClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
-    TSubclassOf<UQLUmgAbility> UmgAbilityClass;
+    TSubclassOf<UQLUmgInventory> UmgInventoryClass;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void ShowDamageOnScreen(float DamageAmount, const FVector& WorldTextLocation);
@@ -73,7 +73,7 @@ protected:
     UQLUmgFirstPerson* UmgFirstPerson;
 
     UPROPERTY()
-    UQLUmgAbility* UmgAbility;
+    UQLUmgInventory* UmgInventory;
 
     float FPS;
 };

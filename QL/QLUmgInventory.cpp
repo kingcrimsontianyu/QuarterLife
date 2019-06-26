@@ -9,7 +9,7 @@
 //------------------------------------------------------------
 
 
-#include "QLUmgAbility.h"
+#include "QLUmgInventory.h"
 #include "QLPlayerController.h"
 #include "GameFramework/InputSettings.h"
 #include "Kismet/GameplayStatics.h"
@@ -17,7 +17,7 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UQLUmgAbility::UQLUmgAbility(const FObjectInitializer& ObjectInitializer) :
+UQLUmgInventory::UQLUmgInventory(const FObjectInitializer& ObjectInitializer) :
 Super(ObjectInitializer)
 {
 
@@ -25,7 +25,7 @@ Super(ObjectInitializer)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgAbility::NativeConstruct()
+void UQLUmgInventory::NativeConstruct()
 {
     // Do some custom setup
 
@@ -35,7 +35,7 @@ void UQLUmgAbility::NativeConstruct()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgAbility::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UQLUmgInventory::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     // Make sure to call the base class's NativeTick function
     Super::NativeTick(MyGeometry, InDeltaTime);
@@ -46,21 +46,21 @@ void UQLUmgAbility::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgAbility::SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt)
+void UQLUmgInventory::SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt)
 {
     QLPlayerController = QLPlayerControllerExt;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-AQLPlayerController* UQLUmgAbility::GetQLPlayerController()
+AQLPlayerController* UQLUmgInventory::GetQLPlayerController()
 {
     return QLPlayerController.Get();
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-FReply UQLUmgAbility::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+FReply UQLUmgInventory::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
     Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 
@@ -85,7 +85,7 @@ FReply UQLUmgAbility::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEve
 
             if (bFound && IsInViewport())
             {
-                // UmgAbility->RemoveFromViewport();
+                // UmgInventory->RemoveFromViewport();
                 // equivalently
                 RemoveFromParent();
 
@@ -104,7 +104,7 @@ FReply UQLUmgAbility::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEve
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-int UQLUmgAbility::SetCurrentAbility_Implementation(const FName& QLName)
+int UQLUmgInventory::SetCurrentAbility_Implementation(const FName& QLName)
 {
     if (QLPlayerController.IsValid())
     {

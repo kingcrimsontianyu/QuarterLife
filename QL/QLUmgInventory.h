@@ -11,19 +11,19 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "QLUmgAbility.generated.h"
+#include "QLUmgInventory.generated.h"
 
 class AQLPlayerController;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API UQLUmgAbility : public UUserWidget
+class QL_API UQLUmgInventory : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
-    UQLUmgAbility(const FObjectInitializer& ObjectInitializer);
+    UQLUmgInventory(const FObjectInitializer& ObjectInitializer);
 
     // Optionally override the Blueprint "Event Construct" event
     virtual void NativeConstruct() override;

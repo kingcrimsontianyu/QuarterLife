@@ -29,7 +29,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "QLPowerup.h"
 #include "QLUmgFirstPerson.h"
-#include "QLUmgAbility.h"
+#include "QLUmgInventory.h"
 #include "Components/AudioComponent.h"
 
 //------------------------------------------------------------
