@@ -48,6 +48,7 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     StaticMeshComponent->SetEnableGravity(false);
 
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
+    PostProcessComponent->bEnabled = false;
 
     GrenadeSpeed = 2000.0f;
     PlayerController = nullptr;
@@ -58,6 +59,7 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
 
     IdleDuration = 2.5f;
     AttractDuration = 1.5f;
+    AttractInterval = 0.01f;
     BlastRadius = 400.0f;
     BlastSpeedChange = 1200.0f;
 
@@ -77,9 +79,9 @@ void AQLRecyclerGrenadeProjectile::BeginPlay()
     GetWorldTimerManager().SetTimer(IdleTimerHandle,
         this,
         &AQLRecyclerGrenadeProjectile::Implode,
-        IdleDuration, // time interval in second
+        1.0f, // time interval in second
         false, // loop
-        0.0f); // delay in second
+        IdleDuration); // delay in second
 }
 
 //------------------------------------------------------------
@@ -156,5 +158,68 @@ void AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl(const FHitResult& Impa
 //------------------------------------------------------------
 void AQLRecyclerGrenadeProjectile::Implode()
 {
+    PostProcessComponent->bEnabled = true;
+
+    CalculateMaterialParameter();
+
+    GetWorldTimerManager().SetTimer(AttractTimerHandle,
+        this,
+        &AQLRecyclerGrenadeProjectile::Attract,
+        AttractInterval, // time interval in second
+        true, // loop
+        0.0f); // delay in second
+
+    GetWorldTimerManager().SetTimer(ImplodeTimerHandle,
+        this,
+        &AQLRecyclerGrenadeProjectile::Annihilate,
+        1.0f, // time interval in second
+        false, // loop
+        AttractDuration); // delay in second
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRecyclerGrenadeProjectile::Attract()
+{
 
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRecyclerGrenadeProjectile::Annihilate()
+{
+    GetWorldTimerManager().ClearTimer(AttractTimerHandle);
+
+    Destroy();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRecyclerGrenadeProjectile::CalculateMaterialParameter()
+{
+    if (PlayerController.IsValid())
+    {
+        // convert coordinates
+        FVector Epicenter = GetActorLocation();
+        FVector2D ScreenLocation;
+
+        bool bIsConversionSuccessful = PlayerController->ProjectWorldLocationToScreen(Epicenter, ScreenLocation);
+        if (!bIsConversionSuccessful)
+        {
+            return;
+        }
+
+        if (DynamicMaterialSpaceWarp.IsValid())
+        {
+            int32 X, Y;
+            PlayerController->GetViewportSize(X, Y);
+
+            FVector Temp;
+            Temp.X = ScreenLocation.X / X;
+            Temp.Y = ScreenLocation.Y / Y;
+            DynamicMaterialSpaceWarp->SetVectorParameterValue("Center", Temp);
+        }
+    }
+}
+
+

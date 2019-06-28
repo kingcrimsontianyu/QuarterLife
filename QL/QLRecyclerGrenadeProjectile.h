@@ -53,6 +53,14 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Implode();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void Attract();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void Annihilate();
+
+    void CalculateMaterialParameter();
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UProjectileMovementComponent* ProjectileMovementComponent;
 
@@ -94,6 +102,9 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float AttractDuration;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float AttractInterval;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BlastRadius;
