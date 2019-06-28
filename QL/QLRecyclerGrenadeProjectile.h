@@ -12,12 +12,21 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/TimelineComponent.h"
 #include "QLRecyclerGrenadeProjectile.generated.h"
 
 class UProjectileMovementComponent;
 class USphereComponent;
 class AQLPlayerController;
+class UPostProcessComponent;
+
 //------------------------------------------------------------
+// The recycler grenade projectile has several stages
+// idle
+// attract
+// annihilate
+// recover
+// destroy
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLRecyclerGrenadeProjectile : public AActor
@@ -59,7 +68,11 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Annihilate();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void CalculateMaterialParameter();
+
+    UFUNCTION()
+    void SpaceWarpCallback(float Value);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UProjectileMovementComponent* ProjectileMovementComponent;
@@ -107,6 +120,9 @@ protected:
     float AttractInterval;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float RecoverDuration;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BlastRadius;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
@@ -115,6 +131,14 @@ protected:
     FTimerHandle IdleTimerHandle;
     FTimerHandle ImplodeTimerHandle;
     FTimerHandle AttractTimerHandle;
-    FTimerHandle AnnihilateTimerHandle;
-    FTimerHandle DestroyTimerHandle;
+
+    UPROPERTY()
+    UTimelineComponent* SpaceWarpTimeline;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
+    UCurveFloat* SpaceWarpCurve;
+
+    FOnTimelineFloat SpaceWarpTimelineInterpFunction;
+
+    bool bCalculateMaterialParameter;
 };

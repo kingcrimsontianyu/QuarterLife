@@ -60,10 +60,16 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     IdleDuration = 2.5f;
     AttractDuration = 1.5f;
     AttractInterval = 0.01f;
+    RecoverDuration = 2.0f;
     BlastRadius = 400.0f;
     BlastSpeedChange = 1200.0f;
 
     BounceSound = nullptr;
+    bCalculateMaterialParameter = false;
+
+    // animation
+    SpaceWarpTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("SpaceWarpTimeline"));
+    SpaceWarpTimelineInterpFunction.BindUFunction(this, FName(TEXT("SpaceWarpCallback")));
 }
 
 //------------------------------------------------------------
@@ -91,6 +97,10 @@ void AQLRecyclerGrenadeProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    if (bCalculateMaterialParameter)
+    {
+        CalculateMaterialParameter();
+    }
 }
 
 //------------------------------------------------------------
@@ -116,6 +126,11 @@ void AQLRecyclerGrenadeProjectile::PostInitializeComponents()
             WeightedBlendable.Weight = 1.0f;
             PostProcessComponent->Settings.WeightedBlendables.Array.Add(WeightedBlendable);
         }
+    }
+
+    if (SpaceWarpTimeline && SpaceWarpCurve)
+    {
+        SpaceWarpTimeline->AddInterpFloat(SpaceWarpCurve, SpaceWarpTimelineInterpFunction, FName(TEXT("SpaceWarp")));
     }
 }
 
@@ -160,7 +175,12 @@ void AQLRecyclerGrenadeProjectile::Implode()
 {
     PostProcessComponent->bEnabled = true;
 
-    CalculateMaterialParameter();
+    bCalculateMaterialParameter = true;
+
+    if (SpaceWarpTimeline)
+    {
+        SpaceWarpTimeline->PlayFromStart();
+    }
 
     GetWorldTimerManager().SetTimer(AttractTimerHandle,
         this,
@@ -190,7 +210,7 @@ void AQLRecyclerGrenadeProjectile::Annihilate()
 {
     GetWorldTimerManager().ClearTimer(AttractTimerHandle);
 
-    Destroy();
+    SetLifeSpan(RecoverDuration);
 }
 
 //------------------------------------------------------------
@@ -222,4 +242,12 @@ void AQLRecyclerGrenadeProjectile::CalculateMaterialParameter()
     }
 }
 
-
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRecyclerGrenadeProjectile::SpaceWarpCallback(float Value)
+{
+    if (DynamicMaterialSpaceWarp.IsValid())
+    {
+        DynamicMaterialSpaceWarp->SetScalarParameterValue("CollapseLevel", Value);
+    }
+}
