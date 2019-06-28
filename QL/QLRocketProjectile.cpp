@@ -41,7 +41,7 @@ AQLRocketProjectile::AQLRocketProjectile()
     ProjectileMovementComponent->InitialSpeed = RocketSpeed;
     ProjectileMovementComponent->MaxSpeed = RocketSpeed;
     ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
-    ProjectileMovementComponent->SetVelocityInLocalSpace(FVector(.0f, 0.0f, 0.0f));
+    ProjectileMovementComponent->SetVelocityInLocalSpace(FVector(0.0f, 0.0f, 0.0f));
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
     StaticMeshComponent->SetupAttachment(RootComponent);

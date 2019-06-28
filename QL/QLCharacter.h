@@ -225,6 +225,9 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SwitchToPortalGun();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToGrenadeLauncher();
+
     // Fires a projectile.
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnUseAbility();

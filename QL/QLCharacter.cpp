@@ -174,6 +174,7 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("SwitchToLightningGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToLightningGun);
     PlayerInputComponent->BindAction("SwitchToRailGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRailGun);
     PlayerInputComponent->BindAction("SwitchToPortalGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToPortalGun);
+    PlayerInputComponent->BindAction("SwitchToGrenadeLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToGrenadeLauncher);
 
     PlayerInputComponent->BindAction("RestartLevel", EInputEvent::IE_Pressed, this, &AQLCharacter::OnRestartLevel);
 
@@ -668,6 +669,16 @@ void AQLCharacter::SwitchToPortalGun()
     if (bCanSwitchWeapon)
     {
         SetCurrentWeapon(FName(TEXT("PortalGun")));
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToGrenadeLauncher()
+{
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("GrenadeLauncher")));
     }
 }
 

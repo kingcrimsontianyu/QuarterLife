@@ -86,7 +86,7 @@ void AQLAbilityTheWorld::OnUse()
 
     PostProcessComponent->bEnabled = true;
     PlaySoundFireAndForget(FName(TEXT("ZaWarudo")));
-
+    PlaySoundFireAndForget(FName(TEXT("VoicelineTheWorld")));
 
 
     // change global time dilation
