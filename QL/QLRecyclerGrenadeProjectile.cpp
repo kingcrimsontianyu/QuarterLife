@@ -28,31 +28,19 @@
 //------------------------------------------------------------
 AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-    RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(10.0f);
+    RootSphereComponent->SetEnableGravity(false);
     RootSphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
-    RootComponent = RootSphereComponent;
 
-    ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-    ProjectileMovementComponent->UpdatedComponent = RootSphereComponent;
-    ProjectileMovementComponent->InitialSpeed = GrenadeSpeed;
-    ProjectileMovementComponent->MaxSpeed = GrenadeSpeed;
     ProjectileMovementComponent->bShouldBounce = true;
-    ProjectileMovementComponent->SetVelocityInLocalSpace(FVector(0.0f, 0.0f, 0.0f));
     ProjectileMovementComponent->OnProjectileBounce.AddDynamic(this, &AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl);
 
-    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-    StaticMeshComponent->SetupAttachment(RootComponent);
-    StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
     StaticMeshComponent->SetEnableGravity(false);
 
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
 
-    GrenadeSpeed = 2000.0f;
+    ProjectileSpeed = 2000.0f;
     PlayerController = nullptr;
 
     BasicDamage = 200.0f;
@@ -80,9 +68,6 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
 void AQLRecyclerGrenadeProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-    ProjectileMovementComponent->InitialSpeed = GrenadeSpeed;
-    ProjectileMovementComponent->MaxSpeed = GrenadeSpeed;
 
     GetWorldTimerManager().SetTimer(IdleTimerHandle,
         this,
@@ -134,29 +119,6 @@ void AQLRecyclerGrenadeProjectile::PostInitializeComponents()
     {
         SpaceWarpTimeline->AddInterpFloat(SpaceWarpCurve, SpaceWarpTimelineInterpFunction, FName(TEXT("SpaceWarp")));
     }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-UProjectileMovementComponent* AQLRecyclerGrenadeProjectile::GetProjectileMovementComponent()
-{
-    return ProjectileMovementComponent;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLRecyclerGrenadeProjectile::SetQLPlayerController(AQLPlayerController* PlayerControllerExt)
-{
-    PlayerController = PlayerControllerExt;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLRecyclerGrenadeProjectile::SetDamageMultiplier(const float Value)
-{
-    DamageMultiplier = Value;
-
-    BasicDamageAdjusted = Value * BasicDamage;
 }
 
 //------------------------------------------------------------

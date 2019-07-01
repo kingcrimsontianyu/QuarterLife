@@ -11,7 +11,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "QLProjectile.h"
 #include "Components/TimelineComponent.h"
 #include "QLRecyclerGrenadeProjectile.generated.h"
 
@@ -29,7 +29,7 @@ class UPostProcessComponent;
 // destroy
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLRecyclerGrenadeProjectile : public AActor
+class QL_API AQLRecyclerGrenadeProjectile : public AQLProjectile
 {
 	GENERATED_BODY()
 
@@ -37,14 +37,6 @@ public:
 	// Sets default values for this actor's properties
 	AQLRecyclerGrenadeProjectile();
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    UProjectileMovementComponent* GetProjectileMovementComponent();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetQLPlayerController(AQLPlayerController* PlayerControllerExt);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetDamageMultiplier(const float Value);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -74,32 +66,8 @@ protected:
     UFUNCTION()
     void SpaceWarpCallback(float Value);
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UProjectileMovementComponent* ProjectileMovementComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    USphereComponent* RootSphereComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UStaticMeshComponent* StaticMeshComponent;
-
-    UPROPERTY()
-    TWeakObjectPtr<AQLPlayerController> PlayerController;
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     USoundBase* BounceSound;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float GrenadeSpeed;
-
-    UPROPERTY()
-    float DamageMultiplier;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float BasicDamage;
-
-    UPROPERTY()
-    float BasicDamageAdjusted;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
     UPostProcessComponent* PostProcessComponent;
@@ -121,12 +89,6 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float RecoverDuration;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float BlastRadius;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float BlastSpeedChange;
 
     FTimerHandle IdleTimerHandle;
     FTimerHandle ImplodeTimerHandle;
