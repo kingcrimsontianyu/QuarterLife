@@ -17,9 +17,11 @@
 #include "QLCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/DamageType.h"
 #include "QLPlayerController.h"
+#include "QLCharacter.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -237,7 +239,7 @@ void AQLRecyclerGrenadeProjectile::CalculateMaterialParameter()
             FVector Temp;
             Temp.X = ScreenLocation.X / X;
             Temp.Y = ScreenLocation.Y / Y;
-            DynamicMaterialSpaceWarp->SetVectorParameterValue("Center", Temp);
+            DynamicMaterialSpaceWarp->SetVectorParameterValue("Center0", Temp);
         }
     }
 }
@@ -248,6 +250,45 @@ void AQLRecyclerGrenadeProjectile::SpaceWarpCallback(float Value)
 {
     if (DynamicMaterialSpaceWarp.IsValid())
     {
-        DynamicMaterialSpaceWarp->SetScalarParameterValue("CollapseLevel", Value);
+        DynamicMaterialSpaceWarp->SetScalarParameterValue("CollapseLevel0", Value);
+
+        // determine the appropriate visual blast radius
+        if (!PlayerController.IsValid())
+        {
+            return;
+        }
+
+        APawn* Pawn = PlayerController->GetPawn();
+        if (!Pawn)
+        {
+            return;
+        }
+
+        AQLCharacter* QLCharacter = Cast<AQLCharacter>(Pawn);
+        if (!QLCharacter)
+        {
+            return;
+        }
+
+        UCameraComponent* Camera = QLCharacter->GetFirstPersonCameraComponent();
+        if (!Camera)
+        {
+            return;
+        }
+
+        FVector CameraLocation = Camera->GetComponentLocation();
+        FVector Epicenter = GetActorLocation();
+        float Distance = FVector::Distance(CameraLocation, Epicenter);
+
+        constexpr float InitialRadius = 0.8f;
+        constexpr float InitialDistance = 200.0f;
+        float Radius = InitialRadius;
+
+        if (Distance > InitialDistance)
+        {
+            Radius = InitialRadius * InitialDistance / Distance;
+        }
+
+        DynamicMaterialSpaceWarp->SetScalarParameterValue("Radius0", Radius);
     }
 }
