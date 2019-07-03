@@ -76,9 +76,9 @@ void AQLWeaponLightningGun::OnFire()
         BeamComponent->Activate();
     }
 
-    GetWorldTimerManager().SetTimer(HeldDownFireTimerHandle,
+    GetWorldTimerManager().SetTimer(HoldFireTimerHandle,
                                     this,
-                                    &AQLWeaponLightningGun::HitTarget,
+                                    &AQLWeaponLightningGun::SpawnLightning,
                                     RateOfFire, // time interval in second
                                     true, // loop
                                     0.0f); // delay in second
@@ -97,7 +97,7 @@ void AQLWeaponLightningGun::OnFireRelease()
         BeamComponent->Deactivate();
     }
 
-    GetWorldTimerManager().ClearTimer(HeldDownFireTimerHandle);
+    GetWorldTimerManager().ClearTimer(HoldFireTimerHandle);
 }
 
 //------------------------------------------------------------
@@ -136,7 +136,7 @@ void AQLWeaponLightningGun::OnFireHold()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponLightningGun::HitTarget()
+void AQLWeaponLightningGun::SpawnLightning()
 {
     AQLCharacter* User = GetWeaponManager()->GetUser();
 

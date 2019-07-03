@@ -34,4 +34,7 @@ class QL_API AQLRocketProjectile : public AQLProjectile
 public:
 	// Sets default values for this actor's properties
 	AQLRocketProjectile();
+
+protected:
+    virtual void PostInitializeComponents() override;
 };

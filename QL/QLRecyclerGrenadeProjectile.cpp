@@ -33,7 +33,6 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     RootSphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 
     ProjectileMovementComponent->bShouldBounce = true;
-    ProjectileMovementComponent->OnProjectileBounce.AddDynamic(this, &AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl);
 
     StaticMeshComponent->SetEnableGravity(false);
 
@@ -118,6 +117,11 @@ void AQLRecyclerGrenadeProjectile::PostInitializeComponents()
     if (SpaceWarpTimeline && SpaceWarpCurve)
     {
         SpaceWarpTimeline->AddInterpFloat(SpaceWarpCurve, SpaceWarpTimelineInterpFunction, FName(TEXT("SpaceWarp")));
+    }
+
+    if (ProjectileMovementComponent)
+    {
+        ProjectileMovementComponent->OnProjectileBounce.AddDynamic(this, &AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl);
     }
 }
 

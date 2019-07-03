@@ -38,19 +38,13 @@ public:
 
     virtual void OnFireHold() override;
 
-    virtual void HitTarget();
+    virtual void SpawnLightning();
 
     virtual void PrepareForImpendingWeaponSwitch() override;
 
     virtual void SetDamageMultiplier(const float Value) override;
 protected:
     virtual void PostInitializeComponents() override;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float BasicDamage;
-
-    UPROPERTY()
-    float BasicDamageAdjusted;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float KnockbackSpeedChange;

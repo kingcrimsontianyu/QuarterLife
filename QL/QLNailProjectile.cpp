@@ -9,7 +9,7 @@
 //------------------------------------------------------------
 
 
-#include "QLRocketProjectile.h"
+#include "QLNailProjectile.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -22,29 +22,28 @@
 #include "QLPlayerController.h"
 
 //------------------------------------------------------------
-// Sets default values
 //------------------------------------------------------------
-AQLRocketProjectile::AQLRocketProjectile()
+AQLNailProjectile::AQLNailProjectile()
 {
     RootSphereComponent->SetEnableGravity(false);
 
     ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
     StaticMeshComponent->SetEnableGravity(false);
 
-    ProjectileLifeSpan = 5.0f;
-    ProjectileSpeed = 2000.0f;
-    BlastRadius = 400.0f;
-    BlastSpeedChange = 1200.0f;
-    BasicDamage = 100.0f;
+    ProjectileLifeSpan = 30.0f;
+    ProjectileSpeed = 1000.0f;
+    BlastRadius = 100.0f;
+    BlastSpeedChange = 100.0f;
+    BasicDamage = 20.0f;
     BasicDamageAdjusted = BasicDamage;
-    BlastSpeedChangeSelfDamageScale = 1.25f;
+    BlastSpeedChangeSelfDamageScale = 10.0f;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLRocketProjectile::PostInitializeComponents()
+void AQLNailProjectile::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLRocketProjectile::OnBeginOverlapForComponent);
+    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLNailProjectile::OnBeginOverlapForComponent);
 }

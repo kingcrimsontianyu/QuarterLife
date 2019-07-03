@@ -53,9 +53,6 @@ protected:
     virtual void PostInitializeComponents() override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float BasicDamage;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ZoomDamage;
 
     UPROPERTY(EditDefaultsOnly, Category = "C++Property")
@@ -83,9 +80,6 @@ protected:
 
     UPROPERTY()
     UCameraComponent* CameraComponentCached;
-
-    UPROPERTY()
-    float BasicDamageAdjusted;
 
     UPROPERTY()
     float ZoomDamageAdjusted;

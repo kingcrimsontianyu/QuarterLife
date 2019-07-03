@@ -9,30 +9,31 @@
 //------------------------------------------------------------
 
 
-#include "QLWeaponRocketLauncher.h"
-#include "QLRocketProjectile.h"
+#include "QLWeaponNailGun.h"
 #include "QLWeaponManager.h"
 #include "QLCharacter.h"
 #include "QLUtility.h"
 #include "Engine/World.h"
 #include "Camera/CameraComponent.h"
-#include "QLRocketProjectile.h"
+#include "QLNailProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "QLPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
+AQLWeaponNailGun::AQLWeaponNailGun()
 {
-    QLName = FName(TEXT("RocketLauncher"));
-    RateOfFire = 0.8f;
-    RocketProjectileClass = AQLRocketProjectile::StaticClass();
+    QLName = FName(TEXT("NailGun"));
+    RateOfFire = 0.1f;
+    NailProjectileClass = AQLNailProjectile::StaticClass();
+
+    bIsFireHeld = false;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponRocketLauncher::PostInitializeComponents()
+void AQLWeaponNailGun::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
@@ -41,35 +42,63 @@ void AQLWeaponRocketLauncher::PostInitializeComponents()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponRocketLauncher::Tick(float DeltaTime)
+void AQLWeaponNailGun::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    if (bIsFireHeld)
+    {
+        OnFireHold();
+    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponRocketLauncher::OnFire()
+void AQLWeaponNailGun::OnFire()
 {
-    // if we are still in the fire disabled window, the weapon cannot be used
-    if (!bFireEnabled)
-    {
-        return;
-    }
-
-    // enforce rate of fire
-    bFireEnabled = false;
-    GetWorldTimerManager().SetTimer(DisableFireTimerHandle,
-                                    this,
-                                    &AQLWeaponRocketLauncher::EnableFireCallBack,
-                                    1.0f, // time interval in second. since loop is not used,
-                                          // this parameter can be an arbitrary value except 0.0f.
-                                    false, // loop
-                                    RateOfFire); // delay in second
-
-    PlayAnimationMontage(FName(TEXT("Fire")));
-
     PlaySoundFireAndForget(FName(TEXT("Fire")));
 
+    bIsFireHeld = true;
+
+    GetWorldTimerManager().SetTimer(HoldFireTimerHandle,
+        this,
+        &AQLWeaponNailGun::SpawnNailProjectile,
+        RateOfFire, // time interval in second
+        true, // loop
+        0.0f); // delay in second
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponNailGun::OnFireRelease()
+{
+    bIsFireHeld = false;
+
+    GetWorldTimerManager().ClearTimer(HoldFireTimerHandle);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponNailGun::OnFireHold()
+{
+
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponNailGun::PrepareForImpendingWeaponSwitch()
+{
+    // stop firing
+    if (bIsFireHeld)
+    {
+        OnFireRelease();
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponNailGun::SpawnNailProjectile()
+{
     // ray tracing
     AQLCharacter* User = GetWeaponManager()->GetUser();
 
@@ -106,10 +135,10 @@ void AQLWeaponRocketLauncher::OnFire()
     FMatrix result = FRotationMatrix::MakeFromXZ(ProjectileForwardVector, CameraComponent->GetUpVector());
     FRotator SourceRotation = result.Rotator();
 
-    // spawn and launch a rocket
+    // spawn and launch a Nail
     UWorld* const World = GetWorld();
 
-    if (RocketProjectileClass && World && WeaponManager.IsValid())
+    if (NailProjectileClass && World && WeaponManager.IsValid())
     {
         if (!User || !CameraComponent)
         {
@@ -117,17 +146,17 @@ void AQLWeaponRocketLauncher::OnFire()
         }
 
         FTransform MyTransform(SourceRotation, SourceLocation, FVector(1.0f));
-        AQLRocketProjectile* Rocket = World->SpawnActorDeferred<AQLRocketProjectile>(RocketProjectileClass, MyTransform);
+        AQLNailProjectile* Nail = World->SpawnActorDeferred<AQLNailProjectile>(NailProjectileClass, MyTransform);
 
-        // pass controller to rocket as damage instigator
+        // pass controller to Nail as damage instigator
         AController* Controller = User->GetController();
         AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
-        Rocket->SetQLPlayerController(QLPlayerController);
-        Rocket->SetDamageMultiplier(DamageMultiplier);
-        UGameplayStatics::FinishSpawningActor(Rocket, MyTransform);
+        Nail->SetQLPlayerController(QLPlayerController);
+        Nail->SetDamageMultiplier(DamageMultiplier);
+        UGameplayStatics::FinishSpawningActor(Nail, MyTransform);
 
         // change velocity
-        FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
-        Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
+        FVector FinalVelocity = ProjectileForwardVector * Nail->GetProjectileMovementComponent()->InitialSpeed;
+        Nail->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
 }

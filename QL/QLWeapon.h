@@ -109,7 +109,7 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialGun;
 
-    FTimerHandle HeldDownFireTimerHandle;
+    FTimerHandle HoldFireTimerHandle;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float HitRange;
@@ -127,6 +127,12 @@ protected:
 
     UPROPERTY()
     bool bFireEnabled;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BasicDamage;
+
+    UPROPERTY()
+    float BasicDamageAdjusted;
 
     UPROPERTY()
     float DamageMultiplier;

@@ -61,6 +61,7 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& QLName)
     // if it is not, do nothing
     if (!WeaponWanted)
     {
+        QLUtility::Log("Named weapon not found" + QLName.ToString());
         return;
     }
 

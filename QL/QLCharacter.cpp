@@ -173,6 +173,7 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("SwitchToRocketLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRocketLauncher);
     PlayerInputComponent->BindAction("SwitchToLightningGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToLightningGun);
     PlayerInputComponent->BindAction("SwitchToRailGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRailGun);
+    PlayerInputComponent->BindAction("SwitchToNailGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToNailGun);
     PlayerInputComponent->BindAction("SwitchToPortalGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToPortalGun);
     PlayerInputComponent->BindAction("SwitchToGrenadeLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToGrenadeLauncher);
 
@@ -659,6 +660,16 @@ void AQLCharacter::SwitchToRailGun()
     if (bCanSwitchWeapon)
     {
         SetCurrentWeapon(FName(TEXT("RailGun")));
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToNailGun()
+{
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("NailGun")));
     }
 }
 

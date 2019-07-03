@@ -40,7 +40,6 @@ AQLPickup::AQLPickup()
     RootSphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
     RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
     RootSphereComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-    RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPickup::OnComponentBeginOverlapImpl);
     RootComponent = RootSphereComponent;
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
@@ -108,6 +107,11 @@ void AQLPickup::PostInitializeComponents()
         UMaterialInterface* BasicMaterial = StaticMeshComponent->GetMaterial(0);
         DynamicMaterial = StaticMeshComponent->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BasicMaterial);
         StaticMeshComponent->SetMaterial(0, DynamicMaterial.Get());
+    }
+
+    if (RootSphereComponent)
+    {
+        RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPickup::OnComponentBeginOverlapImpl);
     }
 }
 

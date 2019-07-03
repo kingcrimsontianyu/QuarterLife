@@ -228,6 +228,9 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SwitchToGrenadeLauncher();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToNailGun();
+
     // Fires a projectile.
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnUseAbility();
