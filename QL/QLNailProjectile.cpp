@@ -68,5 +68,12 @@ void AQLNailProjectile::OnBeginOverlapForComponent(UPrimitiveComponent* Overlapp
         }
     }
 
+    // randomly sample from one of 3 nail gun hit sound effects to play
+    int32 Min = 1;
+    int32 Max = 3;
+    int32 Idx = FMath::RandRange(Min, Max);
+    FString SoundName = "NailGunHit" + FString::FromInt(Idx);
+    PlaySoundFireAndForget(FName(*SoundName));
+
     Super::OnBeginOverlapForComponent(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 }
