@@ -109,5 +109,8 @@ protected:
     TMap<FName, USoundBase*> SoundList;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    USoundAttenuation* SoundAttenuation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ExplosionParticleSystemScale;
 };

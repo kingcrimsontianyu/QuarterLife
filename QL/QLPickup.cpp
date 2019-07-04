@@ -111,6 +111,11 @@ void AQLPickup::PostInitializeComponents()
         RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPickup::OnComponentBeginOverlapImpl);
         RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPickup::OnComponentBeginOverlapImpl);
     }
+
+    if (SoundComponent && SoundAttenuation)
+    {
+        SoundComponent->AttenuationSettings = SoundAttenuation;
+    }
 }
 
 
@@ -129,9 +134,17 @@ void AQLPickup::PlaySoundFireAndForget(const FName& SoundName)
     if (Result)
     {
         USoundBase* Sound = *Result;
-        if (Sound)
+
+        if (Sound && SoundAttenuation)
         {
-            UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(),
+                Sound,
+                GetActorLocation(),
+                GetActorRotation(),
+                1.0f, // VolumeMultiplier
+                1.0f, // PitchMultiplier
+                0.0f, // StartTime
+                SoundAttenuation);
         }
     }
 }
@@ -148,9 +161,6 @@ void AQLPickup::PlaySound(const FName& SoundName)
         {
             SoundComponent->SetSound(Sound);
             SoundComponent->Play(0.0f);
-
-            //// sound played using this function is fire and forget and does not travel with the actor
-            //UGameplayStatics::PlaySoundAtLocation(this, Sound, User->GetActorLocation());
         }
     }
 }

@@ -281,9 +281,16 @@ void AQLProjectile::PlaySoundFireAndForget(const FName& SoundName)
     if (Result)
     {
         USoundBase* Sound = *Result;
-        if (Sound)
+        if (Sound && SoundAttenuation)
         {
-            UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(),
+                Sound,
+                GetActorLocation(),
+                GetActorRotation(),
+                1.0f, // VolumeMultiplier
+                1.0f, // PitchMultiplier
+                0.0f, // StartTime
+                SoundAttenuation);
         }
     }
 }
