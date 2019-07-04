@@ -991,3 +991,22 @@ bool AQLCharacter::HasWeapon(const FName& WeaponName)
 
     return WeaponManager->HasWeapon(WeaponName);
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::IsBot()
+{
+    AController* MyController = GetController();
+    if (!MyController)
+    {
+        return true;
+    }
+
+    APlayerController* MyPlayerController = Cast<APlayerController>(Controller);
+    if (!MyPlayerController)
+    {
+        return true;
+    }
+
+    return false;
+}

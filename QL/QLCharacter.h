@@ -156,6 +156,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float MaxArmor;
 
+    //------------------------------------------------------------
+    // Differentiate human player from AI bots
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool IsBot();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
