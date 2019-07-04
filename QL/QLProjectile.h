@@ -43,6 +43,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetDamageMultiplier(const float Value);
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlaySoundFireAndForget(const FName& SoundName);
 protected:
     //------------------------------------------------------------
 	// Called when the game starts or when spawned
@@ -97,12 +99,15 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     UParticleSystem* ExplosionParticleSystem;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    USoundBase* ExplosionSound;
-
     UPROPERTY()
     TWeakObjectPtr<AQLPlayerController> PlayerController;
 
     UPROPERTY()
     float DamageMultiplier;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TMap<FName, USoundBase*> SoundList;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float ExplosionParticleSystemScale;
 };

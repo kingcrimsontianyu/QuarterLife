@@ -202,9 +202,21 @@ void AQLWeapon::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp,
     AQLCharacter* QLCharacter = Cast<AQLCharacter>(OtherActor);
     if (QLCharacter)
     {
+        // if the character has weapon of this type already, nothing will happen
+        if (QLCharacter->HasWeapon(this->GetQLName()))
+        {
+            return;
+        }
+
         QLCharacter->AddWeapon(this);
         QLCharacter->SetCurrentWeapon(this->GetQLName());
         PlaySound("PickUp");
+
+        // disable delegate
+        if (RootSphereComponent)
+        {
+            RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLWeapon::OnComponentBeginOverlapImpl);
+        }
     }
 }
 

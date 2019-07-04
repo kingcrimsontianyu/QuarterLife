@@ -38,6 +38,7 @@ AQLRocketProjectile::AQLRocketProjectile()
     BasicDamage = 100.0f;
     BasicDamageAdjusted = BasicDamage;
     BlastSpeedChangeSelfDamageScale = 1.25f;
+    ExplosionParticleSystemScale = 4.0f;
 }
 
 //------------------------------------------------------------
@@ -46,5 +47,6 @@ void AQLRocketProjectile::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
+    RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLRocketProjectile::OnBeginOverlapForComponent);
     RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLRocketProjectile::OnBeginOverlapForComponent);
 }

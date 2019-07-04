@@ -53,7 +53,6 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     BlastRadius = 400.0f;
     BlastSpeedChange = 1200.0f;
 
-    BounceSound = nullptr;
     bCalculateMaterialParameter = false;
 
     // animation
@@ -121,6 +120,7 @@ void AQLRecyclerGrenadeProjectile::PostInitializeComponents()
 
     if (ProjectileMovementComponent)
     {
+        ProjectileMovementComponent->OnProjectileBounce.RemoveDynamic(this, &AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl);
         ProjectileMovementComponent->OnProjectileBounce.AddDynamic(this, &AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl);
     }
 }
@@ -129,12 +129,7 @@ void AQLRecyclerGrenadeProjectile::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLRecyclerGrenadeProjectile::OnProjectileBounceImpl(const FHitResult& ImpactResult, const FVector& ImpactVelocity)
 {
-    // play explosion sound
-    if (BounceSound)
-    {
-        // fire and forget
-        UGameplayStatics::PlaySoundAtLocation(GetWorld(), BounceSound, ImpactResult.ImpactPoint);
-    }
+    PlaySoundFireAndForget("Bounce");
 }
 
 //------------------------------------------------------------

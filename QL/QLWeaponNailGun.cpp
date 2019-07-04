@@ -56,8 +56,6 @@ void AQLWeaponNailGun::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLWeaponNailGun::OnFire()
 {
-    PlaySoundFireAndForget(FName(TEXT("Fire")));
-
     bIsFireHeld = true;
 
     GetWorldTimerManager().SetTimer(HoldFireTimerHandle,
@@ -99,6 +97,8 @@ void AQLWeaponNailGun::PrepareForImpendingWeaponSwitch()
 //------------------------------------------------------------
 void AQLWeaponNailGun::SpawnNailProjectile()
 {
+    PlaySoundFireAndForget(FName(TEXT("Fire")));
+
     // ray tracing
     AQLCharacter* User = GetWeaponManager()->GetUser();
 

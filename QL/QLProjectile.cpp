@@ -46,7 +46,6 @@ AQLProjectile::AQLProjectile()
     StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
     ExplosionParticleSystem = nullptr;
-    ExplosionSound = nullptr;
     ProjectileLifeSpan = 5.0f;
     ProjectileSpeed = 1000.0f;
     BlastRadius = 400.0f;
@@ -56,6 +55,7 @@ AQLProjectile::AQLProjectile()
     DamageMultiplier = 1.0f;
     BasicDamageAdjusted = BasicDamage;
     BlastSpeedChangeSelfDamageScale = 1.25f;
+    ExplosionParticleSystemScale = 1.0f;
 }
 
 //------------------------------------------------------------
@@ -237,7 +237,7 @@ void AQLProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
         {
             FTransform Transform(FRotator::ZeroRotator,
                 GetActorLocation(),
-                FVector(4.0f)); // scale
+                FVector(ExplosionParticleSystemScale)); // scale
 
             UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
                 ExplosionParticleSystem,
@@ -246,12 +246,7 @@ void AQLProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
                 EPSCPoolMethod::AutoRelease);
         }
 
-        // play explosion sound
-        if (ExplosionSound)
-        {
-            // fire and forget
-            UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSound, GetActorLocation());
-        }
+        PlaySoundFireAndForget(FName(TEXT("Explode")));
     }
 }
 
@@ -276,4 +271,19 @@ void AQLProjectile::SetDamageMultiplier(const float Value)
     DamageMultiplier = Value;
 
     BasicDamageAdjusted = Value * BasicDamage;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLProjectile::PlaySoundFireAndForget(const FName& SoundName)
+{
+    USoundBase** Result = SoundList.Find(SoundName);
+    if (Result)
+    {
+        USoundBase* Sound = *Result;
+        if (Sound)
+        {
+            UGameplayStatics::PlaySoundAtLocation(GetWorld(), Sound, GetActorLocation());
+        }
+    }
 }

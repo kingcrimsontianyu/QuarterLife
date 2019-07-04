@@ -131,6 +131,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual UAnimSequence* PlayAnimationSequence(const FName& AnimationSequenceName);
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool HasWeapon(const FName& WeaponName);
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float Health;
 

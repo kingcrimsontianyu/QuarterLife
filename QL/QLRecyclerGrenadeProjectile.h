@@ -66,9 +66,6 @@ protected:
     UFUNCTION()
     void SpaceWarpCallback(float Value);
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    USoundBase* BounceSound;
-
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
     UPostProcessComponent* PostProcessComponent;
 

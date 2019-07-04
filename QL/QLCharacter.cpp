@@ -943,3 +943,15 @@ void AQLCharacter::SetSwitchWeaponEnabled(const bool bFlag)
 {
     bCanSwitchWeapon = bFlag;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::HasWeapon(const FName& WeaponName)
+{
+    if (!WeaponManager)
+    {
+        return false;
+    }
+
+    return WeaponManager->HasWeapon(WeaponName);
+}
