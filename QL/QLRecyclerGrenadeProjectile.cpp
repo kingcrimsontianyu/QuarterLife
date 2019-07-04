@@ -183,7 +183,49 @@ void AQLRecyclerGrenadeProjectile::Implode()
 //------------------------------------------------------------
 void AQLRecyclerGrenadeProjectile::Attract()
 {
+    // get victims within the blast radius
+    FVector Epicenter = GetActorLocation();
+    TArray<FOverlapResult> OutOverlaps;
+    FCollisionObjectQueryParams CollisionObjectQueryParams(ECollisionChannel::ECC_Pawn);
+    FCollisionQueryParams CollisionQueryParams;
 
+    GetWorld()->OverlapMultiByObjectType(OutOverlaps,
+        Epicenter,
+        FQuat(GetActorRotation()),
+        CollisionObjectQueryParams,
+        FCollisionShape::MakeSphere(BlastRadius),
+        CollisionQueryParams);
+
+    // iterate victims
+    for (auto&& Result : OutOverlaps)
+    {
+        TWeakObjectPtr<UPrimitiveComponent> Comp = Result.Component;
+        AActor* Actor = Comp->GetOwner();
+        if (Actor)
+        {
+            AQLCharacter* Character = Cast<AQLCharacter>(Actor);
+            if (Character)
+            {
+                // change victim velocity
+                UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
+                if (CharacterMovementComponent)
+                {
+                    float ActualBlastSpeedChange = BlastSpeedChange;
+                    if (PlayerController.IsValid() && Character == PlayerController->GetCharacter())
+                    {
+                        ActualBlastSpeedChange *= BlastSpeedChangeSelfDamageScale;
+                    }
+
+                    CharacterMovementComponent->AddRadialImpulse(
+                        GetActorLocation(),
+                        BlastRadius,
+                        -ActualBlastSpeedChange,
+                        ERadialImpulseFalloff::RIF_Linear,
+                        true); // velocity change (true) or impulse (false)
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------
