@@ -58,6 +58,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UStaticMeshComponent* GetStaticMeshComponent();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void ChangePhysicsSetup();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void RevertPhysicsSetup();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -72,6 +82,11 @@ protected:
     //------------------------------------------------------------
     UFUNCTION()
     virtual void OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION()
+    virtual void OnComponentHitImpl(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
     //------------------------------------------------------------
     //------------------------------------------------------------

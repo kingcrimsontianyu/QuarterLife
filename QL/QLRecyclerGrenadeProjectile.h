@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <vector>
 #include "CoreMinimal.h"
 #include "QLProjectile.h"
 #include "Components/TimelineComponent.h"
@@ -19,6 +20,8 @@ class UProjectileMovementComponent;
 class USphereComponent;
 class AQLPlayerController;
 class UPostProcessComponent;
+class AQLHealth;
+class AQLArmor;
 
 //------------------------------------------------------------
 // The recycler grenade projectile has several stages
@@ -100,4 +103,13 @@ protected:
     FOnTimelineFloat SpaceWarpTimelineInterpFunction;
 
     bool bCalculateMaterialParameter;
+
+    UPROPERTY(EditDefaultsOnly, Category = "C++Property")
+    TSubclassOf<AQLHealth> HealthClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "C++Property")
+    TSubclassOf<AQLArmor> ArmorClass;
+
+    // temporary container to hold generated pickups
+    std::vector<AQLPickup*> PickupList;
 };

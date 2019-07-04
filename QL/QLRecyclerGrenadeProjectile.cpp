@@ -22,6 +22,8 @@
 #include "GameFramework/DamageType.h"
 #include "QLPlayerController.h"
 #include "QLCharacter.h"
+#include "QLHealth.h"
+#include "QLArmor.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -58,6 +60,10 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     // animation
     SpaceWarpTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("SpaceWarpTimeline"));
     SpaceWarpTimelineInterpFunction.BindUFunction(this, FName(TEXT("SpaceWarpCallback")));
+
+    // pickup
+    HealthClass = AQLHealth::StaticClass();
+    ArmorClass = AQLArmor::StaticClass();
 }
 
 //------------------------------------------------------------
@@ -93,6 +99,16 @@ void AQLRecyclerGrenadeProjectile::Tick(float DeltaTime)
 void AQLRecyclerGrenadeProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     Super::EndPlay(EndPlayReason);
+
+    if (PickupList.size() > 0)
+    {
+        for (auto&& Item : PickupList)
+        {
+            Item->RevertPhysicsSetup();
+        }
+
+        PickupList.clear();
+    }
 }
 
 //------------------------------------------------------------
@@ -171,11 +187,51 @@ void AQLRecyclerGrenadeProjectile::Attract()
 //------------------------------------------------------------
 void AQLRecyclerGrenadeProjectile::Annihilate()
 {
+    PlaySoundFireAndForget("Annihilate");
+
     StaticMeshComponent->SetVisibility(false);
 
     GetWorldTimerManager().ClearTimer(AttractTimerHandle);
 
     SetLifeSpan(RecoverDuration);
+
+    // generate health and armor pickups
+    FActorSpawnParameters SpawnParameters;
+    SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+    // health
+    for (int32 i = 0; i < 2; ++i)
+    {
+        float XPosition = FMath::RandRange(-50.0f, 50.0f);
+        float YPosition = FMath::RandRange(-50.0f, 50.0f);
+        float ZPosition = FMath::RandRange(100.0f, 150.0f);
+
+        FVector SpawnLocation = GetActorLocation() + FVector(XPosition, YPosition, ZPosition);
+        auto* Pickup = GetWorld()->SpawnActor<AQLHealth>(HealthClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+        PickupList.push_back(Pickup);
+    }
+
+    // armor
+    for (int32 i = 0; i < 2; ++i)
+    {
+        float XPosition = FMath::RandRange(-50.0f, 50.0f);
+        float YPosition = FMath::RandRange(-50.0f, 50.0f);
+        float ZPosition = FMath::RandRange(100.0f, 150.0f);
+
+        FVector SpawnLocation = GetActorLocation() + FVector(XPosition, YPosition, ZPosition);
+        auto* Pickup = GetWorld()->SpawnActor<AQLArmor>(ArmorClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+        PickupList.push_back(Pickup);
+    }
+
+    for (auto&& Item : PickupList)
+    {
+        float XVelocity = FMath::RandRange(-100.0f, 100.0f);
+        float YVelocity = FMath::RandRange(-100.0f, 100.0f);
+        float ZVelocity = 600.0f;
+
+        Item->ChangePhysicsSetup();
+        Item->GetRootSphereComponent()->SetPhysicsLinearVelocity(FVector(XVelocity, YVelocity, ZVelocity));
+    }
 }
 
 //------------------------------------------------------------
@@ -255,3 +311,4 @@ void AQLRecyclerGrenadeProjectile::SpaceWarpCallback(float Value)
         DynamicMaterialSpaceWarp->SetScalarParameterValue("Radius0", Radius);
     }
 }
+

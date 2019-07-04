@@ -39,8 +39,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-    virtual void BeginDestroy() override;
-
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UParticleSystemComponent* BeamComponent;
 };

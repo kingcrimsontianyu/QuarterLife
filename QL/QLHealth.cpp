@@ -11,6 +11,8 @@
 
 #include "QLHealth.h"
 #include "QLCharacter.h"
+#include "QLUtility.h"
+#include "Components/SphereComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -22,6 +24,20 @@ AQLHealth::AQLHealth()
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLHealth::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    AddHealthToPlayer(OtherActor);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLHealth::OnComponentHitImpl(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+    AddHealthToPlayer(OtherActor);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLHealth::AddHealthToPlayer(AActor* OtherActor)
 {
     if (OtherActor)
     {
@@ -38,4 +54,3 @@ void AQLHealth::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp,
         }
     }
 }
-

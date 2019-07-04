@@ -110,6 +110,9 @@ void AQLPickup::PostInitializeComponents()
     {
         RootSphereComponent->OnComponentBeginOverlap.RemoveDynamic(this, &AQLPickup::OnComponentBeginOverlapImpl);
         RootSphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AQLPickup::OnComponentBeginOverlapImpl);
+
+        RootSphereComponent->OnComponentHit.RemoveDynamic(this, &AQLPickup::OnComponentHitImpl);
+        RootSphereComponent->OnComponentHit.AddDynamic(this, &AQLPickup::OnComponentHitImpl);
     }
 
     if (SoundComponent && SoundAttenuation)
@@ -217,4 +220,37 @@ UStaticMeshComponent* AQLPickup::GetStaticMeshComponent()
 //------------------------------------------------------------
 void AQLPickup::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::OnComponentHitImpl(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::ChangePhysicsSetup()
+{
+    if (RootSphereComponent)
+    {
+        RootSphereComponent->SetSimulatePhysics(true);
+        RootSphereComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
+        RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+        RootSphereComponent->SetNotifyRigidBodyCollision(true); // equivalently BP Simulation Generates Hit Events
+        RootSphereComponent->SetLinearDamping(1.0f);
+        RootSphereComponent->SetAngularDamping(1.0f);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::RevertPhysicsSetup()
+{
+    if (RootSphereComponent)
+    {
+        RootSphereComponent->SetSimulatePhysics(false);
+        RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+        RootSphereComponent->SetNotifyRigidBodyCollision(false); // equivalently BP Simulation Generates Hit Events
+    }
 }
