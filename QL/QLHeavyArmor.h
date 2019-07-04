@@ -25,5 +25,4 @@ public:
     AQLHeavyArmor();
 
 protected:
-    virtual void AddArmorToPlayer(AQLCharacter* QLCharacter) override;
 };

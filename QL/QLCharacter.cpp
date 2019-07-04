@@ -307,6 +307,24 @@ float AQLCharacter::GetHealth() const
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void AQLCharacter::AddHealth(float Increment)
+{
+    float Temp = Health + Increment;
+
+    if (Temp >= MaxHealth)
+    {
+        Health = MaxHealth;
+    }
+    else
+    {
+        Health = Temp;
+    }
+
+    UpdateHealth();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 float AQLCharacter::GetMaxHealth() const
 {
     return MaxHealth;
@@ -317,6 +335,24 @@ float AQLCharacter::GetMaxHealth() const
 float AQLCharacter::GetArmor() const
 {
     return Armor;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::AddArmor(float Increment)
+{
+    float Temp = Armor + Increment;
+
+    if (Temp >= MaxArmor)
+    {
+        Armor = MaxArmor;
+    }
+    else
+    {
+        Armor = Temp;
+    }
+
+    UpdateArmor();
 }
 
 //------------------------------------------------------------

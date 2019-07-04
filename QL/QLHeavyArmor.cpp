@@ -19,9 +19,3 @@ AQLHeavyArmor::AQLHeavyArmor()
 
 }
 
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLHeavyArmor::AddArmorToPlayer(AQLCharacter* QLCharacter)
-{
-
-}

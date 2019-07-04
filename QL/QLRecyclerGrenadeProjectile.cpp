@@ -171,6 +171,8 @@ void AQLRecyclerGrenadeProjectile::Attract()
 //------------------------------------------------------------
 void AQLRecyclerGrenadeProjectile::Annihilate()
 {
+    StaticMeshComponent->SetVisibility(false);
+
     GetWorldTimerManager().ClearTimer(AttractTimerHandle);
 
     SetLifeSpan(RecoverDuration);

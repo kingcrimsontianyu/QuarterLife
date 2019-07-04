@@ -19,9 +19,3 @@ AQLMegaHealth::AQLMegaHealth()
 
 }
 
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLMegaHealth::AddHealthToPlayer(AQLCharacter* QLCharacter)
-{
-
-}

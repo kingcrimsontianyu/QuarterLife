@@ -25,5 +25,4 @@ public:
     AQLMegaHealth();
 
 protected:
-    virtual void AddHealthToPlayer(AQLCharacter* QLCharacter) override;
 };

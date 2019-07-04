@@ -99,10 +99,16 @@ public:
     float GetHealth() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void AddHealth(float Increment);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetMaxHealth() const;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetArmor() const;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void AddArmor(float Increment);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetMaxArmor() const;

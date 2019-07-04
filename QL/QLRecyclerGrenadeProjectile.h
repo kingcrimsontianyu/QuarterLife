@@ -22,10 +22,10 @@ class UPostProcessComponent;
 
 //------------------------------------------------------------
 // The recycler grenade projectile has several stages
-// idle
-// attract
+// idle (2.5 s)
+// attract (1.5 s)
 // annihilate
-// recover
+// recover (2 s)
 // destroy
 //------------------------------------------------------------
 UCLASS()
