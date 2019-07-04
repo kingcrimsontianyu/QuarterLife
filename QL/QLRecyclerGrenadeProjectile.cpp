@@ -104,7 +104,10 @@ void AQLRecyclerGrenadeProjectile::EndPlay(const EEndPlayReason::Type EndPlayRea
     {
         for (auto&& Item : PickupList)
         {
-            Item->RevertPhysicsSetup();
+            if (Item.IsValid())
+            {
+                Item->RevertPhysicsSetup();
+            }
         }
 
         PickupList.clear();
@@ -195,42 +198,63 @@ void AQLRecyclerGrenadeProjectile::Annihilate()
 
     SetLifeSpan(RecoverDuration);
 
-    // generate health and armor pickups
+    HandleSplashHit(nullptr, false); // AActor* OtherActor, bool bDirectHit
+
+    // Normally, when the character dies, it is not immediately destroyed.
+    // There is a small duration reserved for animation.
+    // It is legal to dereference the pointer in this duration.
+    // Now we want the dead victims to be destroyed immediately.
+
     FActorSpawnParameters SpawnParameters;
     SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-    // health
-    for (int32 i = 0; i < 2; ++i)
+    for (auto&& Victim : SplashDamageVictimList)
     {
-        float XPosition = FMath::RandRange(-50.0f, 50.0f);
-        float YPosition = FMath::RandRange(-50.0f, 50.0f);
-        float ZPosition = FMath::RandRange(100.0f, 150.0f);
+        if (Victim.IsValid())
+        {
+            if (!Victim->IsAlive())
+            {
+                Victim->Destroy();
 
-        FVector SpawnLocation = GetActorLocation() + FVector(XPosition, YPosition, ZPosition);
-        auto* Pickup = GetWorld()->SpawnActor<AQLHealth>(HealthClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
-        PickupList.push_back(Pickup);
-    }
+                // dead victims are converted into health and armor pickups
+                // health
+                for (int32 i = 0; i < 2; ++i)
+                {
+                    float XPosition = FMath::RandRange(-50.0f, 50.0f);
+                    float YPosition = FMath::RandRange(-50.0f, 50.0f);
+                    float ZPosition = FMath::RandRange(100.0f, 150.0f);
 
-    // armor
-    for (int32 i = 0; i < 2; ++i)
-    {
-        float XPosition = FMath::RandRange(-50.0f, 50.0f);
-        float YPosition = FMath::RandRange(-50.0f, 50.0f);
-        float ZPosition = FMath::RandRange(100.0f, 150.0f);
+                    FVector SpawnLocation = GetActorLocation() + FVector(XPosition, YPosition, ZPosition);
+                    auto* Pickup = GetWorld()->SpawnActor<AQLHealth>(HealthClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+                    PickupList.push_back(TWeakObjectPtr<AQLPickup>(Pickup));
+                }
 
-        FVector SpawnLocation = GetActorLocation() + FVector(XPosition, YPosition, ZPosition);
-        auto* Pickup = GetWorld()->SpawnActor<AQLArmor>(ArmorClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
-        PickupList.push_back(Pickup);
-    }
+                // armor
+                for (int32 i = 0; i < 2; ++i)
+                {
+                    float XPosition = FMath::RandRange(-50.0f, 50.0f);
+                    float YPosition = FMath::RandRange(-50.0f, 50.0f);
+                    float ZPosition = FMath::RandRange(100.0f, 150.0f);
 
-    for (auto&& Item : PickupList)
-    {
-        float XVelocity = FMath::RandRange(-100.0f, 100.0f);
-        float YVelocity = FMath::RandRange(-100.0f, 100.0f);
-        float ZVelocity = 600.0f;
+                    FVector SpawnLocation = GetActorLocation() + FVector(XPosition, YPosition, ZPosition);
+                    auto* Pickup = GetWorld()->SpawnActor<AQLArmor>(ArmorClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+                    PickupList.push_back(TWeakObjectPtr<AQLPickup>(Pickup));
+                }
 
-        Item->ChangePhysicsSetup();
-        Item->GetRootSphereComponent()->SetPhysicsLinearVelocity(FVector(XVelocity, YVelocity, ZVelocity));
+                for (auto&& Item : PickupList)
+                {
+                    if (Item.IsValid())
+                    {
+                        float XVelocity = FMath::RandRange(-100.0f, 100.0f);
+                        float YVelocity = FMath::RandRange(-100.0f, 100.0f);
+                        float ZVelocity = 600.0f;
+
+                        Item->ChangePhysicsSetup();
+                        Item->GetRootSphereComponent()->SetPhysicsLinearVelocity(FVector(XVelocity, YVelocity, ZVelocity));
+                    }
+                }
+            }
+        }
     }
 }
 

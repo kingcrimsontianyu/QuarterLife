@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include <vector>
 #include "QLProjectile.generated.h"
 
 //------------------------------------------------------------
@@ -113,4 +114,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ExplosionParticleSystemScale;
+
+    // temporary container to hold victims of splash damage
+    std::vector<TWeakObjectPtr<AQLCharacter>> SplashDamageVictimList;
 };

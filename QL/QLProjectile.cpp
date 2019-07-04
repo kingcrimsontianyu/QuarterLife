@@ -164,6 +164,8 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
             AQLCharacter* Character = Cast<AQLCharacter>(Actor);
             if (Character)
             {
+                SplashDamageVictimList.push_back(TWeakObjectPtr<AQLCharacter>(Character));
+
                 // change victim velocity
                 UCharacterMovementComponent*  CharacterMovementComponent = Character->GetCharacterMovement();
                 if (CharacterMovementComponent)
@@ -192,7 +194,7 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                     continue;
                 }
 
-                // reduce self splash damage (e.g. rocket jump)
+                // reduce self splash damage (e.g. rocket jump, nailgun jump)
                 float DamageAmount = BasicDamageAdjusted;
 
                 if (PlayerController.IsValid() && Character == PlayerController->GetCharacter())

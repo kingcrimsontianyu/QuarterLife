@@ -86,6 +86,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void RemovePowerup(AQLPowerup* Powerup);
 
+    //------------------------------------------------------------
+    // When the character dies, it is not immediately destroyed.
+    // There is a small duration reserved for animation.
+    //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void Die();
 

@@ -111,5 +111,5 @@ protected:
     TSubclassOf<AQLArmor> ArmorClass;
 
     // temporary container to hold generated pickups
-    std::vector<AQLPickup*> PickupList;
+    std::vector<TWeakObjectPtr<AQLPickup>> PickupList;
 };
