@@ -51,6 +51,8 @@ AQLPickup::AQLPickup()
     bConstantlyRotating = true;
     RespawnInterval = 0.0f;
     GlowColor = FLinearColor(0.0f, 0.0f, 1.0f);
+
+    bStartRotationInterp = false;
 }
 
 //------------------------------------------------------------
@@ -90,6 +92,18 @@ void AQLPickup::Tick(float DeltaTime)
         FRotator Rotator = GetActorRotation();
         Rotator.Add(Increment.Pitch, Increment.Yaw, Increment.Roll);
         SetActorRotation(Rotator);
+    }
+
+    // interp rotation
+    if (bStartRotationInterp)
+    {
+        FRotator NewRotation = FMath::RInterpConstantTo(GetActorRotation(), FRotator::ZeroRotator, DeltaTime, 100.0f);
+        SetActorRotation(NewRotation);
+
+        if (GetActorRotation().Equals(FRotator::ZeroRotator))
+        {
+            bStartRotationInterp = false;
+        }
     }
 }
 
@@ -253,4 +267,23 @@ void AQLPickup::RevertPhysicsSetup()
         RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
         RootSphereComponent->SetNotifyRigidBodyCollision(false); // equivalently BP Simulation Generates Hit Events
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::PerformRotationInterpWithDelay(const float Delay)
+{
+    GetWorldTimerManager().SetTimer(StartRotationDelayTimerHandle,
+        this,
+        &AQLPickup::PerformRotationInterpCallback,
+        1.0f, // time interval in second
+        false, // loop
+        Delay); // delay in second
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::PerformRotationInterpCallback()
+{
+    bStartRotationInterp = true;
 }

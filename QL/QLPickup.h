@@ -68,6 +68,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void RevertPhysicsSetup();
 
+    //------------------------------------------------------------
+    // After Delay seconds, perform PerformRotationInterpCallback()
+    // which sets bStartRotationInterp to true, and performs rotation interpolation
+    // in Tick() until the rotation becomes FRotator::ZeroRotator
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PerformRotationInterpWithDelay(const float Delay);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -87,6 +94,11 @@ protected:
     //------------------------------------------------------------
     UFUNCTION()
     virtual void OnComponentHitImpl(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION()
+    void PerformRotationInterpCallback();
 
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -137,4 +149,8 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FName QLName;
+
+    FTimerHandle StartRotationDelayTimerHandle;
+
+    bool bStartRotationInterp;
 };

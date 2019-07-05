@@ -293,6 +293,7 @@ void AQLRecyclerGrenadeProjectile::Annihilate()
 
                         Item->ChangePhysicsSetup();
                         Item->GetRootSphereComponent()->SetPhysicsLinearVelocity(FVector(XVelocity, YVelocity, ZVelocity));
+                        Item->PerformRotationInterpWithDelay(2.0f);
                     }
                 }
             }
