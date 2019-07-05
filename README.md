@@ -27,13 +27,14 @@ Regarding this repository:
         + Rocket launcher
     + Gravity gun (Half life 2)
     + Portal gun (Portal 2)
-    + Recycler grenade (Prey)
+    + Recycler grenade launcher (Prey + Quake Champions)
+    + Nailgun (Quake Champions)
 
 + Ability
     + Ghost walk 鬼影 (Quake Champions)
     + Piercing sight 透視 (Quake Champions)
     + Mimic Matter (Prey)
-    + Za Warudo (the world) (manga/anime JoJo's Bizarre Adventure)
+    + Za Warudo (the world) 世界 (manga/anime JoJo's Bizarre Adventure)
 
 + Powerup
     + Quad damage (Quake Champions)
@@ -68,6 +69,9 @@ Regarding this repository:
 ------
 
 ## Clip
+
+### Nailgun, The World ability, Recycler Grenade Launcher
+<a href="https://youtu.be/TGVjuJ0y8JE" target="_blank"><img src="http://i3.ytimg.com/vi/TGVjuJ0y8JE/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Piercing Sight and Ghost Walk abilities
 <a href="https://youtu.be/tGoB7L8ij78" target="_blank"><img src="http://i3.ytimg.com/vi/tGoB7L8ij78/hqdefault.jpg" width="480" height="360" border="10" /></a>
