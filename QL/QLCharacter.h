@@ -161,6 +161,12 @@ public:
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool IsBot();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetMaxWalkSpeed(const float MaxWalkSpeed);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void ResetMaxWalkSpeed();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)

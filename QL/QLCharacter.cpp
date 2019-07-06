@@ -31,6 +31,7 @@
 #include "QLUmgFirstPerson.h"
 #include "QLUmgInventory.h"
 #include "Components/AudioComponent.h"
+#include "QLAIController.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -88,6 +89,8 @@ AQLCharacter::AQLCharacter()
     PlayerHealthArmorBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PlayerHealthArmorBarWidgetComponent"));
     PlayerHealthArmorBarWidgetComponent->SetupAttachment(GetCapsuleComponent());
     PlayerHealthArmorBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+
+    AIControllerClass = AQLAIController::StaticClass();
 }
 
 //------------------------------------------------------------
@@ -751,6 +754,9 @@ void AQLCharacter::Die()
         1.0f, // time interval in second
         false, // loop
         DurationBeforeDestroyed); // delay in second
+
+    // prevent dead character from still being controlled
+    DetachFromControllerPendingDestroy();
 }
 
 //------------------------------------------------------------
@@ -1009,4 +1015,26 @@ bool AQLCharacter::IsBot()
     }
 
     return false;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetMaxWalkSpeed(const float MaxWalkSpeed)
+{
+    auto* MyCharacterMovement = GetCharacterMovement();
+    if (MyCharacterMovement)
+    {
+        MyCharacterMovement->MaxWalkSpeed = MaxWalkSpeed;
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::ResetMaxWalkSpeed()
+{
+    auto* MyCharacterMovement = GetCharacterMovement();
+    if (MyCharacterMovement)
+    {
+        MyCharacterMovement->MaxWalkSpeed = 600.0f;
+    }
 }
