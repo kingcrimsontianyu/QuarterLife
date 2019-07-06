@@ -18,6 +18,14 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+UQLBTTaskPatrol::UQLBTTaskPatrol(const FObjectInitializer& ObjectInitializer) :
+    Super(ObjectInitializer)
+{
+    NodeName = "Patrol";
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 EBTNodeResult::Type UQLBTTaskPatrol::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     auto* MyController = Cast<AQLAIController>(OwnerComp.GetAIOwner());

@@ -22,5 +22,11 @@ class QL_API UQLBTServiceUpdateTargetInfo : public UBTService_BlackboardBase
     GENERATED_BODY()
 
 public:
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UQLBTServiceUpdateTargetInfo(const FObjectInitializer& ObjectInitializer);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8 * NodeMemory, float DeltaSeconds) override;
 };

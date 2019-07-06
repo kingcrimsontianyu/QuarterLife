@@ -24,5 +24,9 @@ class QL_API UQLBTTaskFollowTarget : public UBTTask_BlackboardBase
 public:
     //------------------------------------------------------------
     //------------------------------------------------------------
+    UQLBTTaskFollowTarget(const FObjectInitializer& ObjectInitializer);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };

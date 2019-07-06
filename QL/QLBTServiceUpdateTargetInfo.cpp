@@ -18,6 +18,14 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+UQLBTServiceUpdateTargetInfo::UQLBTServiceUpdateTargetInfo(const FObjectInitializer& ObjectInitializer) :
+    Super(ObjectInitializer)
+{
+    NodeName = "UpdateTargetInfo";
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);

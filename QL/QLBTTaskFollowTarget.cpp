@@ -18,6 +18,14 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+UQLBTTaskFollowTarget::UQLBTTaskFollowTarget(const FObjectInitializer& ObjectInitializer) :
+    Super(ObjectInitializer)
+{
+    NodeName = "FollowTarget";
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 EBTNodeResult::Type UQLBTTaskFollowTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     auto* MyController = Cast<AQLAIController>(OwnerComp.GetAIOwner());

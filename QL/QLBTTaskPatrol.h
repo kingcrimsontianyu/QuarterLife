@@ -24,5 +24,9 @@ class QL_API UQLBTTaskPatrol : public UBTTask_BlackboardBase
 public:
     //------------------------------------------------------------
     //------------------------------------------------------------
+    UQLBTTaskPatrol(const FObjectInitializer& ObjectInitializer);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 };
