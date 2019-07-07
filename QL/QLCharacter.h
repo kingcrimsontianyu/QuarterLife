@@ -167,6 +167,20 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void ResetMaxWalkSpeed();
+
+    // Fires a projectile.
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnFire();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnFireRelease();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnAltFire();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnAltFireRelease();
+
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -220,19 +234,6 @@ protected:
     // Called via input to turn look up/down at a given rate.
     // This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
     void LookUpAtRate(float Rate);
-
-    // Fires a projectile.
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnFire();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnFireRelease();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnAltFire();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnAltFireRelease();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnRestartLevel();

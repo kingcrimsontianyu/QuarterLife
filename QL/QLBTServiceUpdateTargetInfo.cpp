@@ -30,41 +30,54 @@ void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, u
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
+    UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+
     APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
     if (!PlayerController)
     {
         return;
     }
 
-    APawn* MyPawn = PlayerController->GetPawn();
-    if (!MyPawn)
+    APawn* TargetPawn = PlayerController->GetPawn();
+    if (TargetPawn)
     {
-        return;
-    }
 
-    AQLCharacter* MyCharacter = Cast<AQLCharacter>(MyPawn);
-    if (!MyCharacter)
-    {
-        return;
-    }
-
-    UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
-
-    // the blackboard must have variables TargetLocation (FVector) and IsTargetVisible (bool)
-    if (BlackboardComponent)
-    {
-        const FName TargetLocationKeyName(TEXT("TargetLocation"));
-        FVector TargetLocation = MyCharacter->GetActorLocation();
-        BlackboardComponent->SetValueAsVector(TargetLocationKeyName, TargetLocation);
-
-        const FName TargetVisibilityKeyName(TEXT("IsTargetVisible"));
-        auto* ThirdPersonMesh = MyCharacter->GetThirdPersonMesh();
-        if (!ThirdPersonMesh)
+        AQLCharacter* TargetCharacter = Cast<AQLCharacter>(TargetPawn);
+        if (TargetCharacter)
         {
-            return;
-        }
+            // the blackboard must have namesake variables
+            if (BlackboardComponent)
+            {
+                {
+                    const FName TargetLocationKeyName(TEXT("TargetLocation"));
+                    FVector TargetLocation = TargetCharacter->GetActorLocation();
+                    BlackboardComponent->SetValueAsVector(TargetLocationKeyName, TargetLocation);
+                }
 
-        bool bIsTargetVisible = ThirdPersonMesh->IsVisible();
-        BlackboardComponent->SetValueAsBool(TargetVisibilityKeyName, bIsTargetVisible);
+                {
+                    const FName TargetVisibilityKeyName(TEXT("IsTargetVisible"));
+                    auto* ThirdPersonMesh = TargetCharacter->GetThirdPersonMesh();
+                    if (!ThirdPersonMesh)
+                    {
+                        return;
+                    }
+
+                    bool bIsTargetVisible = ThirdPersonMesh->IsVisible();
+                    BlackboardComponent->SetValueAsBool(TargetVisibilityKeyName, bIsTargetVisible);
+                }
+
+                {
+                    const FName TargetAliveKeyName(TEXT("IsTargetAlive"));
+                    bool bResult = TargetCharacter->IsAlive();
+                    BlackboardComponent->SetValueAsBool(TargetAliveKeyName, bResult);
+                }
+            }
+        }
+    }
+    // the target is dead and destroyed
+    else
+    {
+        const FName TargetAliveKeyName(TEXT("IsTargetAlive"));
+        BlackboardComponent->SetValueAsBool(TargetAliveKeyName, false);
     }
 }

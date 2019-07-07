@@ -91,6 +91,9 @@ AQLCharacter::AQLCharacter()
     PlayerHealthArmorBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
     AIControllerClass = AQLAIController::StaticClass();
+
+    bUseControllerRotationPitch = true;
+    bUseControllerRotationYaw = true;
 }
 
 //------------------------------------------------------------

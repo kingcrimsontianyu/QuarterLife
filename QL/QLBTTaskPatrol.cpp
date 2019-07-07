@@ -35,14 +35,18 @@ EBTNodeResult::Type UQLBTTaskPatrol::ExecuteTask(UBehaviorTreeComponent& OwnerCo
     }
 
     APawn* MyBot = MyController->GetPawn();
-    if (MyBot)
+    if (!MyBot)
     {
-        AQLCharacter* MyBotCharacter = Cast<AQLCharacter>(MyBot);
-        if (MyBotCharacter)
-        {
-            MyBotCharacter->SetMaxWalkSpeed(125.0f);
-        }
+        return EBTNodeResult::Failed;
     }
+
+    AQLCharacter* MyBotCharacter = Cast<AQLCharacter>(MyBot);
+    if (!MyBotCharacter)
+    {
+        return EBTNodeResult::Failed;
+    }
+
+    MyBotCharacter->SetMaxWalkSpeed(125.0f);
 
     return EBTNodeResult::Succeeded;
 }
