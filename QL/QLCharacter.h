@@ -14,6 +14,7 @@
 #include "GameFramework/Character.h"
 #include "QLPlayerHealthArmorBarUserWidget.h"
 #include "Components/TimelineComponent.h"
+#include "Classes/GenericTeamAgentInterface.h"
 #include "QLCharacter.generated.h"
 
 class AQLWeapon;
@@ -22,11 +23,12 @@ class AQLAbility;
 class UQLAbilityManager;
 class UWidgetComponent;
 class UQLPowerupManager;
+class UAIPerceptionStimuliSourceComponent;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLCharacter : public ACharacter
+class QL_API AQLCharacter : public ACharacter, public IGenericTeamAgentInterface
 {
     GENERATED_BODY()
 
@@ -214,9 +216,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BaseLookUpRate;
 
-    // Projectile class to spawn
-    // UPROPERTY(EditDefaultsOnly, Category = Projectile)
-    // TSubclassOf<class ATestFirstPersonProjectile> ProjectileClass;
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -273,8 +272,11 @@ protected:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
-protected:
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual FGenericTeamId GetGenericTeamId() const override;
+protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UWidgetComponent* PlayerHealthArmorBarWidgetComponent;
 
@@ -315,4 +317,10 @@ protected:
 
     UPROPERTY()
     bool bCanSwitchWeapon;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FGenericTeamId TeamId;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
 };

@@ -14,6 +14,11 @@
 #include "AIController.h"
 #include "QLAIController.generated.h"
 
+class UAISenseConfig;
+class UAISenseConfig_Sight;
+class UAISenseConfig_Hearing;
+class UAISenseConfig_Prediction;
+
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -43,6 +48,46 @@ public:
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
+    virtual void PostInitializeComponents() override;
+
+    //------------------------------------------------------------
+    //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPerceptionUpdatedDelegate, const TArray<AActor*>&, UpdatedActors);
+    //DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActorPerceptionUpdatedDelegate, AActor*, Actor, FAIStimulus, Stimulus);
+    //------------------------------------------------------------
+    UFUNCTION()
+    void OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActors);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     UBehaviorTree* BehaviorTreeBasic;
+
+    UPROPERTY()
+    UAISenseConfig_Sight* AISenseConfig_Sight;
+
+    UPROPERTY()
+    UAISenseConfig_Hearing* AISenseConfig_Hearing;
+
+    UPROPERTY()
+    UAISenseConfig_Prediction* AISenseConfig_Prediction;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool QLDetectEnemies;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool QLDetectFriendlies;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool QLDetectNeutrals;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FGenericTeamId QLTeamId;
 };

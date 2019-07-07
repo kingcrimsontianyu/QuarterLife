@@ -32,6 +32,11 @@
 #include "QLUmgInventory.h"
 #include "Components/AudioComponent.h"
 #include "QLAIController.h"
+#include "Classes/Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Classes/Perception/AISense.h"
+#include "Classes/Perception/AISense_Sight.h"
+#include "Classes/Perception/AISense_Hearing.h"
+#include "Classes/Perception/AISense_Prediction.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -56,7 +61,7 @@ AQLCharacter::AQLCharacter()
     BaseLookUpRate = 45.0f;
 
     // Create a CameraComponent
-    FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+    FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCameraComponent"));
     FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
     //FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
     FirstPersonCameraComponent->RelativeLocation = FVector(-10.0f, 1.75f, 64.f);
@@ -93,6 +98,12 @@ AQLCharacter::AQLCharacter()
     AIControllerClass = AQLAIController::StaticClass();
 
     bUseControllerRotationYaw = true;
+
+    // ai
+    AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSourceComponent"));
+    AIPerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
+
+    TeamId = FGenericTeamId(0);
 }
 
 //------------------------------------------------------------
@@ -1047,4 +1058,11 @@ void AQLCharacter::ResetMaxWalkSpeed()
     {
         MyCharacterMovement->MaxWalkSpeed = 600.0f;
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FGenericTeamId AQLCharacter::GetGenericTeamId() const
+{
+    return TeamId;
 }
