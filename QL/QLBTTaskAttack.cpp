@@ -67,7 +67,7 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
         const FName TargetLocationKeyName(TEXT("TargetLocation"));
         FVector TargetLocation = BlackboardComponent->GetValueAsVector(TargetLocationKeyName);
 
-        MyController->SetFocus(TargetPawn);
+        MyController->SetFocalPoint(TargetLocation);
         MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
         MyBotCharacter->OnFire();
     }

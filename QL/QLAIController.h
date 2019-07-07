@@ -34,6 +34,12 @@ public:
     //------------------------------------------------------------
     virtual void OnPossess(APawn* InPawn) override;
 
+    //------------------------------------------------------------
+    // In the base class, this function simply zeros out pitch. WTF?
+    // To allow bots to aim up and down, this function must therefore be overridden.
+    //------------------------------------------------------------
+    virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn) override;
+
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
