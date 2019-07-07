@@ -13,6 +13,7 @@
 #include "Classes/BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
+#include "QLCharacter.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -37,5 +38,12 @@ void AQLAIController::OnPossess(APawn* InPawn)
     if (BehaviorTreeBasic)
     {
         RunBehaviorTree(BehaviorTreeBasic);
+    }
+
+    auto* MyCharacter = Cast<AQLCharacter>(InPawn);
+    if (MyCharacter)
+    {
+        // allow bots to aim up and down (change pitch)
+        MyCharacter->InitializeBot();
     }
 }

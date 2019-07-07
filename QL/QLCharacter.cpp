@@ -92,7 +92,6 @@ AQLCharacter::AQLCharacter()
 
     AIControllerClass = AQLAIController::StaticClass();
 
-    bUseControllerRotationPitch = true;
     bUseControllerRotationYaw = true;
 }
 
@@ -1018,6 +1017,14 @@ bool AQLCharacter::IsBot()
     }
 
     return false;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::InitializeBot()
+{
+    // to do: investigate why bUseControllerRotationPitch messes up rocket jump
+    bUseControllerRotationPitch = true;
 }
 
 //------------------------------------------------------------
