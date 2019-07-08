@@ -19,10 +19,14 @@
 #include "Classes/Perception/AISenseConfig_Sight.h"
 #include "Classes/Perception/AISenseConfig_Hearing.h"
 #include "Classes/Perception/AISenseConfig_Prediction.h"
+#include "Classes/Perception/AISenseConfig_Damage.h"
+#include "Classes/Perception/AISenseConfig_Team.h"
 #include "Classes/Perception/AISense.h"
 #include "Classes/Perception/AISense_Sight.h"
 #include "Classes/Perception/AISense_Hearing.h"
 #include "Classes/Perception/AISense_Prediction.h"
+#include "Classes/Perception/AISense_Damage.h"
+#include "Classes/Perception/AISense_Team.h"
 #include "QLUtility.h"
 
 //------------------------------------------------------------
@@ -37,11 +41,15 @@ AQLAIController::AQLAIController()
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
     AISenseConfig_Prediction = CreateDefaultSubobject<UAISenseConfig_Prediction>(TEXT("AISenseConfig_Prediction"));
+    AISenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISenseConfig_Damage"));
+    AISenseConfig_Team = CreateDefaultSubobject<UAISenseConfig_Team>(TEXT("AISenseConfig_Team"));
 
     PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
     PerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
     PerceptionComponent->ConfigureSense(*AISenseConfig_Hearing);
     PerceptionComponent->ConfigureSense(*AISenseConfig_Prediction);
+    PerceptionComponent->ConfigureSense(*AISenseConfig_Damage);
+    PerceptionComponent->ConfigureSense(*AISenseConfig_Team);
 
     PerceptionComponent->SetDominantSense(UAISense_Sight::StaticClass());
 

@@ -18,6 +18,8 @@ class UAISenseConfig;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Prediction;
+class UAISenseConfig_Damage;
+class UAISenseConfig_Team;
 class AQLCharacter;
 
 //------------------------------------------------------------
@@ -75,6 +77,12 @@ protected:
 
     UPROPERTY()
     UAISenseConfig_Prediction* AISenseConfig_Prediction;
+
+    UPROPERTY()
+    UAISenseConfig_Damage* AISenseConfig_Damage;
+
+    UPROPERTY()
+    UAISenseConfig_Team* AISenseConfig_Team;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
