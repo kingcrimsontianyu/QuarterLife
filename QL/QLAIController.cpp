@@ -185,6 +185,11 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
         // thus it is safe to deference Target in the second operand
         bool bResult = QLTarget.IsValid() && QLTarget->QLGetVisibility() && QLTarget->IsAlive();
         Blackboard->SetValueAsBool(FName(TEXT("CanAttackTarget")), bResult);
+
+        if (QLTarget.IsValid())
+        {
+            Blackboard->SetValueAsObject(FName(TEXT("Target")), QLTarget.Get());
+        }
     }
 }
 

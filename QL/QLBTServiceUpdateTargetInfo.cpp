@@ -44,5 +44,10 @@ void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, u
         AQLCharacter* Target = MyController->GetTarget();
         bool bResult = Target && Target->QLGetVisibility() && Target->IsAlive();
         BlackboardComponent->SetValueAsBool(FName(TEXT("CanAttackTarget")), bResult);
+
+        if (Target)
+        {
+            BlackboardComponent->SetValueAsObject(FName(TEXT("Target")), Target);
+        }
     }
 }

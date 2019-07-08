@@ -58,7 +58,7 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
             return EBTNodeResult::Failed;
         }
 
-        MyController->SetFocalPoint(Target->GetTargetLocation());
+        //MyController->SetFocalPoint(Target->GetTargetLocation());
         MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
         MyBotCharacter->OnFire();
     }
