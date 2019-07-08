@@ -150,7 +150,7 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
     for (auto&& Target : UpdatedActors)
     {
         auto* MyCharacter = Cast<AQLCharacter>(Target);
-        if (!MyCharacter || MyCharacter->IsBot())
+        if (!MyCharacter || MyCharacter->QLIsBot())
         {
             continue;
         }
@@ -160,6 +160,9 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
 
         for (const auto& Stimulus : Info.LastSensedStimuli)
         {
+            QLUtility::Screen(Stimulus.Type.Name.ToString());
+
+
             // check if the bot has seen the player
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
@@ -167,12 +170,17 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
                 if (bSenseResult)
                 {
                     QLTarget = MyCharacter;
-                    break;
                 }
                 else
                 {
                     QLTarget.Reset();
                 }
+            }
+
+            // check if the bot has taken damage
+            else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Damage::StaticClass()))
+            {
+                QLUtility::Screen("DAMAGE!");
             }
         }
     }

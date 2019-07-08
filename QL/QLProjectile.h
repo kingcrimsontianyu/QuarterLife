@@ -39,7 +39,7 @@ public:
     UProjectileMovementComponent* GetProjectileMovementComponent();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetQLPlayerController(AQLPlayerController* PlayerControllerExt);
+    void QLSetPlayerController(AQLPlayerController* PlayerControllerExt);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetDamageMultiplier(const float Value);

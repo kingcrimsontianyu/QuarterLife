@@ -46,7 +46,7 @@ public:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt);
+    void QLSetPlayerController(AQLPlayerController* QLPlayerControllerExt);
 
     //------------------------------------------------------------
     //------------------------------------------------------------

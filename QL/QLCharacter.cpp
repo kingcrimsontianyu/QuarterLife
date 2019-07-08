@@ -37,6 +37,8 @@
 #include "Classes/Perception/AISense_Sight.h"
 #include "Classes/Perception/AISense_Hearing.h"
 #include "Classes/Perception/AISense_Prediction.h"
+#include "Classes/Perception/AISense_Damage.h"
+#include "Classes/Perception/AISense_Team.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -544,6 +546,19 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 
     if (ActualDamage > 0.0f)
     {
+        // sense damage
+        if (QLIsBot())
+        {
+            UAISense_Damage::ReportDamageEvent(
+                GetWorld(),
+                this, // AActor* DamagedActor
+                EventInstigator->Instigator, // AActor* Instigator,
+                ActualDamage,
+                GetActorLocation(), // EventLocation
+                GetActorLocation() // HitLocation
+            );
+        }
+
         TakeDamageQuakeStyle(ActualDamage);
     }
 
@@ -1003,7 +1018,7 @@ bool AQLCharacter::HasWeapon(const FName& WeaponName)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-bool AQLCharacter::IsBot()
+bool AQLCharacter::QLIsBot()
 {
     AController* MyController = GetController();
     if (!MyController)

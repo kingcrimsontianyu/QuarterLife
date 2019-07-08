@@ -159,7 +159,7 @@ public:
     // Differentiate human player from AI bots
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    bool IsBot();
+    bool QLIsBot();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetMaxWalkSpeed(const float MaxWalkSpeed);

@@ -151,7 +151,7 @@ void AQLWeaponNailGun::SpawnNailProjectile()
         // pass controller to Nail as damage instigator
         AController* Controller = User->GetController();
         AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
-        Nail->SetQLPlayerController(QLPlayerController);
+        Nail->QLSetPlayerController(QLPlayerController);
         Nail->SetDamageMultiplier(DamageMultiplier);
         UGameplayStatics::FinishSpawningActor(Nail, MyTransform);
 

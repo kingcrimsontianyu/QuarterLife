@@ -164,7 +164,7 @@ void UQLUmgFirstPerson::ShowDamageOnScreen(const FString& msg, const FVector& Lo
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgFirstPerson::SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt)
+void UQLUmgFirstPerson::QLSetPlayerController(AQLPlayerController* QLPlayerControllerExt)
 {
     QLPlayerController = QLPlayerControllerExt;
 }

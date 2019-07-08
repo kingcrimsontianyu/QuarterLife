@@ -46,7 +46,7 @@ void UQLUmgInventory::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLUmgInventory::SetQLPlayerController(AQLPlayerController* QLPlayerControllerExt)
+void UQLUmgInventory::QLSetPlayerController(AQLPlayerController* QLPlayerControllerExt)
 {
     QLPlayerController = QLPlayerControllerExt;
 }

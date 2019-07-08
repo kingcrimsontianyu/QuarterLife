@@ -41,7 +41,7 @@ void AQLArmor::AddArmorToPlayer(AActor* OtherActor)
     if (OtherActor)
     {
         AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
-        if (Character && !Character->IsBot())
+        if (Character && !Character->QLIsBot())
         {
             if (Character->GetArmor() < Character->GetMaxArmor())
             {

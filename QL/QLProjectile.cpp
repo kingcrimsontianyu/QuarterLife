@@ -254,7 +254,7 @@ void AQLProjectile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLProjectile::SetQLPlayerController(AQLPlayerController* PlayerControllerExt)
+void AQLProjectile::QLSetPlayerController(AQLPlayerController* PlayerControllerExt)
 {
     PlayerController = PlayerControllerExt;
 }

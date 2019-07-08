@@ -70,13 +70,13 @@ void AQLPlayerController::Tick(float DeltaSeconds)
 void AQLPlayerController::AddUMG()
 {
     UmgFirstPerson = CreateWidget<UQLUmgFirstPerson>(GetWorld(), UmgFirstPersonClass, FName(TEXT("UmgFirstPerson")));
-    UmgFirstPerson->SetQLPlayerController(this);
+    UmgFirstPerson->QLSetPlayerController(this);
     UmgFirstPerson->AddToViewport();
     bShowMouseCursor = false;
     SetInputMode(FInputModeGameOnly());
 
     UmgInventory = CreateWidget<UQLUmgInventory>(GetWorld(), UmgInventoryClass, FName(TEXT("UmgInventory")));
-    UmgInventory->SetQLPlayerController(this);
+    UmgInventory->QLSetPlayerController(this);
 }
 
 //------------------------------------------------------------

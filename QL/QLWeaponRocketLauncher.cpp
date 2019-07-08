@@ -122,7 +122,7 @@ void AQLWeaponRocketLauncher::OnFire()
         // pass controller to rocket as damage instigator
         AController* Controller = User->GetController();
         AQLPlayerController* QLPlayerController = Cast<AQLPlayerController>(Controller);
-        Rocket->SetQLPlayerController(QLPlayerController);
+        Rocket->QLSetPlayerController(QLPlayerController);
         Rocket->SetDamageMultiplier(DamageMultiplier);
         UGameplayStatics::FinishSpawningActor(Rocket, MyTransform);
 
