@@ -51,7 +51,7 @@ EBTNodeResult::Type UQLBTTaskFindPatrolLocation::ExecuteTask(UBehaviorTreeCompon
 
     // get a random location
     FVector RandomLocation;
-    float SearchRadius = 10000.0f;
+    float SearchRadius = 500.0f;
     UNavigationSystemV1::K2_GetRandomReachablePointInRadius(MyController, MyBotCharacter->GetActorLocation(), RandomLocation, SearchRadius);
 
     UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();

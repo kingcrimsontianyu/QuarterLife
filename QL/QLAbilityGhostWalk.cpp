@@ -77,9 +77,7 @@ void AQLAbilityGhostWalk::OnUse()
             }
 
             QLCharacter->SetFireEnabled(false);
-            QLCharacter->GetFirstPersonMesh()->SetVisibility(false);
-            QLCharacter->GetThirdPersonMesh()->SetVisibility(false);
-            QLCharacter->SetCurrentWeaponVisibility(false);
+            QLCharacter->QLSetVisibility(false);
             QLCharacter->SetSwitchWeaponEnabled(false);
         }
     }
@@ -140,9 +138,7 @@ void AQLAbilityGhostWalk::OnAbilityEnd()
             }
 
             QLCharacter->SetFireEnabled(true);
-            QLCharacter->GetFirstPersonMesh()->SetVisibility(true);
-            QLCharacter->GetThirdPersonMesh()->SetVisibility(true);
-            QLCharacter->SetCurrentWeaponVisibility(true);
+            QLCharacter->QLSetVisibility(true);
             QLCharacter->SetSwitchWeaponEnabled(true);
         }
     }

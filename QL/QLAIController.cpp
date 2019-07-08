@@ -176,6 +176,16 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             }
         }
     }
+
+    // update blackboard variable
+    if (Blackboard)
+    {
+        // according to c++ standard, operator && performs short-circuit evaluation,
+        // i.e. do not evaluate the second operand if the result is known after evaluating the first
+        // thus it is safe to deference Target in the second operand
+        bool bResult = QLTarget.IsValid() && QLTarget->QLGetVisibility() && QLTarget->IsAlive();
+        Blackboard->SetValueAsBool(FName(TEXT("CanAttackTarget")), bResult);
+    }
 }
 
 //------------------------------------------------------------

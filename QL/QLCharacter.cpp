@@ -102,6 +102,8 @@ AQLCharacter::AQLCharacter()
     AIPerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
 
     TeamId = FGenericTeamId(0);
+
+    bQLIsVisible = true;
 }
 
 //------------------------------------------------------------
@@ -898,16 +900,6 @@ void AQLCharacter::StopGlow()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::SetCurrentWeaponVisibility(const bool bFlag)
-{
-    if (WeaponManager)
-    {
-        WeaponManager->SetCurrentWeaponVisibility(bFlag);
-    }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
 bool AQLCharacter::IsAlive()
 {
     if (Health > 0.0f)
@@ -1059,14 +1051,30 @@ FGenericTeamId AQLCharacter::GetGenericTeamId() const
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-bool AQLCharacter::QLIsVisible()
+bool AQLCharacter::QLGetVisibility()
 {
-    if (ThirdPersonMesh && ThirdPersonMesh->IsVisible())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return bQLIsVisible;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::QLSetVisibility(const bool bFlag)
+{
+    if (FirstPersonMesh)
+    {
+        FirstPersonMesh->SetVisibility(bFlag);
+    }
+
+    if (ThirdPersonMesh)
+    {
+        ThirdPersonMesh->SetVisibility(bFlag);
+    }
+
+    if (WeaponManager)
+    {
+        WeaponManager->SetCurrentWeaponVisibility(bFlag);
+    }
+
+    bQLIsVisible = bFlag;
+}
+

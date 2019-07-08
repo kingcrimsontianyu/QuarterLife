@@ -138,9 +138,6 @@ public:
     void SetSwitchWeaponEnabled(const bool bFlag);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCurrentWeaponVisibility(const bool bFlag);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual UAnimSequence* PlayAnimationSequence(const FName& AnimationSequenceName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -184,7 +181,10 @@ public:
     void OnAltFireRelease();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    bool QLIsVisible();
+    bool QLGetVisibility();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void QLSetVisibility(const bool bFlag);
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -320,4 +320,7 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
+
+    UPROPERTY()
+    bool bQLIsVisible;
 };

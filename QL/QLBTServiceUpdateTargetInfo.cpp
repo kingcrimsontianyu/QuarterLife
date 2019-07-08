@@ -27,7 +27,7 @@ UQLBTServiceUpdateTargetInfo::UQLBTServiceUpdateTargetInfo(const FObjectInitiali
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
+void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
@@ -38,15 +38,11 @@ void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, u
         return;
     }
 
-    AQLCharacter* Target = MyController->GetTarget();
-
-    // according to c++ standard, && performs short-circuit evaluation,
-    // i.e. do not evaluate the second operand if the result is known after evaluating the first
-    // thus it is safe to deference Target in the second operand
-    bool bResult = Target && Target->QLIsVisible() && Target->IsAlive();
     UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
     if (BlackboardComponent)
     {
+        AQLCharacter* Target = MyController->GetTarget();
+        bool bResult = Target && Target->QLGetVisibility() && Target->IsAlive();
         BlackboardComponent->SetValueAsBool(FName(TEXT("CanAttackTarget")), bResult);
     }
 }
