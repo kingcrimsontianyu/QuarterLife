@@ -9,24 +9,25 @@
 //------------------------------------------------------------
 
 
-#include "QLBTTaskPatrol.h"
+#include "QLBTTaskFindPatrolLocation.h"
 #include "QLAIController.h"
 #include "QLCharacter.h"
 #include "QLUtility.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
+#include "NavigationSystem.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UQLBTTaskPatrol::UQLBTTaskPatrol(const FObjectInitializer& ObjectInitializer) :
+UQLBTTaskFindPatrolLocation::UQLBTTaskFindPatrolLocation(const FObjectInitializer& ObjectInitializer) :
     Super(ObjectInitializer)
 {
-    NodeName = "Patrol";
+    NodeName = "FindPatrolLocation";
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-EBTNodeResult::Type UQLBTTaskPatrol::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UQLBTTaskFindPatrolLocation::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     Super::ExecuteTask(OwnerComp, NodeMemory);
 
@@ -46,6 +47,17 @@ EBTNodeResult::Type UQLBTTaskPatrol::ExecuteTask(UBehaviorTreeComponent& OwnerCo
     if (!MyBotCharacter)
     {
         return EBTNodeResult::Failed;
+    }
+
+    // get a random location
+    FVector RandomLocation;
+    float SearchRadius = 10000.0f;
+    UNavigationSystemV1::K2_GetRandomReachablePointInRadius(MyController, MyBotCharacter->GetActorLocation(), RandomLocation, SearchRadius);
+
+    UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+    if (BlackboardComponent)
+    {
+        BlackboardComponent->SetValueAsVector(FName(TEXT("PatrolLocation")), RandomLocation);
     }
 
     MyBotCharacter->SetMaxWalkSpeed(125.0f);

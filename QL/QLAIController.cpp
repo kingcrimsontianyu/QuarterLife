@@ -33,7 +33,7 @@ AQLAIController::AQLAIController()
     AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
     AISenseConfig_Sight->SightRadius = 6000.0f;
     AISenseConfig_Sight->LoseSightRadius = 7000.0f;
-    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 70.0f;
+    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 90.0f;
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
     AISenseConfig_Prediction = CreateDefaultSubobject<UAISenseConfig_Prediction>(TEXT("AISenseConfig_Prediction"));
@@ -90,13 +90,6 @@ void AQLAIController::OnPossess(APawn* InPawn)
     if (BehaviorTreeBasic)
     {
         RunBehaviorTree(BehaviorTreeBasic);
-    }
-
-    auto* MyCharacter = Cast<AQLCharacter>(InPawn);
-    if (MyCharacter)
-    {
-        // allow bots to aim up and down (change pitch)
-        MyCharacter->InitializeBot();
     }
 }
 

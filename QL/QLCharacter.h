@@ -164,11 +164,6 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool IsBot();
 
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void InitializeBot();
-
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetMaxWalkSpeed(const float MaxWalkSpeed);
 

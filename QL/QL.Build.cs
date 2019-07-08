@@ -17,7 +17,9 @@ public class QL : ModuleRules
             "Slate",
             "SlateCore",
             "GameplayTasks",
-            "GameplayDebugger"
+            "GameplayDebugger",
+            "NavigationSystem",
+            "AIModule",
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });

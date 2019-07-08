@@ -97,8 +97,6 @@ AQLCharacter::AQLCharacter()
 
     AIControllerClass = AQLAIController::StaticClass();
 
-    bUseControllerRotationYaw = true;
-
     // ai
     AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSourceComponent"));
     AIPerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
@@ -1028,14 +1026,6 @@ bool AQLCharacter::IsBot()
     }
 
     return false;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLCharacter::InitializeBot()
-{
-    // to do: investigate why bUseControllerRotationPitch messes up rocket jump
-    bUseControllerRotationPitch = true;
 }
 
 //------------------------------------------------------------

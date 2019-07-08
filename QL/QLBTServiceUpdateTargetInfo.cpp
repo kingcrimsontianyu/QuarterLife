@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "QLCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "QLAIController.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -30,5 +31,22 @@ void UQLBTServiceUpdateTargetInfo::TickNode(UBehaviorTreeComponent& OwnerComp, u
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
+    auto* MyController = Cast<AQLAIController>(OwnerComp.GetAIOwner());
+
+    if (!MyController)
+    {
+        return;
+    }
+
+    AQLCharacter* Target = MyController->GetTarget();
+
+    // according to c++ standard, && performs short-circuit evaluation,
+    // i.e. do not evaluate the second operand if the result is known after evaluating the first
+    // thus it is safe to deference Target in the second operand
+    bool bResult = Target && Target->QLIsVisible() && Target->IsAlive();
     UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+    if (BlackboardComponent)
+    {
+        BlackboardComponent->SetValueAsBool(FName(TEXT("CanAttackTarget")), bResult);
+    }
 }

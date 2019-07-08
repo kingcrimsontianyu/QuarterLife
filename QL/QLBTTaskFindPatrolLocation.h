@@ -12,19 +12,19 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "QLBTTaskPatrol.generated.h"
+#include "QLBTTaskFindPatrolLocation.generated.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API UQLBTTaskPatrol : public UBTTask_BlackboardBase
+class QL_API UQLBTTaskFindPatrolLocation : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 
 public:
     //------------------------------------------------------------
     //------------------------------------------------------------
-    UQLBTTaskPatrol(const FObjectInitializer& ObjectInitializer);
+    UQLBTTaskFindPatrolLocation(const FObjectInitializer& ObjectInitializer);
 
     //------------------------------------------------------------
     //------------------------------------------------------------
