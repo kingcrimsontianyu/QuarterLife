@@ -31,6 +31,8 @@ AQLAIController::AQLAIController()
 {
     // AI sense
     AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
+    AISenseConfig_Sight->SightRadius = 6000.0f;
+    AISenseConfig_Sight->LoseSightRadius = 7000.0f;
     AISenseConfig_Sight->PeripheralVisionAngleDegrees = 70.0f;
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
@@ -146,23 +148,38 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
 {
     for (auto&& Target : UpdatedActors)
     {
+        auto* MyCharacter = Cast<AQLCharacter>(Target);
+        if (!MyCharacter || MyCharacter->IsBot())
+        {
+            continue;
+        }
+
         FActorPerceptionBlueprintInfo Info;
         PerceptionComponent->GetActorsPerception(Target, Info);
 
         for (const auto& Stimulus : Info.LastSensedStimuli)
         {
+            // check if the bot has seen the player
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
                 bool bSenseResult = Stimulus.WasSuccessfullySensed();
                 if (bSenseResult)
                 {
-                    QLUtility::Log("ENTER");
+                    QLTarget = MyCharacter;
+                    break;
                 }
                 else
                 {
-                    QLUtility::Log("LEAVE");
+                    QLTarget.Reset();
                 }
             }
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+AQLCharacter* AQLAIController::GetTarget()
+{
+    return QLTarget.Get();
 }

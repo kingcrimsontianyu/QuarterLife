@@ -188,6 +188,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnAltFireRelease();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool QLIsVisible();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)

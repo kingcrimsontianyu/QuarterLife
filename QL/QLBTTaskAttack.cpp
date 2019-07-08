@@ -29,6 +29,8 @@ UQLBTTaskAttack::UQLBTTaskAttack(const FObjectInitializer& ObjectInitializer) :
 //------------------------------------------------------------
 EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+    Super::ExecuteTask(OwnerComp, NodeMemory);
+
     auto* MyController = Cast<AQLAIController>(OwnerComp.GetAIOwner());
     if (!MyController)
     {
@@ -47,27 +49,16 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
         return EBTNodeResult::Failed;
     }
 
-    APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-    if (!PlayerController)
-    {
-        return EBTNodeResult::Failed;
-    }
-
-    APawn* TargetPawn = PlayerController->GetPawn();
-    if (!TargetPawn)
-    {
-        return EBTNodeResult::Failed;
-    }
-
     UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
-
-    // the blackboard must have variables TargetLocation (FVector)
     if (BlackboardComponent)
     {
-        const FName TargetLocationKeyName(TEXT("TargetLocation"));
-        FVector TargetLocation = BlackboardComponent->GetValueAsVector(TargetLocationKeyName);
+        AQLCharacter* Target = MyController->GetTarget();
+        if (!Target)
+        {
+            return EBTNodeResult::Failed;
+        }
 
-        MyController->SetFocalPoint(TargetLocation);
+        MyController->SetFocalPoint(Target->GetTargetLocation());
         MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
         MyBotCharacter->OnFire();
     }

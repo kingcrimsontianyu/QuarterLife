@@ -28,6 +28,8 @@ UQLBTTaskFollowTarget::UQLBTTaskFollowTarget(const FObjectInitializer& ObjectIni
 //------------------------------------------------------------
 EBTNodeResult::Type UQLBTTaskFollowTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+    Super::ExecuteTask(OwnerComp, NodeMemory);
+
     auto* MyController = Cast<AQLAIController>(OwnerComp.GetAIOwner());
     if (!MyController)
     {
@@ -49,15 +51,16 @@ EBTNodeResult::Type UQLBTTaskFollowTarget::ExecuteTask(UBehaviorTreeComponent& O
     MyBotCharacter->ResetMaxWalkSpeed();
 
     UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
-
-    // the blackboard must have variables TargetLocation (FVector) and IsTargetVisible (bool)
     if (BlackboardComponent)
     {
-        const FName TargetLocationKeyName(TEXT("TargetLocation"));
-        FVector TargetLocation = BlackboardComponent->GetValueAsVector(TargetLocationKeyName);
+        AQLCharacter* Target = MyController->GetTarget();
+        if (!Target)
+        {
+            return EBTNodeResult::Failed;
+        }
 
         float AcceptanceRadius = 800.0f;
-        MyController->MoveToLocation(TargetLocation, AcceptanceRadius);
+        MyController->MoveToLocation(Target->GetActorLocation(), AcceptanceRadius);
     }
 
     return EBTNodeResult::Succeeded;

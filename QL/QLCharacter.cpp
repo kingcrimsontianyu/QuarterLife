@@ -1066,3 +1066,17 @@ FGenericTeamId AQLCharacter::GetGenericTeamId() const
 {
     return TeamId;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::QLIsVisible()
+{
+    if (ThirdPersonMesh && ThirdPersonMesh->IsVisible())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

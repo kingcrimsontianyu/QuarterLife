@@ -16,7 +16,8 @@ public class QL : ModuleRules
             "UMG",
             "Slate",
             "SlateCore",
-            "GameplayTasks"
+            "GameplayTasks",
+            "GameplayDebugger"
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });

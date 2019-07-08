@@ -28,6 +28,8 @@ UQLBTTaskPatrol::UQLBTTaskPatrol(const FObjectInitializer& ObjectInitializer) :
 //------------------------------------------------------------
 EBTNodeResult::Type UQLBTTaskPatrol::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+    Super::ExecuteTask(OwnerComp, NodeMemory);
+
     auto* MyController = Cast<AQLAIController>(OwnerComp.GetAIOwner());
     if (!MyController)
     {

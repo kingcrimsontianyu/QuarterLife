@@ -18,6 +18,7 @@ class UAISenseConfig;
 class UAISenseConfig_Sight;
 class UAISenseConfig_Hearing;
 class UAISenseConfig_Prediction;
+class AQLCharacter;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -45,6 +46,10 @@ public:
     //------------------------------------------------------------
     virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn) override;
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    AQLCharacter* GetTarget();
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -90,4 +95,7 @@ protected:
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FGenericTeamId QLTeamId;
+
+    UPROPERTY()
+    TWeakObjectPtr<AQLCharacter> QLTarget;
 };
