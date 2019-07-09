@@ -15,6 +15,8 @@
 #include "QLMegaHealth.generated.h"
 
 //------------------------------------------------------------
+// In Blueprint,
+// Set collision object type to QLPickup
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLMegaHealth : public AQLHealth

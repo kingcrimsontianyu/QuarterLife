@@ -26,6 +26,8 @@ class UQLPowerupManager;
 class UAIPerceptionStimuliSourceComponent;
 
 //------------------------------------------------------------
+// In Blueprint,
+// Set collision presets to custom, set collision with QLPickup to overlap
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLCharacter : public ACharacter, public IGenericTeamAgentInterface

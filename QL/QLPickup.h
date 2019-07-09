@@ -18,6 +18,9 @@ class UBoxComponent;
 class UStaticMeshComponent;
 
 //------------------------------------------------------------
+// The AQLPickup actor shall have a custom collision channel
+// that ignores other AQLPickup actor.
+// Project settings --> collision --> add object channels / trace channels
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLPickup : public AActor

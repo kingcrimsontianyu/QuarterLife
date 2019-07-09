@@ -32,7 +32,8 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
 {
     RootSphereComponent->InitSphereRadius(10.0f);
     RootSphereComponent->SetEnableGravity(false);
-    RootSphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+    RootSphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+    RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
     ProjectileMovementComponent->bShouldBounce = true;
 

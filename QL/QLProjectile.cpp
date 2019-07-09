@@ -32,7 +32,9 @@ AQLProjectile::AQLProjectile()
 
     RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
     RootSphereComponent->InitSphereRadius(20.0f);
-    RootSphereComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+    RootSphereComponent->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+    RootSphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    RootSphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     RootComponent = RootSphereComponent;
 
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));

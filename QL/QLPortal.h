@@ -9,7 +9,7 @@
 //------------------------------------------------------------
 
 //------------------------------------------------------------
-// This section describes the implementation detail of a portal gun in QL.
+// The portal gun system consists of:
 //
 // Portal gun
 //
