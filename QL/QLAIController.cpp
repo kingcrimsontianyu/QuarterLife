@@ -44,7 +44,7 @@ AQLAIController::AQLAIController()
     AISenseConfig_Prediction = CreateDefaultSubobject<UAISenseConfig_Prediction>(TEXT("AISenseConfig_Prediction"));
 
     AISenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISenseConfig_Damage"));
-    AISenseConfig_Damage->SetMaxAge(3.0f); // after the set duration, perceived damage stimulus expires
+    AISenseConfig_Damage->SetMaxAge(4.0f); // after the set duration, damage stimulus expires
 
     AISenseConfig_Team = CreateDefaultSubobject<UAISenseConfig_Team>(TEXT("AISenseConfig_Team"));
 
@@ -160,6 +160,8 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             continue;
         }
 
+        bool bAnythingSensed = false;
+
         FActorPerceptionBlueprintInfo Info;
         // retrieve what has been sensed about the target actor
         PerceptionComponent->GetActorsPerception(Target, Info);
@@ -168,28 +170,32 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
         for (auto&& Stimulus : Info.LastSensedStimuli)
         {
             // check if the bot has seen the player
+            // OnPerceptionUpdated() is fired when the player enters or leaves the region of sight, or the sense expires
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
-                bool bSenseResult = Stimulus.WasSuccessfullySensed();
-                if (bSenseResult)
+                if (Stimulus.WasSuccessfullySensed())
                 {
-                    QLTarget = MyCharacter;
-                }
-                else
-                {
-                    QLTarget.Reset();
+                    bAnythingSensed = true;
                 }
             }
 
             // check if the bot has taken damage
             else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Damage::StaticClass()))
             {
-                bool bSenseResult = Stimulus.WasSuccessfullySensed();
-                if (bSenseResult)
+                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired())
                 {
-                    QLTarget = MyCharacter;
+                    bAnythingSensed = true;
                 }
             }
+        }
+
+        if (bAnythingSensed)
+        {
+            QLTarget = MyCharacter;
+        }
+        else
+        {
+            QLTarget.Reset();
         }
     }
 
