@@ -1,4 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+//------------------------------------------------------------
+// Quarter Life
+//
+// GNU General Public License v3.0
+//
+//  (\-/)
+// (='.'=)
+// (")-(")o
+//------------------------------------------------------------
 
 #pragma once
 

@@ -97,11 +97,11 @@ AQLCharacter::AQLCharacter()
     PlayerHealthArmorBarWidgetComponent->SetupAttachment(GetCapsuleComponent());
     PlayerHealthArmorBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 
-    AIControllerClass = AQLAIController::StaticClass();
-
     // ai
     AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSourceComponent"));
     AIPerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
+    AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+    AIControllerClass = AQLAIController::StaticClass();
 
     TeamId = FGenericTeamId(0);
 

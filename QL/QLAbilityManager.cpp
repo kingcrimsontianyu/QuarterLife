@@ -1,8 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "QLAbilityManager.h"
-
 //------------------------------------------------------------
 // Quarter Life
 //
@@ -12,7 +7,6 @@
 // (='.'=)
 // (")-(")o
 //------------------------------------------------------------
-
 
 #include "QLAbilityManager.h"
 #include "QLAbility.h"
