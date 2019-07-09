@@ -52,6 +52,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void ShowAbilityMenu();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnRestartLevel();
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------

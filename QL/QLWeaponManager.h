@@ -34,6 +34,8 @@ public:
 
     void AddWeapon(AQLWeapon* Weapon);
 
+    void DestroyAllWeapon();
+
     void SetCurrentWeapon(const FName& QLName);
 
     void UpdateCrossHair();

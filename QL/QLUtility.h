@@ -36,4 +36,14 @@ namespace QLUtility
         std::string name = ss.str();
         return FString(name.c_str());
     }
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    void MakePredictionShot(
+        FVector& LocationProjectileHitsEnemy,
+        float& TimeProjectileHitsEnemy,
+        const FVector MyLocation,
+        const FVector EnemyLocation,
+        const FVector EnemyVelocity,
+        const float ProjectileSpeed);
 }

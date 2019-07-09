@@ -58,7 +58,22 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
             return EBTNodeResult::Failed;
         }
 
-        //MyController->SetFocalPoint(Target->GetTargetLocation());
+        FVector WhereToAim;
+
+        //WhereToAim = Target->GetTargetLocation();
+
+        float TimeProjectileHitsEnemy;
+        QLUtility::MakePredictionShot(
+            WhereToAim,
+            TimeProjectileHitsEnemy,
+            MyBotCharacter->GetActorLocation(),
+            Target->GetActorLocation(),
+            Target->GetVelocity(),
+            2000.0f);
+
+        // once the bot leaves attack task, MyController->ClearFocus(EAIFocusPriority::Gameplay) should be called
+        MyController->SetFocalPoint(WhereToAim);
+
         MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
         MyBotCharacter->OnFire();
     }

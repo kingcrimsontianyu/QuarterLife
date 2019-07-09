@@ -166,6 +166,16 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void UQLWeaponManager::DestroyAllWeapon()
+{
+    for (auto& Item : WeaponList)
+    {
+        Item->Destroy();
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void UQLWeaponManager::SetDamageMultiplier(const float Value)
 {
     DamageMultiplier = Value;

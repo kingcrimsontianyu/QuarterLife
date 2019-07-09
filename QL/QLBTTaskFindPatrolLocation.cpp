@@ -61,6 +61,7 @@ EBTNodeResult::Type UQLBTTaskFindPatrolLocation::ExecuteTask(UBehaviorTreeCompon
     }
 
     MyBotCharacter->SetMaxWalkSpeed(125.0f);
+    MyController->ClearFocus(EAIFocusPriority::Gameplay);
 
     return EBTNodeResult::Succeeded;
 }

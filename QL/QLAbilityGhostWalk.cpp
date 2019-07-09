@@ -76,9 +76,8 @@ void AQLAbilityGhostWalk::OnUse()
                 CapsuleComponent->SetGenerateOverlapEvents(false);
             }
 
-            QLCharacter->SetFireEnabled(false);
+            QLCharacter->SetWeaponEnabled(false);
             QLCharacter->QLSetVisibility(false);
-            QLCharacter->SetSwitchWeaponEnabled(false);
         }
     }
 }
@@ -137,9 +136,8 @@ void AQLAbilityGhostWalk::OnAbilityEnd()
                 CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
             }
 
-            QLCharacter->SetFireEnabled(true);
+            QLCharacter->SetWeaponEnabled(true);
             QLCharacter->QLSetVisibility(true);
-            QLCharacter->SetSwitchWeaponEnabled(true);
         }
     }
 }

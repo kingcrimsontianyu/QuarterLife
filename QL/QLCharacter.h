@@ -131,11 +131,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();
 
+    //------------------------------------------------------------
+    // Enable or disable weapon switch, fire and alt fire
+    //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetFireEnabled(const bool bFlag);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetSwitchWeaponEnabled(const bool bFlag);
+    void SetWeaponEnabled(const bool bFlag);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual UAnimSequence* PlayAnimationSequence(const FName& AnimationSequenceName);
@@ -183,8 +183,22 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool QLGetVisibility();
 
+    //------------------------------------------------------------
+    // Enable or disable the visibility of the first person mesh,
+    // third person mesh, and weapon mesh
+    //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void QLSetVisibility(const bool bFlag);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool QLGetVulnerability();
+
+    //------------------------------------------------------------
+    // Enable or disable the visibility of the first person mesh,
+    // third person mesh, and weapon mesh
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void QLSetVulnerability(const bool bFlag);
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -235,9 +249,6 @@ protected:
     // Called via input to turn look up/down at a given rate.
     // This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
     void LookUpAtRate(float Rate);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void OnRestartLevel();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SwitchToRocketLauncher();
@@ -321,6 +332,9 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
 
-    UPROPERTY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     bool bQLIsVisible;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool bQLIsVulnerable;
 };

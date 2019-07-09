@@ -40,8 +40,12 @@ AQLAIController::AQLAIController()
     AISenseConfig_Sight->PeripheralVisionAngleDegrees = 90.0f;
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
+
     AISenseConfig_Prediction = CreateDefaultSubobject<UAISenseConfig_Prediction>(TEXT("AISenseConfig_Prediction"));
+
     AISenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISenseConfig_Damage"));
+    AISenseConfig_Damage->SetMaxAge(3.0f); // after the set duration, perceived damage stimulus expires
+
     AISenseConfig_Team = CreateDefaultSubobject<UAISenseConfig_Team>(TEXT("AISenseConfig_Team"));
 
     PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
@@ -147,6 +151,7 @@ void AQLAIController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn)
 //------------------------------------------------------------
 void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActors)
 {
+    // for each target actor which has been sensed
     for (auto&& Target : UpdatedActors)
     {
         auto* MyCharacter = Cast<AQLCharacter>(Target);
@@ -156,13 +161,12 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
         }
 
         FActorPerceptionBlueprintInfo Info;
+        // retrieve what has been sensed about the target actor
         PerceptionComponent->GetActorsPerception(Target, Info);
 
-        for (const auto& Stimulus : Info.LastSensedStimuli)
+        // for each stimulus
+        for (auto&& Stimulus : Info.LastSensedStimuli)
         {
-            QLUtility::Screen(Stimulus.Type.Name.ToString());
-
-
             // check if the bot has seen the player
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
@@ -180,7 +184,11 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             // check if the bot has taken damage
             else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Damage::StaticClass()))
             {
-                QLUtility::Screen("DAMAGE!");
+                bool bSenseResult = Stimulus.WasSuccessfullySensed();
+                if (bSenseResult)
+                {
+                    QLTarget = MyCharacter;
+                }
             }
         }
     }

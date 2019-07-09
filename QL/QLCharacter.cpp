@@ -106,6 +106,7 @@ AQLCharacter::AQLCharacter()
     TeamId = FGenericTeamId(0);
 
     bQLIsVisible = true;
+    bQLIsVulnerable = true;
 }
 
 //------------------------------------------------------------
@@ -161,6 +162,9 @@ void AQLCharacter::PostInitializeComponents()
         DynamicMaterialThirdPersonMesh = ThirdPersonMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, BasicMaterial);
         ThirdPersonMesh->SetMaterial(0, DynamicMaterialThirdPersonMesh.Get());
     }
+
+    QLSetVisibility(bQLIsVisible);
+    QLSetVulnerability(bQLIsVulnerable);
 }
 
 //------------------------------------------------------------
@@ -194,8 +198,6 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("SwitchToNailGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToNailGun);
     PlayerInputComponent->BindAction("SwitchToPortalGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToPortalGun);
     PlayerInputComponent->BindAction("SwitchToGrenadeLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToGrenadeLauncher);
-
-    PlayerInputComponent->BindAction("RestartLevel", EInputEvent::IE_Pressed, this, &AQLCharacter::OnRestartLevel);
 
     PlayerInputComponent->BindAction("UseAbility", EInputEvent::IE_Pressed, this, &AQLCharacter::OnUseAbility);
 
@@ -508,6 +510,35 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 {
     float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+    // bot sense damage
+    if (QLIsBot())
+    {
+        if (EventInstigator)
+        {
+            auto* MyPawn = EventInstigator->GetPawn();
+            if (MyPawn)
+            {
+                auto* Enemy = Cast<AQLCharacter>(MyPawn);
+                if (Enemy)
+                {
+                    UAISense_Damage::ReportDamageEvent(
+                        GetWorld(),
+                        this, // AActor* DamagedActor
+                        Enemy, // AActor* Instigator: somehow this argument must be the player who initiates the damage, not the controller
+                        ActualDamage,
+                        Enemy->GetActorLocation(), // EventLocation: will be reported as Instigator's location at the moment of event happening
+                        GetActorLocation() // HitLocation
+                    );
+                }
+            }
+        }
+    }
+
+    if (!bQLIsVulnerable)
+    {
+        return 0.0f;
+    }
+
     // if the character is already dead, no further damage
     if (Health <= 0.0f)
     {
@@ -546,20 +577,16 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 
     if (ActualDamage > 0.0f)
     {
-        // sense damage
-        if (QLIsBot())
-        {
-            UAISense_Damage::ReportDamageEvent(
-                GetWorld(),
-                this, // AActor* DamagedActor
-                EventInstigator->Instigator, // AActor* Instigator,
-                ActualDamage,
-                GetActorLocation(), // EventLocation
-                GetActorLocation() // HitLocation
-            );
-        }
-
         TakeDamageQuakeStyle(ActualDamage);
+
+        UpdateArmor();
+
+        UpdateHealth();
+
+        if (Health <= 0.0f)
+        {
+            Die();
+        }
     }
 
     return ActualDamage;
@@ -588,8 +615,6 @@ void AQLCharacter::TakeDamageQuakeStyle(float ActualDamage)
             Armor = RemainingAmor;
         }
 
-        UpdateArmor();
-
         // calculate health
         float RemainingHealth = Health - HealthDamage;
         if (RemainingHealth < 0.0f)
@@ -599,13 +624,6 @@ void AQLCharacter::TakeDamageQuakeStyle(float ActualDamage)
         else
         {
             Health = RemainingHealth;
-        }
-
-        UpdateHealth();
-
-        if (Health <= 0.0f)
-        {
-            Die();
         }
     }
 }
@@ -672,13 +690,6 @@ void AQLCharacter::UpdateArmor()
     {
         QLPlayerController->GetUMG()->UpdateTextArmorValue(Armor);
     }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLCharacter::OnRestartLevel()
-{
-    UGameplayStatics::OpenLevel(GetWorld(), "QLArena");
 }
 
 //------------------------------------------------------------
@@ -768,7 +779,7 @@ void AQLCharacter::Die()
 
     // get animation length
     float ActualAnimationLength = Animation->SequenceLength / Animation->RateScale;
-    float DurationBeforeDestroyed = ActualAnimationLength + 3.0f;
+    float DurationBeforeDestroyed = ActualAnimationLength + 10.0f;
 
     PlaySoundFireAndForget(FName(TEXT("Die")));
 
@@ -785,6 +796,11 @@ void AQLCharacter::Die()
 
     // prevent dead character from still being controlled
     DetachFromControllerPendingDestroy();
+
+    if (WeaponManager)
+    {
+        WeaponManager->DestroyAllWeapon();
+    }
 }
 
 //------------------------------------------------------------
@@ -992,15 +1008,9 @@ void AQLCharacter::StopSound()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::SetFireEnabled(const bool bFlag)
+void AQLCharacter::SetWeaponEnabled(const bool bFlag)
 {
     bCanFireAndAltFire = bFlag;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLCharacter::SetSwitchWeaponEnabled(const bool bFlag)
-{
     bCanSwitchWeapon = bFlag;
 }
 
@@ -1093,3 +1103,16 @@ void AQLCharacter::QLSetVisibility(const bool bFlag)
     bQLIsVisible = bFlag;
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::QLGetVulnerability()
+{
+    return bQLIsVulnerable;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::QLSetVulnerability(const bool bFlag)
+{
+    bQLIsVulnerable = bFlag;
+}

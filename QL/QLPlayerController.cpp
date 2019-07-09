@@ -161,4 +161,12 @@ void AQLPlayerController::SetupInputComponent()
     Super::SetupInputComponent();
 
     InputComponent->BindAction("AbilityMenu", EInputEvent::IE_Pressed, this, &AQLPlayerController::ShowAbilityMenu);
+    InputComponent->BindAction("RestartLevel", EInputEvent::IE_Pressed, this, &AQLPlayerController::OnRestartLevel);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPlayerController::OnRestartLevel()
+{
+    UGameplayStatics::OpenLevel(GetWorld(), "QLArena");
 }
