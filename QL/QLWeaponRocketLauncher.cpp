@@ -28,6 +28,8 @@ AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
     QLName = FName(TEXT("RocketLauncher"));
     RateOfFire = 0.8f;
     RocketProjectileClass = AQLRocketProjectile::StaticClass();
+    bIsProjectileWeapon = true;
+    ProjectileSpeed = 2000.0f;
 }
 
 //------------------------------------------------------------
@@ -127,7 +129,9 @@ void AQLWeaponRocketLauncher::OnFire()
         UGameplayStatics::FinishSpawningActor(Rocket, MyTransform);
 
         // change velocity
-        FVector FinalVelocity = ProjectileForwardVector * Rocket->GetProjectileMovementComponent()->InitialSpeed;
+        Rocket->GetProjectileMovementComponent()->MaxSpeed = ProjectileSpeed;
+        Rocket->GetProjectileMovementComponent()->InitialSpeed = ProjectileSpeed;
+        FVector FinalVelocity = ProjectileForwardVector * ProjectileSpeed;
         Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
 }

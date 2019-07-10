@@ -32,7 +32,7 @@ AQLWeaponLightningGun::AQLWeaponLightningGun()
     bIsFireHeld = false;
 
     BasicDamage = 6.0f;
-    KnockbackSpeedChange = 30.0f;
+    KnockbackSpeedChange = 50.0f;
 }
 
 //------------------------------------------------------------

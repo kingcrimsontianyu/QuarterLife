@@ -45,7 +45,4 @@ public:
     virtual void SetDamageMultiplier(const float Value) override;
 protected:
     virtual void PostInitializeComponents() override;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float KnockbackSpeedChange;
 };

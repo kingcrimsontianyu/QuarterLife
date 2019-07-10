@@ -42,6 +42,8 @@ AQLWeaponRailGun::AQLWeaponRailGun()
     // animation
     ZoomTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("ZoomTimeline"));
     ZoomTimelineInterpFunction.BindUFunction(this, FName{ TEXT("ZoomCallback") });
+
+    KnockbackSpeedChange = 100.0f;
 }
 
 //------------------------------------------------------------

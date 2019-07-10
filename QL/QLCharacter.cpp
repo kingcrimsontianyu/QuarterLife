@@ -502,6 +502,18 @@ void AQLCharacter::SetCurrentWeapon(const FName& QLName)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+AQLWeapon* AQLCharacter::GetCurrentWeapon()
+{
+    if (!WeaponManager)
+    {
+        return nullptr;
+    }
+
+    return WeaponManager->GetCurrentWeapon();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLCharacter::SetCurrentAbility(const FName& QLName)
 {
     if (!AbilityManager)

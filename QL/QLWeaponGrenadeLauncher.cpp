@@ -29,6 +29,8 @@ AQLWeaponGrenadeLauncher::AQLWeaponGrenadeLauncher()
     RateOfFire = 1.0f;
 
     RecyclerGrenadeProjectileClass = AQLRecyclerGrenadeProjectile::StaticClass();
+    bIsProjectileWeapon = true;
+    ProjectileSpeed = 2000.0f;
 }
 
 //------------------------------------------------------------
@@ -126,7 +128,9 @@ void AQLWeaponGrenadeLauncher::OnFire()
         UGameplayStatics::FinishSpawningActor(RecyclerGrenade, MyTransform);
 
         // change velocity
-        FVector FinalVelocity = ProjectileForwardVector * RecyclerGrenade->GetProjectileMovementComponent()->InitialSpeed;
+        RecyclerGrenade->GetProjectileMovementComponent()->MaxSpeed = ProjectileSpeed;
+        RecyclerGrenade->GetProjectileMovementComponent()->InitialSpeed = ProjectileSpeed;
+        FVector FinalVelocity = ProjectileForwardVector * ProjectileSpeed;
         RecyclerGrenade->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
 }

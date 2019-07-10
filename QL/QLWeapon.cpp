@@ -51,6 +51,8 @@ AQLWeapon::AQLWeapon()
     BeamComponent->SetupAttachment(MuzzleSceneComponent);
 
     DamageMultiplier = 1.0;
+
+    bIsProjectileWeapon = false;
 }
 
 //------------------------------------------------------------
@@ -282,4 +284,25 @@ void AQLWeapon::StopGlow()
     {
         DynamicMaterialGun->SetScalarParameterValue("GlowEnabled", 0.0f);
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLWeapon::GetKnockbackSpeedChange()
+{
+    return KnockbackSpeedChange;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLWeapon::IsProjectileWeapon()
+{
+    return bIsProjectileWeapon;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLWeapon::GetProjectileSpeed()
+{
+    return ProjectileSpeed;
 }

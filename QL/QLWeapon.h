@@ -81,6 +81,15 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopGlow();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetKnockbackSpeedChange();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool IsProjectileWeapon();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetProjectileSpeed();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -136,4 +145,12 @@ protected:
 
     UPROPERTY()
     float DamageMultiplier;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float KnockbackSpeedChange;
+
+    bool bIsProjectileWeapon;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float ProjectileSpeed;
 };

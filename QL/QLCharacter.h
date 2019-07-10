@@ -90,6 +90,9 @@ public:
     void SetCurrentWeapon(const FName& QLName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    AQLWeapon* GetCurrentWeapon();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void AddAbility(AQLAbility* Ability);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

@@ -16,6 +16,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
 #include "Kismet/GameplayStatics.h"
+#include "QLWeapon.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -58,24 +59,38 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
             return EBTNodeResult::Failed;
         }
 
-        FVector WhereToAim;
+        //MyBotCharacter->SetCurrentWeapon(FName(TEXT("RailGun")));
+        //MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+        MyBotCharacter->SetCurrentWeapon(FName(TEXT("NailGun")));
 
-        //WhereToAim = Target->GetTargetLocation();
+        AQLWeapon* CurrentWeapon = MyBotCharacter->GetCurrentWeapon();
+        if (CurrentWeapon)
+        {
+            FVector WhereToAim;
 
-        float TimeProjectileHitsEnemy;
-        QLUtility::MakePredictionShot(
-            WhereToAim,
-            TimeProjectileHitsEnemy,
-            MyBotCharacter->GetActorLocation(),
-            Target->GetActorLocation(),
-            Target->GetVelocity(),
-            2000.0f);
+            // for projectile weapon, predict enemy movement
+            if (CurrentWeapon->IsProjectileWeapon())
+            {
+                float TimeProjectileHitsEnemy;
+                QLUtility::MakePredictionShot(
+                    WhereToAim,
+                    TimeProjectileHitsEnemy,
+                    MyBotCharacter->GetActorLocation(),
+                    Target->GetActorLocation(),
+                    Target->GetVelocity(),
+                    CurrentWeapon->GetProjectileSpeed());
+            }
+            // for non-projectile weapon, aim at the enemy
+            else
+            {
+                WhereToAim = Target->GetTargetLocation();
+            }
 
-        // once the bot leaves attack task, MyController->ClearFocus(EAIFocusPriority::Gameplay) should be called
-        MyController->SetFocalPoint(WhereToAim);
-        MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
-        MyBotCharacter->GetFirstPersonCameraComponent()->SetWorldRotation(MyController->GetControlRotation());
-        MyBotCharacter->OnFire();
+            // once the bot leaves attack task, MyController->ClearFocus(EAIFocusPriority::Gameplay) should be called
+            MyController->SetFocalPoint(WhereToAim);
+            MyBotCharacter->GetFirstPersonCameraComponent()->SetWorldRotation(MyController->GetControlRotation());
+            MyBotCharacter->OnFire();
+        }
     }
 
     return EBTNodeResult::Succeeded;

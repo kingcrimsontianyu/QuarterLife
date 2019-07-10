@@ -39,8 +39,6 @@ AQLProjectile::AQLProjectile()
 
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
     ProjectileMovementComponent->UpdatedComponent = RootSphereComponent;
-    ProjectileMovementComponent->InitialSpeed = ProjectileSpeed;
-    ProjectileMovementComponent->MaxSpeed = ProjectileSpeed;
     ProjectileMovementComponent->SetVelocityInLocalSpace(FVector(0.0f, 0.0f, 0.0f));
 
     StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
@@ -49,7 +47,6 @@ AQLProjectile::AQLProjectile()
 
     ExplosionParticleSystem = nullptr;
     ProjectileLifeSpan = 5.0f;
-    ProjectileSpeed = 1000.0f;
     BlastRadius = 400.0f;
     BlastSpeedChange = 600.0f;
     BasicDamage = 100.0f;
@@ -66,9 +63,6 @@ AQLProjectile::AQLProjectile()
 void AQLProjectile::BeginPlay()
 {
     Super::BeginPlay();
-
-    ProjectileMovementComponent->InitialSpeed = ProjectileSpeed;
-    ProjectileMovementComponent->MaxSpeed = ProjectileSpeed;
 
     SetLifeSpan(ProjectileLifeSpan);
 }

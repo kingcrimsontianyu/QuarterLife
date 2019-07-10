@@ -42,7 +42,6 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
 
-    ProjectileSpeed = 2000.0f;
     PlayerController = nullptr;
 
     BasicDamage = 200.0f;

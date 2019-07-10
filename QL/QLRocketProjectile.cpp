@@ -32,7 +32,6 @@ AQLRocketProjectile::AQLRocketProjectile()
     StaticMeshComponent->SetEnableGravity(false);
 
     ProjectileLifeSpan = 5.0f;
-    ProjectileSpeed = 2000.0f;
     BlastRadius = 400.0f;
     BlastSpeedChange = 600.0f;
     BasicDamage = 100.0f;

@@ -29,6 +29,8 @@ AQLWeaponNailGun::AQLWeaponNailGun()
     NailProjectileClass = AQLNailProjectile::StaticClass();
 
     bIsFireHeld = false;
+    bIsProjectileWeapon = true;
+    ProjectileSpeed = 1500.0f;
 }
 
 //------------------------------------------------------------
@@ -156,7 +158,9 @@ void AQLWeaponNailGun::SpawnNailProjectile()
         UGameplayStatics::FinishSpawningActor(Nail, MyTransform);
 
         // change velocity
-        FVector FinalVelocity = ProjectileForwardVector * Nail->GetProjectileMovementComponent()->InitialSpeed;
+        Nail->GetProjectileMovementComponent()->MaxSpeed = ProjectileSpeed;
+        Nail->GetProjectileMovementComponent()->InitialSpeed = ProjectileSpeed;
+        FVector FinalVelocity = ProjectileForwardVector * ProjectileSpeed;
         Nail->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
 }
