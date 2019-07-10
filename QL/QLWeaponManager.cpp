@@ -156,7 +156,19 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     Weapon->DisableComponentsSimulatePhysics();
     Weapon->SetConstantRotationEnabled(false);
     Weapon->SetDamageMultiplier(DamageMultiplier);
-    Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+
+    if (User->QLIsBot())
+    {
+        Weapon->AttachToComponent(User->GetThirdPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+        // hardcoded adjustment
+        // todo: come up with a more elegant solution!
+        Weapon->SetActorRelativeLocation(FVector(-2.0f, 8.0f, -4.0f));
+        Weapon->SetActorRelativeRotation(FRotator(0.0f, -155.0f, 5.0f)); // argument order: pitch, yaw, roll
+    }
+    else
+    {
+        Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    }
 
     if (bIsGlowing)
     {

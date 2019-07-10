@@ -73,8 +73,8 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 
         // once the bot leaves attack task, MyController->ClearFocus(EAIFocusPriority::Gameplay) should be called
         MyController->SetFocalPoint(WhereToAim);
-
         MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+        MyBotCharacter->GetFirstPersonCameraComponent()->SetWorldRotation(MyController->GetControlRotation());
         MyBotCharacter->OnFire();
     }
 

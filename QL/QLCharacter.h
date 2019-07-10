@@ -201,6 +201,13 @@ public:
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void QLSetVulnerability(const bool bFlag);
+
+    virtual void Jump() override;
+
+    virtual void StopJumping() override;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool IsJumpButtonDown();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -339,4 +346,8 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     bool bQLIsVulnerable;
+
+    // monitor jump status for animation purpose
+    UPROPERTY()
+    bool bJumpButtonDown;
 };

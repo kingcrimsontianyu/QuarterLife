@@ -66,8 +66,8 @@ AQLCharacter::AQLCharacter()
     FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCameraComponent"));
     FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
     //FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
-    FirstPersonCameraComponent->RelativeLocation = FVector(-10.0f, 1.75f, 64.f);
-    FirstPersonCameraComponent->bUsePawnControlRotation = true;
+    FirstPersonCameraComponent->RelativeLocation = FVector(-10.0f, 1.75f, 64.0f);
+    FirstPersonCameraComponent->bUsePawnControlRotation = true; // critical! If false, mouse would not change pitch!
     FirstPersonCameraComponent->SetFieldOfView(100.0f);
 
     // Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
@@ -107,6 +107,8 @@ AQLCharacter::AQLCharacter()
 
     bQLIsVisible = true;
     bQLIsVulnerable = true;
+
+    bJumpButtonDown = false;
 }
 
 //------------------------------------------------------------
@@ -209,6 +211,31 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     // "turn" handles devices that provide an absolute delta, such as a mouse.
     PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
     PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::Jump()
+{
+    Super::Jump();
+
+    bJumpButtonDown = true;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::StopJumping()
+{
+    Super::StopJumping();
+
+    bJumpButtonDown = false;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLCharacter::IsJumpButtonDown()
+{
+    return bJumpButtonDown;
 }
 
 //------------------------------------------------------------
