@@ -82,7 +82,9 @@ AQLCharacter::AQLCharacter()
     // third person
     ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
     ThirdPersonMesh->SetupAttachment(GetCapsuleComponent());
-    ThirdPersonMesh->SetCollisionProfileName(TEXT("NoCollision"));
+    ThirdPersonMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    ThirdPersonMesh->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+    ThirdPersonMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Block);
     ThirdPersonMesh->bOwnerNoSee = true;
     ThirdPersonMesh->CastShadow = true;
     ThirdPersonMesh->bCastDynamicShadow = true;
@@ -109,6 +111,12 @@ AQLCharacter::AQLCharacter()
     bQLIsVulnerable = true;
 
     bJumpButtonDown = false;
+
+    // capsule
+    // in order to achieve good hitbox, let ray-trace occur to the third person skeletal mesh rather than the capsule
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 }
 
 //------------------------------------------------------------
@@ -517,7 +525,8 @@ FHitResult AQLCharacter::RayTraceFromCharacterPOV(float rayTraceRange)
     FVector end = FirstPersonCameraComponent->GetForwardVector() * rayTraceRange + start;
 
     FHitResult hitResult(ForceInit);
-    GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_Pawn, params);
+    // only hit the object that reponds to ray-trace, i.e. ECollisionChannel::ECC_Camera is set to ECollisionResponse::ECR_Block
+    GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECollisionChannel::ECC_Camera, params);
 
     // useful properties
     // hitResult.bBlockingHit  // did ray hit something

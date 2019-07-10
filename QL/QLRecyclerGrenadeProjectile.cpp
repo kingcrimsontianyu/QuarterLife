@@ -54,7 +54,7 @@ AQLRecyclerGrenadeProjectile::AQLRecyclerGrenadeProjectile()
     AttractInterval = 0.01f;
     RecoverDuration = 2.0f;
     BlastRadius = 400.0f;
-    BlastSpeedChange = 1200.0f;
+    BlastSpeedChange = 600.0f;
 
     bCalculateMaterialParameter = false;
 

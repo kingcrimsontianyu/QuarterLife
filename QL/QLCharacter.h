@@ -27,7 +27,18 @@ class UAIPerceptionStimuliSourceComponent;
 
 //------------------------------------------------------------
 // In Blueprint,
-// Set collision presets to custom, set collision with QLPickup to overlap
+// Set up the collision:
+//     Capsule
+//         collision preset : custom
+//         collision enabled: query and physics,
+//         object type : pawn
+//         collision responses : ignore camera
+//
+//     Third person mesh
+//         collision preset : custom
+//         collision enabled: query only,
+//         object type : pawn
+//         collision responses : block camera
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLCharacter : public ACharacter, public IGenericTeamAgentInterface

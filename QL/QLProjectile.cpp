@@ -51,7 +51,7 @@ AQLProjectile::AQLProjectile()
     ProjectileLifeSpan = 5.0f;
     ProjectileSpeed = 1000.0f;
     BlastRadius = 400.0f;
-    BlastSpeedChange = 1200.0f;
+    BlastSpeedChange = 600.0f;
     BasicDamage = 100.0f;
     PlayerController = nullptr;
     DamageMultiplier = 1.0f;
