@@ -66,6 +66,11 @@ void AQLWeaponLightningGun::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFire()
 {
+    if (bIsFireHeld)
+    {
+        return;
+    }
+
     PlaySound(FName(TEXT("Fire")));
 
     bIsFireHeld = true;
@@ -88,6 +93,11 @@ void AQLWeaponLightningGun::OnFire()
 //------------------------------------------------------------
 void AQLWeaponLightningGun::OnFireRelease()
 {
+    if (!bIsFireHeld)
+    {
+        return;
+    }
+
     StopSound();
 
     bIsFireHeld = false;
@@ -197,7 +207,7 @@ void AQLWeaponLightningGun::SpawnLightning()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponLightningGun::PrepareForImpendingWeaponSwitch()
+void AQLWeaponLightningGun::StopFire()
 {
     // stop firing
     if (bIsFireHeld)

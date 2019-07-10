@@ -47,17 +47,17 @@ void AQLWeaponNailGun::PostInitializeComponents()
 void AQLWeaponNailGun::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
-    if (bIsFireHeld)
-    {
-        OnFireHold();
-    }
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLWeaponNailGun::OnFire()
 {
+    if (bIsFireHeld)
+    {
+        return;
+    }
+
     bIsFireHeld = true;
 
     GetWorldTimerManager().SetTimer(HoldFireTimerHandle,
@@ -72,6 +72,11 @@ void AQLWeaponNailGun::OnFire()
 //------------------------------------------------------------
 void AQLWeaponNailGun::OnFireRelease()
 {
+    if (!bIsFireHeld)
+    {
+        return;
+    }
+
     bIsFireHeld = false;
 
     GetWorldTimerManager().ClearTimer(HoldFireTimerHandle);
@@ -86,7 +91,7 @@ void AQLWeaponNailGun::OnFireHold()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponNailGun::PrepareForImpendingWeaponSwitch()
+void AQLWeaponNailGun::StopFire()
 {
     // stop firing
     if (bIsFireHeld)

@@ -59,12 +59,18 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
             return EBTNodeResult::Failed;
         }
 
-        //MyBotCharacter->SetCurrentWeapon(FName(TEXT("RailGun")));
-        //MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
-        MyBotCharacter->SetCurrentWeapon(FName(TEXT("NailGun")));
-
         AQLWeapon* CurrentWeapon = MyBotCharacter->GetCurrentWeapon();
-        if (CurrentWeapon)
+
+        // if without a weapon yet
+        if (!CurrentWeapon)
+        {
+            // MyBotCharacter->SetCurrentWeapon(FName(TEXT("RailGun")));
+            // MyBotCharacter->SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+            // MyBotCharacter->SetCurrentWeapon(FName(TEXT("NailGun")));
+            MyBotCharacter->SetCurrentWeapon(FName(TEXT("LightningGun")));
+        }
+        // otherwise, ready to shoot
+        else
         {
             FVector WhereToAim;
 

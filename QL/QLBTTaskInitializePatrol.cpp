@@ -9,7 +9,7 @@
 //------------------------------------------------------------
 
 
-#include "QLBTTaskFindPatrolLocation.h"
+#include "QLBTTaskInitializePatrol.h"
 #include "QLAIController.h"
 #include "QLCharacter.h"
 #include "QLUtility.h"
@@ -19,15 +19,15 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UQLBTTaskFindPatrolLocation::UQLBTTaskFindPatrolLocation(const FObjectInitializer& ObjectInitializer) :
+UQLBTTaskInitializePatrol::UQLBTTaskInitializePatrol(const FObjectInitializer& ObjectInitializer) :
     Super(ObjectInitializer)
 {
-    NodeName = "FindPatrolLocation";
+    NodeName = "InitializePatrol";
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-EBTNodeResult::Type UQLBTTaskFindPatrolLocation::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UQLBTTaskInitializePatrol::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
     Super::ExecuteTask(OwnerComp, NodeMemory);
 
@@ -47,6 +47,13 @@ EBTNodeResult::Type UQLBTTaskFindPatrolLocation::ExecuteTask(UBehaviorTreeCompon
     if (!MyBotCharacter)
     {
         return EBTNodeResult::Failed;
+    }
+
+    // disable weapon in use
+    AQLWeapon* CurrentWeapon = MyBotCharacter->GetCurrentWeapon();
+    if (CurrentWeapon)
+    {
+        CurrentWeapon->StopFire();
     }
 
     // get a random location

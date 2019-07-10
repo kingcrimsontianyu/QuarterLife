@@ -193,7 +193,7 @@ UQLWeaponManager* AQLWeapon::GetWeaponManager()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeapon::PrepareForImpendingWeaponSwitch()
+void AQLWeapon::StopFire()
 {
 }
 

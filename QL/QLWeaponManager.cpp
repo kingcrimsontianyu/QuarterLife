@@ -67,7 +67,7 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& QLName)
     // if the current weapon exists, hide it
     if (CurrentWeapon.IsValid())
     {
-        CurrentWeapon->PrepareForImpendingWeaponSwitch();
+        CurrentWeapon->StopFire();
         CurrentWeapon->GetGunSkeletalMeshComponent()->SetVisibility(false);
     }
 

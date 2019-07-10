@@ -71,7 +71,7 @@ public:
     UQLWeaponManager* GetWeaponManager();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void PrepareForImpendingWeaponSwitch();
+    virtual void StopFire();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void SetDamageMultiplier(const float Value);
@@ -127,15 +127,15 @@ protected:
     float RateOfFire;
 
     UPROPERTY()
+    bool bFireEnabled;
+
+    UPROPERTY()
     bool bIsFireHeld;
 
     UPROPERTY()
     TWeakObjectPtr<UQLWeaponManager> WeaponManager;
 
     FTimerHandle DisableFireTimerHandle;
-
-    UPROPERTY()
-    bool bFireEnabled;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BasicDamage;

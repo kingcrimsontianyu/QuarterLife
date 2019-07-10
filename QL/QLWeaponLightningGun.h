@@ -40,7 +40,7 @@ public:
 
     virtual void SpawnLightning();
 
-    virtual void PrepareForImpendingWeaponSwitch() override;
+    virtual void StopFire() override;
 
     virtual void SetDamageMultiplier(const float Value) override;
 protected:

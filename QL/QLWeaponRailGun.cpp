@@ -246,7 +246,7 @@ void AQLWeaponRailGun::ZoomCallback(float Val)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponRailGun::PrepareForImpendingWeaponSwitch()
+void AQLWeaponRailGun::StopFire()
 {
     // reset fov
     if (ZoomTimeline->IsPlaying())

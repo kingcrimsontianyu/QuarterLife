@@ -35,7 +35,7 @@ public:
 
     virtual void SpawnNailProjectile();
 
-    virtual void PrepareForImpendingWeaponSwitch() override;
+    virtual void StopFire() override;
 protected:
     virtual void PostInitializeComponents() override;
 
