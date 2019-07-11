@@ -35,8 +35,8 @@ AQLAIController::AQLAIController()
 {
     // AI sense
     AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
-    AISenseConfig_Sight->SightRadius = 6000.0f;
-    AISenseConfig_Sight->LoseSightRadius = 7000.0f;
+    AISenseConfig_Sight->SightRadius = 3500.0f;
+    AISenseConfig_Sight->LoseSightRadius = 4000.0f;
     AISenseConfig_Sight->PeripheralVisionAngleDegrees = 90.0f;
     AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
     AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
