@@ -146,14 +146,13 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
     // for each target actor that has been sensed
     for (auto&& Target : UpdatedActors)
     {
-        auto* MyCharacter = Cast<AQLCharacter>(Target);
-        // exclude the target that the bot is not hostile to
-        if (!MyCharacter || GetTeamAttitudeTowards(*MyCharacter) != ETeamAttitude::Hostile)
+        auto* TargetCharacter = Cast<AQLCharacter>(Target);
+        if (!TargetCharacter)
         {
             continue;
         }
 
-        bool bAnythingSensed = false;
+        bool bEnemySensed = false;
 
         FActorPerceptionBlueprintInfo Info;
         // retrieve what has been sensed about the target actor
@@ -166,25 +165,34 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             // OnPerceptionUpdated() is fired when the player enters or leaves the region of sight, or the sense expires
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed())
+                if (Stimulus.WasSuccessfullySensed() && GetTeamAttitudeTowards(*TargetCharacter) == ETeamAttitude::Hostile)
                 {
-                    bAnythingSensed = true;
+                    bEnemySensed = true;
                 }
             }
 
             // check if the bot has taken damage
             else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Damage::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired())
+                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired() && GetTeamAttitudeTowards(*TargetCharacter) == ETeamAttitude::Hostile)
                 {
-                    bAnythingSensed = true;
+                    bEnemySensed = true;
+                }
+            }
+
+            // check if any teammate is nearby
+            else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Team::StaticClass()))
+            {
+                if (Stimulus.WasSuccessfullySensed())
+                {
+                    QLUtility::Screen("TEAMMATE");
                 }
             }
         }
 
-        if (bAnythingSensed)
+        if (bEnemySensed)
         {
-            QLTarget = MyCharacter;
+            QLTarget = TargetCharacter;
         }
         else
         {
