@@ -27,6 +27,8 @@ AQLCharacterHelper::AQLCharacterHelper()
     RespawnExtent = FVector(5000.0f, 5000.0f, 100.0f);
     RespawnBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("RootBoxComponent"));
     RespawnBoxComponent->InitBoxExtent(RespawnExtent);
+    RespawnBoxComponent->SetSimulatePhysics(false);
+    RespawnBoxComponent->SetCollisionProfileName(FName(TEXT("NoCollision")));
     RootComponent = RespawnBoxComponent;
 }
 
