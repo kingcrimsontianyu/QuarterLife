@@ -18,7 +18,6 @@ class UParticleSystemComponent;
 
 //------------------------------------------------------------
 // In Blueprint, set these properties
-// - initial life span = 1.5
 // - beam component
 //------------------------------------------------------------
 UCLASS()
@@ -32,6 +31,9 @@ public:
 
     // Called every frame
     virtual void Tick(float DeltaTime) override;
+
+    // Called every frame
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UParticleSystemComponent* GetBeamComponent();

@@ -37,6 +37,8 @@ AQLRailBeam::AQLRailBeam()
 void AQLRailBeam::BeginPlay()
 {
 	Super::BeginPlay();
+
+    SetLifeSpan(1.0f);
 }
 
 //------------------------------------------------------------
@@ -53,4 +55,11 @@ void AQLRailBeam::Tick(float DeltaTime)
 UParticleSystemComponent* AQLRailBeam::GetBeamComponent()
 {
     return BeamComponent;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLRailBeam::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);
 }

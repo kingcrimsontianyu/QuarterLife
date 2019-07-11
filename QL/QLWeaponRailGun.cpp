@@ -20,6 +20,7 @@
 #include "QLWeaponManager.h"
 #include "QLUmgFirstPerson.h"
 #include "QLPlayerController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -43,7 +44,7 @@ AQLWeaponRailGun::AQLWeaponRailGun()
     ZoomTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("ZoomTimeline"));
     ZoomTimelineInterpFunction.BindUFunction(this, FName{ TEXT("ZoomCallback") });
 
-    KnockbackSpeedChange = 100.0f;
+    KnockbackSpeedChange = 600.0f;
 }
 
 //------------------------------------------------------------
@@ -91,7 +92,8 @@ void AQLWeaponRailGun::OnFire()
 
     if (RailBeamClass)
     {
-        // to do: destroy this actor!!!
+        // AQLRailBeam object is automatically destroyed after the particle effect ends
+        // because AQLRailBeam lifespan is specified in its BeginPlay()
         RailBeamTemp = GetWorld()->SpawnActor<AQLRailBeam>(RailBeamClass, GetMuzzleLocation(), FRotator::ZeroRotator);
         if (RailBeamTemp)
         {
@@ -150,6 +152,15 @@ void AQLWeaponRailGun::OnFire()
     const FPointDamageEvent DamageEvent;
 
     float DamageAmount = hitActor->TakeDamage(CurrentDamage, DamageEvent, User->GetController(), this);
+
+    // change victim velocity
+    UCharacterMovementComponent* CharacterMovementComponent = hitActor->GetCharacterMovement();
+    if (CharacterMovementComponent)
+    {
+        CharacterMovementComponent->AddImpulse(
+            -HitResult.ImpactNormal * KnockbackSpeedChange, // impulse vector
+            true); // velocity change (true) or impulse (false)
+    }
 
     // display damage
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();

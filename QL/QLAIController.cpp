@@ -278,6 +278,6 @@ void AQLAIController::BroadcastTarget(AQLCharacter* Target)
             Target->GetActorLocation(), // last known location
             EventRange // event range
         );
-        UAIPerceptionSystem::ReportPerceptionEvent(GetWorld(), TeamStimulusEvent);
+        UAIPerceptionSystem::OnEvent<FAITeamStimulusEvent, FAITeamStimulusEvent::FSenseClass>(GetWorld(), TeamStimulusEvent);
     }
 }
