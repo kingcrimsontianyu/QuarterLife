@@ -106,7 +106,7 @@ AQLCharacter::AQLCharacter()
     AIControllerClass = AQLAIController::StaticClass();
 
     bQLIsVisible = true;
-    bQLIsVulnerable = true;
+    bQLIsVulnerable = false;
 
     bJumpButtonDown = false;
 

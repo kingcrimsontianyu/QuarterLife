@@ -39,8 +39,8 @@ AQLAIController::AQLAIController()
     AISenseConfig_Sight->LoseSightRadius = 4000.0f;
     AISenseConfig_Sight->PeripheralVisionAngleDegrees = 90.0f;
     AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
-    AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
-    AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = true;
+    AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
+    AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
 
@@ -140,9 +140,17 @@ void AQLAIController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn)
 }
 
 //------------------------------------------------------------
+// in the ctor, detection of friendlies and neutrals are disabled.
+// so in this function UpdatedActors are always enemies.
 //------------------------------------------------------------
 void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActors)
 {
+    APawn* Bot = GetPawn();
+    if (!Bot)
+    {
+        return;
+    }
+
     // for each target actor that has been sensed
     for (auto&& Target : UpdatedActors)
     {
@@ -165,7 +173,7 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             // OnPerceptionUpdated() is fired when the player enters or leaves the region of sight, or the sense expires
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed() && GetTeamAttitudeTowards(*TargetCharacter) == ETeamAttitude::Hostile)
+                if (Stimulus.WasSuccessfullySensed() && GetTeamAttitudeTowards(*TargetCharacter))
                 {
                     bEnemySensed = true;
                 }
@@ -174,7 +182,7 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             // check if the bot has taken damage
             else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Damage::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired() && GetTeamAttitudeTowards(*TargetCharacter) == ETeamAttitude::Hostile)
+                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired())
                 {
                     bEnemySensed = true;
                 }
@@ -183,16 +191,14 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             // check if any teammate is nearby
             else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Team::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed())
-                {
-                    QLUtility::Screen("TEAMMATE");
-                }
+                QLUtility::Screen("TEAMMATE");
             }
         }
 
         if (bEnemySensed)
         {
             QLTarget = TargetCharacter;
+            BroadcastTarget(QLTarget.Get());
         }
         else
         {
@@ -258,4 +264,20 @@ ETeamAttitude::Type AQLAIController::GetTeamAttitudeTowards(const AActor& Other)
     }
 
     // return Super::GetTeamAttitudeTowards(*QLCharacter->GetController());
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAIController::BroadcastTarget(AQLCharacter* Target)
+{
+    if (Target)
+    {
+        float EventRange = 1000.0f;
+        FAITeamStimulusEvent TeamStimulusEvent(this, // broadcaster
+            Target, // enemy
+            Target->GetActorLocation(), // last known location
+            EventRange // event range
+        );
+        UAIPerceptionSystem::ReportPerceptionEvent(GetWorld(), TeamStimulusEvent);
+    }
 }
