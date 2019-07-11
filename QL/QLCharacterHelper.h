@@ -12,54 +12,38 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "QLAIHelper.generated.h"
+#include "QLCharacterHelper.generated.h"
 
-class AQLCharacter;
-class AQLCharacterHelper;
+class UBoxComponent;
 
 //------------------------------------------------------------
+// This helper class serves more than one AQLCharacters at the same time!
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLAIHelper : public AActor
+class QL_API AQLCharacterHelper : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AQLAIHelper();
+	AQLCharacterHelper();
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
     virtual void PostInitializeComponents() override;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SpawnBots();
-
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+    void RespawnCharacterRandomly(AController* Controller);
 protected:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    int NumBotsToSpawn;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float SpawnRadius;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    TSubclassOf<AQLCharacter> CharacterClass;
-
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    USphereComponent* RootSphereComponent;
+    UBoxComponent* RespawnBoxComponent;
 
-    UPROPERTY()
-    TWeakObjectPtr<AQLCharacterHelper> CharacterHelper;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FVector RespawnExtent;
 };

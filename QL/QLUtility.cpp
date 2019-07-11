@@ -100,5 +100,34 @@ namespace QLUtility
 
         LocationProjectileHitsEnemy = EnemyLocation + EnemyVelocity * root;
     }
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    FVector SamplePointFromDiskOnXYPlane(const float Radius, const FVector& Center)
+    {
+        constexpr float QLTwoPi = 2.0f * PI;
+
+        // sample a point in a circle
+        // reference:
+        // - http://mathworld.wolfram.com/DiskPointPicking.html
+        // - https://www.arl.army.mil/arlreports/2015/ARL-TR-7333.pdf
+        float RandomTheta = FMath::RandRange(0.0f, QLTwoPi);
+        float RandomU = FMath::RandRange(0.0f, Radius * Radius);
+
+        float RandomRadius = FMath::Sqrt(RandomU);
+        float x = Center.X + RandomRadius * FMath::Cos(RandomTheta);
+        float y = Center.Y + RandomRadius * FMath::Sin(RandomTheta);
+
+        return FVector(x, y, Center.Z);
+    }
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    FVector SamplePointFromSquareOnXYPlane(const float XHalfSide, const float YHalfSide, const FVector& Center)
+    {
+        float x = Center.X + FMath::RandRange(-XHalfSide, XHalfSide);
+        float y = Center.Y + FMath::RandRange(-YHalfSide, YHalfSide);
+        return FVector(x, y, Center.Z);
+    }
 }
 

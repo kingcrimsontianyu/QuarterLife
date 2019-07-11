@@ -39,6 +39,7 @@
 #include "Classes/Perception/AISense_Prediction.h"
 #include "Classes/Perception/AISense_Damage.h"
 #include "Classes/Perception/AISense_Team.h"
+#include "QLCharacterHelper.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -840,6 +841,11 @@ void AQLCharacter::Die()
         false, // loop
         DurationBeforeDestroyed); // delay in second
 
+    if (CharacterHelper.IsValid())
+    {
+        CharacterHelper->RespawnCharacterRandomly(GetController());
+    }
+
     // prevent dead character from still being controlled
     DetachFromControllerPendingDestroy();
 
@@ -1154,4 +1160,11 @@ bool AQLCharacter::QLGetVulnerability()
 void AQLCharacter::QLSetVulnerability(const bool bFlag)
 {
     bQLIsVulnerable = bFlag;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt)
+{
+    CharacterHelper = CharacterHelperExt;
 }

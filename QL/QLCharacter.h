@@ -23,6 +23,7 @@ class UQLAbilityManager;
 class UWidgetComponent;
 class UQLPowerupManager;
 class UAIPerceptionStimuliSourceComponent;
+class AQLCharacterHelper;
 
 //------------------------------------------------------------
 // In Blueprint,
@@ -221,6 +222,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool IsJumpButtonDown();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt);
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -357,4 +361,7 @@ protected:
     // monitor jump status for animation purpose
     UPROPERTY()
     bool bJumpButtonDown;
+
+    UPROPERTY()
+    TWeakObjectPtr<AQLCharacterHelper> CharacterHelper;
 };

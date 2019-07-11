@@ -12,6 +12,9 @@
 #include "QLAIHelper.h"
 #include "QLCharacter.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
+#include "QLUtility.h"
+#include "QLCharacterHelper.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -39,8 +42,6 @@ AQLAIHelper::AQLAIHelper()
 void AQLAIHelper::BeginPlay()
 {
 	Super::BeginPlay();
-
-    SpawnBots();
 }
 
 //------------------------------------------------------------
@@ -65,26 +66,25 @@ void AQLAIHelper::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLAIHelper::SpawnBots()
 {
-    constexpr float QLTwoPi = 2.0f * PI;
     FActorSpawnParameters SpawnParameters;
     SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
     for (int32 Idx = 0; Idx < NumBotsToSpawn; ++Idx)
     {
-        // sample a point in a circle
-        // reference:
-        // - http://mathworld.wolfram.com/DiskPointPicking.html
-        // - https://www.arl.army.mil/arlreports/2015/ARL-TR-7333.pdf
-        float RandomTheta = FMath::RandRange(0.0f, QLTwoPi);
-        float RandomU = FMath::RandRange(0.0f, SpawnRadius * SpawnRadius);
+        FVector SpawnLocation = QLUtility::SamplePointFromDiskOnXYPlane(SpawnRadius, GetActorLocation());
 
-        float Radius = FMath::Sqrt(RandomU);
-        float x = GetActorLocation().X + Radius * FMath::Cos(RandomTheta);
-        float y = GetActorLocation().Y + Radius * FMath::Sin(RandomTheta);
-
-        FVector SpawnLocation(x, y, GetActorLocation().Z);
-
-        GetWorld()->SpawnActor<AQLCharacter>(CharacterClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+        AQLCharacter* Bot = GetWorld()->SpawnActor<AQLCharacter>(CharacterClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
+        if (CharacterHelper.IsValid())
+        {
+            Bot->SetCharacterHelper(CharacterHelper.Get());
+        }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAIHelper::SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt)
+{
+    CharacterHelper = CharacterHelperExt;
 }
 

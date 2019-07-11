@@ -14,6 +14,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "QLGameModeBase.generated.h"
 
+class QLCharacterHelper;
+
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -23,4 +25,6 @@ class QL_API AQLGameModeBase : public AGameModeBase
 
 public:
     AQLGameModeBase();
+
+protected:
 };

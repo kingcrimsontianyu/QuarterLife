@@ -46,4 +46,12 @@ namespace QLUtility
         const FVector EnemyLocation,
         const FVector EnemyVelocity,
         const float ProjectileSpeed);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    FVector SamplePointFromDiskOnXYPlane(const float Radius, const FVector& Center);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    FVector SamplePointFromSquareOnXYPlane(const float XHalfSide, const float YHalfSide, const FVector& Center);
 }
