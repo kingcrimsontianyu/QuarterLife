@@ -14,7 +14,6 @@
 #include "GameFramework/Character.h"
 #include "QLPlayerHealthArmorBarUserWidget.h"
 #include "Components/TimelineComponent.h"
-#include "Classes/GenericTeamAgentInterface.h"
 #include "QLCharacter.generated.h"
 
 class AQLWeapon;
@@ -41,7 +40,7 @@ class UAIPerceptionStimuliSourceComponent;
 //         collision responses : block camera
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLCharacter : public ACharacter, public IGenericTeamAgentInterface
+class QL_API AQLCharacter : public ACharacter
 {
     GENERATED_BODY()
 
@@ -304,9 +303,6 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
 
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    virtual FGenericTeamId GetGenericTeamId() const override;
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UWidgetComponent* PlayerHealthArmorBarWidgetComponent;
@@ -348,9 +344,6 @@ protected:
 
     UPROPERTY()
     bool bCanSwitchWeapon;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FGenericTeamId TeamId;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;

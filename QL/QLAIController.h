@@ -53,6 +53,14 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     AQLCharacter* GetTarget();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FName GetStartingWeaponName();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const;
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -88,17 +96,7 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    bool QLDetectEnemies;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    bool QLDetectFriendlies;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    bool QLDetectNeutrals;
+    FName StartingWeaponName;
 
     //------------------------------------------------------------
     //------------------------------------------------------------

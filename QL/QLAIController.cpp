@@ -38,6 +38,9 @@ AQLAIController::AQLAIController()
     AISenseConfig_Sight->SightRadius = 6000.0f;
     AISenseConfig_Sight->LoseSightRadius = 7000.0f;
     AISenseConfig_Sight->PeripheralVisionAngleDegrees = 90.0f;
+    AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
+    AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = true;
+    AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = true;
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
 
@@ -58,10 +61,6 @@ AQLAIController::AQLAIController()
     PerceptionComponent->SetDominantSense(UAISense_Sight::StaticClass());
 
     QLTeamId = FGenericTeamId(1);
-
-    QLDetectEnemies = true;
-    QLDetectFriendlies = true;
-    QLDetectNeutrals = true;
 }
 
 //------------------------------------------------------------
@@ -81,13 +80,6 @@ void AQLAIController::PostInitializeComponents()
     {
         PerceptionComponent->OnPerceptionUpdated.RemoveDynamic(this, &AQLAIController::OnPerceptionUpdatedImpl);
         PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &AQLAIController::OnPerceptionUpdatedImpl);
-    }
-
-    if (AISenseConfig_Sight)
-    {
-        AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = QLDetectEnemies;
-        AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = QLDetectFriendlies;
-        AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = QLDetectNeutrals;
     }
 
     SetGenericTeamId(QLTeamId);
@@ -151,11 +143,12 @@ void AQLAIController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn)
 //------------------------------------------------------------
 void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActors)
 {
-    // for each target actor which has been sensed
+    // for each target actor that has been sensed
     for (auto&& Target : UpdatedActors)
     {
         auto* MyCharacter = Cast<AQLCharacter>(Target);
-        if (!MyCharacter || MyCharacter->QLIsBot())
+        // exclude the target that the bot is not hostile to
+        if (!MyCharacter || GetTeamAttitudeTowards(*MyCharacter) != ETeamAttitude::Hostile)
         {
             continue;
         }
@@ -220,4 +213,41 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
 AQLCharacter* AQLAIController::GetTarget()
 {
     return QLTarget.Get();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FName AQLAIController::GetStartingWeaponName()
+{
+    return StartingWeaponName;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+ETeamAttitude::Type AQLAIController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+    const AQLCharacter* QLCharacter = Cast<AQLCharacter>(&Other);
+
+    if (!QLCharacter)
+    {
+        return ETeamAttitude::Neutral;
+    }
+
+    const IGenericTeamAgentInterface* TeamAgent = Cast<IGenericTeamAgentInterface>(QLCharacter->GetController());
+    if (!TeamAgent)
+    {
+        return ETeamAttitude::Neutral;
+    }
+
+    // in QL, 0 is reserved for the player team id
+    if (TeamAgent->GetGenericTeamId() == 0)
+    {
+        return ETeamAttitude::Hostile;
+    }
+    else
+    {
+        return ETeamAttitude::Friendly;
+    }
+
+    // return Super::GetTeamAttitudeTowards(*QLCharacter->GetController());
 }

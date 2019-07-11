@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Classes/GenericTeamAgentInterface.h"
 #include "QLPlayerController.generated.h"
 
 class UQLUmgFirstPerson;
@@ -20,7 +21,7 @@ class UQLUmgInventory;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLPlayerController : public APlayerController
+class QL_API AQLPlayerController : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -55,6 +56,10 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnRestartLevel();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual FGenericTeamId GetGenericTeamId() const override;
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
@@ -79,4 +84,7 @@ protected:
     UQLUmgInventory* UmgInventory;
 
     float FPS;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FGenericTeamId QLTeamId;
 };

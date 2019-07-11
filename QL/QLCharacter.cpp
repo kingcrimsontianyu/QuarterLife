@@ -105,8 +105,6 @@ AQLCharacter::AQLCharacter()
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
     AIControllerClass = AQLAIController::StaticClass();
 
-    TeamId = FGenericTeamId(0);
-
     bQLIsVisible = true;
     bQLIsVulnerable = true;
 
@@ -1113,13 +1111,6 @@ void AQLCharacter::ResetMaxWalkSpeed()
     {
         MyCharacterMovement->MaxWalkSpeed = 600.0f;
     }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-FGenericTeamId AQLCharacter::GetGenericTeamId() const
-{
-    return TeamId;
 }
 
 //------------------------------------------------------------

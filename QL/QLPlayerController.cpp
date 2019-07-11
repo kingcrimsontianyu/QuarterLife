@@ -27,6 +27,8 @@ FPS(0.0f)
 
     UmgInventoryClass = UQLUmgInventory::StaticClass();
     UmgInventory = nullptr;
+
+    QLTeamId = FGenericTeamId(0);
 }
 
 //------------------------------------------------------------
@@ -91,6 +93,8 @@ UQLUmgFirstPerson* AQLPlayerController::GetUMG()
 void AQLPlayerController::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    SetGenericTeamId(QLTeamId);
 }
 
 //------------------------------------------------------------
@@ -169,4 +173,11 @@ void AQLPlayerController::SetupInputComponent()
 void AQLPlayerController::OnRestartLevel()
 {
     UGameplayStatics::OpenLevel(GetWorld(), "QLArena");
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FGenericTeamId AQLPlayerController::GetGenericTeamId() const
+{
+    return QLTeamId;
 }
