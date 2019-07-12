@@ -148,8 +148,6 @@ void AQLWeaponRailGun::OnFire()
         return;
     }
 
-    PlaySoundFireAndForget("Hit");
-
     // create a damage event
     const FPointDamageEvent DamageEvent;
 
@@ -168,6 +166,7 @@ void AQLWeaponRailGun::OnFire()
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
     if (DamageAmount > 0.0f && QLPlayerController)
     {
+        PlaySoundFireAndForget("Hit");
         QLPlayerController->ShowDamageOnScreen(DamageAmount, HitResult.ImpactPoint);
     }
 }

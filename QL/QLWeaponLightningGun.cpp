@@ -182,8 +182,6 @@ void AQLWeaponLightningGun::SpawnLightning()
         return;
     }
 
-    PlaySoundFireAndForget("Hit");
-
     // create a damage event
     const FPointDamageEvent DamageEvent;
 
@@ -203,6 +201,7 @@ void AQLWeaponLightningGun::SpawnLightning()
     AQLPlayerController* QLPlayerController = User->GetQLPlayerController();
     if (DamageAmount > 0.0f && QLPlayerController)
     {
+        PlaySoundFireAndForget("Hit");
         QLPlayerController->ShowDamageOnScreen(DamageAmount, HitResult.ImpactPoint);
     }
 }

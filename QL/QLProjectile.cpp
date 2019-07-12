@@ -119,8 +119,6 @@ void AQLProjectile::HandleDirectHit(AActor* OtherActor, bool& bSelfDirectHit, bo
             return;
         }
 
-        PlaySoundFireAndForget("Hit");
-
         float DamageAmount = BasicDamageAdjusted;
         const FPointDamageEvent DamageEvent;
         DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
@@ -128,6 +126,7 @@ void AQLProjectile::HandleDirectHit(AActor* OtherActor, bool& bSelfDirectHit, bo
         // display damage
         if (DamageAmount > 0.0f && PlayerController.IsValid())
         {
+            PlaySoundFireAndForget("Hit");
             PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
         }
 
@@ -208,8 +207,6 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                     DamageAmount = ReduceSelfDamage(DamageAmount);
                 }
 
-                PlaySoundFireAndForget("Hit");
-
                 FRadialDamageEvent DamageEvent;
                 DamageEvent.Params.BaseDamage = DamageAmount;
                 DamageEvent.Params.OuterRadius = BlastRadius;
@@ -220,6 +217,7 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 // display positive damage
                 if (DamageAmount > 0.0f && PlayerController.IsValid())
                 {
+                    PlaySoundFireAndForget("Hit");
                     PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
                 }
             }
