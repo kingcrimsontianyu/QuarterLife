@@ -148,6 +148,8 @@ void AQLWeaponRailGun::OnFire()
         return;
     }
 
+    PlaySoundFireAndForget("Hit");
+
     // create a damage event
     const FPointDamageEvent DamageEvent;
 

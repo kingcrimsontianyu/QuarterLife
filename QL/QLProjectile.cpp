@@ -48,7 +48,7 @@ AQLProjectile::AQLProjectile()
     ExplosionParticleSystem = nullptr;
     ProjectileLifeSpan = 5.0f;
     BlastRadius = 400.0f;
-    BlastSpeedChange = 600.0f;
+    BlastSpeedChange = 1200.0f;
     BasicDamage = 100.0f;
     PlayerController = nullptr;
     DamageMultiplier = 1.0f;
@@ -119,6 +119,8 @@ void AQLProjectile::HandleDirectHit(AActor* OtherActor, bool& bSelfDirectHit, bo
             return;
         }
 
+        PlaySoundFireAndForget("Hit");
+
         float DamageAmount = BasicDamageAdjusted;
         const FPointDamageEvent DamageEvent;
         DamageAmount = Character->TakeDamage(DamageAmount, DamageEvent, PlayerController.Get(), this);
@@ -154,6 +156,14 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
     for (auto&& Result : OutOverlaps)
     {
         TWeakObjectPtr<UPrimitiveComponent> Comp = Result.Component;
+
+        // two components of the character can be registered: the capsule and the third person mesh
+        // to avoid splash damage being applied to a character twice, we single out the third person component
+        if (!Comp.IsValid() || !Cast<USkeletalMeshComponent>(Comp))
+        {
+            continue;
+        }
+
         AActor* Actor = Comp->GetOwner();
         if (Actor)
         {
@@ -197,6 +207,8 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 {
                     DamageAmount = ReduceSelfDamage(DamageAmount);
                 }
+
+                PlaySoundFireAndForget("Hit");
 
                 FRadialDamageEvent DamageEvent;
                 DamageEvent.Params.BaseDamage = DamageAmount;

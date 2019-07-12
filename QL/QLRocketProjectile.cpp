@@ -33,7 +33,7 @@ AQLRocketProjectile::AQLRocketProjectile()
 
     ProjectileLifeSpan = 5.0f;
     BlastRadius = 400.0f;
-    BlastSpeedChange = 600.0f;
+    BlastSpeedChange = 1200.0f;
     BasicDamage = 100.0f;
     BasicDamageAdjusted = BasicDamage;
     BlastSpeedChangeSelfDamageScale = 1.25f;

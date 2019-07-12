@@ -33,7 +33,7 @@ AQLNailProjectile::AQLNailProjectile()
 
     ProjectileLifeSpan = 30.0f;
     BlastRadius = 50.0f;
-    BlastSpeedChange = 100.0f;
+    BlastSpeedChange = 200.0f;
     BasicDamage = 15.0f;
     BasicDamageAdjusted = BasicDamage;
     BlastSpeedChangeSelfDamageScale = 10.0f;

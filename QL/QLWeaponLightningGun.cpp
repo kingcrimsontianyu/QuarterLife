@@ -182,6 +182,8 @@ void AQLWeaponLightningGun::SpawnLightning()
         return;
     }
 
+    PlaySoundFireAndForget("Hit");
+
     // create a damage event
     const FPointDamageEvent DamageEvent;
 
