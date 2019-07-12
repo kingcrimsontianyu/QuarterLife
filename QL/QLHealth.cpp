@@ -42,7 +42,7 @@ void AQLHealth::AddHealthToPlayer(AActor* OtherActor)
     if (OtherActor)
     {
         AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
-        if (Character && !Character->QLIsBot())
+        if (Character && !Character->GetIsBot())
         {
             if (Character->GetHealth() < Character->GetMaxHealth())
             {

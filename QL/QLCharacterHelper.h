@@ -37,7 +37,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-    void RespawnCharacterRandomly(AController* Controller);
+    void RespawnCharacterRandomly(bool bSpawnAsBot);
 protected:
     //------------------------------------------------------------
     //------------------------------------------------------------

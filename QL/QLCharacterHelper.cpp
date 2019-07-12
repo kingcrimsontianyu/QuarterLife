@@ -61,13 +61,8 @@ void AQLCharacterHelper::Tick(float DeltaTime)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacterHelper::RespawnCharacterRandomly(AController* Controller)
+void AQLCharacterHelper::RespawnCharacterRandomly(bool bSpawnAsBot)
 {
-    if (!Controller)
-    {
-        return;
-    }
-
     FVector Extent = RespawnBoxComponent->GetScaledBoxExtent();
 
     FVector RandomLocation = QLUtility::SamplePointFromSquareOnXYPlane(Extent.X / 2.0f, Extent.Y / 2.0f, RespawnBoxComponent->GetComponentLocation());
@@ -79,7 +74,16 @@ void AQLCharacterHelper::RespawnCharacterRandomly(AController* Controller)
     SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     AQLCharacter* NewCharacter = GetWorld()->SpawnActor<AQLCharacter>(GameModeBase->DefaultPawnClass, RandomLocation, RandomYawRotation, SpawnParameters);
 
-    Controller->Possess(NewCharacter);
+    if (bSpawnAsBot)
+    {
+        NewCharacter->SetIsBot(true);
+    }
+    else
+    {
+        NewCharacter->SetIsBot(false);
+        UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(NewCharacter);
+    }
 
+    NewCharacter->EquipAll();
     NewCharacter->SetCharacterHelper(this);
 }

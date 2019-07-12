@@ -111,11 +111,16 @@ AQLCharacter::AQLCharacter()
 
     bJumpButtonDown = false;
 
+    bQLIsBot = false;
+
     // capsule
     // in order to achieve good hitbox, let ray-trace occur to the third person skeletal mesh rather than the capsule
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     GetCapsuleComponent()->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+    DurationAfterDeathBeforeDestroyed = 3.0f;
+    DurationAfterDeathBeforeRespawn = 2.5f;
 }
 
 //------------------------------------------------------------
@@ -127,16 +132,6 @@ void AQLCharacter::BeginPlay()
 
     UpdateHealth();
     UpdateArmor();
-
-    if (WeaponManager)
-    {
-        WeaponManager->CreateAndAddAllWeapons(WeaponClassList);
-    }
-
-    if (AbilityManager)
-    {
-        AbilityManager->CreateAndAddAllAbilities(AbilityClassList);
-    }
 }
 
 //------------------------------------------------------------
@@ -558,7 +553,7 @@ float AQLCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
     float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
     // bot sense damage
-    if (QLIsBot())
+    if (GetIsBot())
     {
         if (EventInstigator)
         {
@@ -822,11 +817,15 @@ void AQLCharacter::SwitchToGrenadeLauncher()
 //------------------------------------------------------------
 void AQLCharacter::Die()
 {
+    if (WeaponManager)
+    {
+        WeaponManager->DestroyAllWeapon();
+    }
+
     UAnimSequence* Animation = PlayAnimationSequence("Death1");
 
     // get animation length
-    float ActualAnimationLength = Animation->SequenceLength / Animation->RateScale;
-    float DurationBeforeDestroyed = ActualAnimationLength + 10.0f;
+    // float ActualAnimationLength = Animation->SequenceLength / Animation->RateScale;
 
     PlaySoundFireAndForget(FName(TEXT("Die")));
 
@@ -839,20 +838,19 @@ void AQLCharacter::Die()
         &AQLCharacter::OnDie,
         1.0f, // time interval in second
         false, // loop
-        DurationBeforeDestroyed); // delay in second
+        DurationAfterDeathBeforeDestroyed); // delay in second
 
-    if (CharacterHelper.IsValid())
-    {
-        CharacterHelper->RespawnCharacterRandomly(GetController());
-    }
+    // respawn the character
+    constexpr float DurationBeforeRespawn = 2.0f;
+    GetWorldTimerManager().SetTimer(RespawnTimerHandle,
+        this,
+        &AQLCharacter::OnRespawnNewCharacter,
+        1.0f, // time interval in second
+        false, // loop
+        DurationAfterDeathBeforeRespawn); // delay in second
 
     // prevent dead character from still being controlled
     DetachFromControllerPendingDestroy();
-
-    if (WeaponManager)
-    {
-        WeaponManager->DestroyAllWeapon();
-    }
 }
 
 //------------------------------------------------------------
@@ -860,6 +858,16 @@ void AQLCharacter::Die()
 void AQLCharacter::OnDie()
 {
     Destroy();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnRespawnNewCharacter()
+{
+    if (CharacterHelper.IsValid())
+    {
+        CharacterHelper->RespawnCharacterRandomly(bQLIsBot);
+    }
 }
 
 //------------------------------------------------------------
@@ -1080,21 +1088,16 @@ bool AQLCharacter::HasWeapon(const FName& WeaponName)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-bool AQLCharacter::QLIsBot()
+bool AQLCharacter::GetIsBot()
 {
-    AController* MyController = GetController();
-    if (!MyController)
-    {
-        return true;
-    }
+    return bQLIsBot;
+}
 
-    APlayerController* MyPlayerController = Cast<APlayerController>(Controller);
-    if (!MyPlayerController)
-    {
-        return true;
-    }
-
-    return false;
+//------------------------------------------------------------
+//-----------------------------------------------------------
+void AQLCharacter::SetIsBot(bool bFlag)
+{
+    bQLIsBot = bFlag;
 }
 
 //------------------------------------------------------------
@@ -1168,3 +1171,19 @@ void AQLCharacter::SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt)
 {
     CharacterHelper = CharacterHelperExt;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::EquipAll()
+{
+    if (WeaponManager)
+    {
+        WeaponManager->CreateAndAddAllWeapons(WeaponClassList);
+    }
+
+    if (AbilityManager)
+    {
+        AbilityManager->CreateAndAddAllAbilities(AbilityClassList);
+    }
+}
+

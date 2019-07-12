@@ -115,6 +115,9 @@ public:
     void OnDie();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnRespawnNewCharacter();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool IsAlive();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
@@ -175,7 +178,10 @@ public:
     // Differentiate human player from AI bots
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    bool QLIsBot();
+    bool GetIsBot();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetIsBot(bool bFlag);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetMaxWalkSpeed(const float MaxWalkSpeed);
@@ -225,6 +231,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void EquipAll();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -331,6 +340,8 @@ protected:
 
     FTimerHandle DieTimerHandle;
 
+    FTimerHandle RespawnTimerHandle;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UAudioComponent* SoundComponent;
 
@@ -364,4 +375,13 @@ protected:
 
     UPROPERTY()
     TWeakObjectPtr<AQLCharacterHelper> CharacterHelper;
+
+    UPROPERTY()
+    bool bQLIsBot;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float DurationAfterDeathBeforeDestroyed;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float DurationAfterDeathBeforeRespawn;
 };

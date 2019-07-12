@@ -157,7 +157,7 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     Weapon->SetConstantRotationEnabled(false);
     Weapon->SetDamageMultiplier(DamageMultiplier);
 
-    if (User->QLIsBot())
+    if (User->GetIsBot())
     {
         Weapon->AttachToComponent(User->GetThirdPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
         // hardcoded adjustment
