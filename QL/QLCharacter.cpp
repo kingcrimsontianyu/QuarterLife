@@ -831,6 +831,7 @@ void AQLCharacter::Die()
 
     // avoid blocking living characters
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+    ThirdPersonMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
     // destroy the character
     GetWorldTimerManager().SetTimer(DieTimerHandle,
