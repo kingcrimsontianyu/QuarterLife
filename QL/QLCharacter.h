@@ -23,7 +23,6 @@ class UQLAbilityManager;
 class UWidgetComponent;
 class UQLPowerupManager;
 class UAIPerceptionStimuliSourceComponent;
-class AQLCharacterHelper;
 
 //------------------------------------------------------------
 // In Blueprint,
@@ -226,9 +225,6 @@ public:
     bool IsJumpButtonDown();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void EquipAll();
 protected:
 
@@ -312,6 +308,8 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
 
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void RespawnCharacterRandomly();
 protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
     UWidgetComponent* PlayerHealthArmorBarWidgetComponent;
@@ -368,9 +366,6 @@ protected:
     // monitor jump status for animation purpose
     UPROPERTY()
     bool bJumpButtonDown;
-
-    UPROPERTY()
-    TWeakObjectPtr<AQLCharacterHelper> CharacterHelper;
 
     UPROPERTY()
     bool bQLIsBot;

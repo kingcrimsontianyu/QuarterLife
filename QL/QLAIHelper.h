@@ -15,7 +15,6 @@
 #include "QLAIHelper.generated.h"
 
 class AQLCharacter;
-class AQLCharacterHelper;
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -27,9 +26,6 @@ class QL_API AQLAIHelper : public AActor
 public:
 	// Sets default values for this actor's properties
 	AQLAIHelper();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,16 +46,5 @@ protected:
     int NumBotsToSpawn;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    float SpawnRadius;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     TSubclassOf<AQLCharacter> CharacterClass;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    USphereComponent* RootSphereComponent;
-
-    UPROPERTY()
-    TWeakObjectPtr<AQLCharacterHelper> CharacterHelper;
 };

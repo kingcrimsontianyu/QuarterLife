@@ -39,7 +39,7 @@
 #include "Classes/Perception/AISense_Prediction.h"
 #include "Classes/Perception/AISense_Damage.h"
 #include "Classes/Perception/AISense_Team.h"
-#include "QLCharacterHelper.h"
+#include "NavigationSystem.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -868,10 +868,7 @@ void AQLCharacter::OnDie()
 //------------------------------------------------------------
 void AQLCharacter::OnRespawnNewCharacter()
 {
-    if (CharacterHelper.IsValid())
-    {
-        CharacterHelper->RespawnCharacterRandomly(bQLIsBot);
-    }
+    RespawnCharacterRandomly();
 }
 
 //------------------------------------------------------------
@@ -1171,13 +1168,6 @@ void AQLCharacter::QLSetVulnerability(const bool bFlag)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt)
-{
-    CharacterHelper = CharacterHelperExt;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
 void AQLCharacter::EquipAll()
 {
     if (WeaponManager)
@@ -1188,6 +1178,42 @@ void AQLCharacter::EquipAll()
     if (AbilityManager)
     {
         AbilityManager->CreateAndAddAllAbilities(AbilityClassList);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::RespawnCharacterRandomly()
+{
+    FActorSpawnParameters SpawnParameters;
+    SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+    UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
+
+    if (NavSys)
+    {
+        FNavLocation RandomLocation;
+        bool bFound = NavSys->GetRandomPoint(RandomLocation);
+        if (!bFound)
+        {
+            return;
+        }
+        RandomLocation.Location.Z += 100.0f;
+
+        FRotator RandomYawRotation = FRotator(0.0f, FMath::RandRange(0.0f, 360.0f), 0.0f);
+
+        AQLCharacter* NewCharacter = GetWorld()->SpawnActor<AQLCharacter>(GetClass(), RandomLocation.Location, RandomYawRotation, SpawnParameters);
+        if (bQLIsBot)
+        {
+            NewCharacter->SetIsBot(true);
+        }
+        else
+        {
+            NewCharacter->SetIsBot(false);
+            UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(NewCharacter);
+        }
+
+        NewCharacter->EquipAll();
     }
 }
 

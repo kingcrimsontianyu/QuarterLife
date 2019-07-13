@@ -14,7 +14,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "QLUtility.h"
-#include "QLCharacterHelper.h"
+#include "NavigationSystem.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -24,14 +24,7 @@ AQLAIHelper::AQLAIHelper()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-    SpawnRadius = 1000.0f;
     NumBotsToSpawn = 3;
-
-    RootSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("RootSphereComponent"));
-    RootSphereComponent->InitSphereRadius(SpawnRadius);
-    RootSphereComponent->SetSimulatePhysics(false);
-    RootSphereComponent->SetCollisionProfileName(FName(TEXT("NoCollision")));
-    RootComponent = RootSphereComponent;
 
     CharacterClass = AQLCharacter::StaticClass();
 }
@@ -42,6 +35,8 @@ AQLAIHelper::AQLAIHelper()
 void AQLAIHelper::BeginPlay()
 {
 	Super::BeginPlay();
+
+    SpawnBots();
 }
 
 //------------------------------------------------------------
@@ -49,8 +44,6 @@ void AQLAIHelper::BeginPlay()
 void AQLAIHelper::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-
-    RootSphereComponent->InitSphereRadius(SpawnRadius);
 }
 
 //------------------------------------------------------------
@@ -71,23 +64,24 @@ void AQLAIHelper::SpawnBots()
 
     for (int32 Idx = 0; Idx < NumBotsToSpawn; ++Idx)
     {
-        FVector SpawnLocation = QLUtility::SamplePointFromDiskOnXYPlane(SpawnRadius, GetActorLocation());
+        UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 
-        AQLCharacter* Bot = GetWorld()->SpawnActor<AQLCharacter>(CharacterClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
-        Bot->SetIsBot(true);
-        Bot->EquipAll();
-
-        if (CharacterHelper.IsValid())
+        if (NavSys)
         {
-            Bot->SetCharacterHelper(CharacterHelper.Get());
+            FNavLocation RandomLocation;
+            bool bFound = NavSys->GetRandomPoint(RandomLocation);
+            if (!bFound)
+            {
+                return;
+            }
+            RandomLocation.Location.Z += 100.0f;
+
+            FRotator RandomYawRotation = FRotator(0.0f, FMath::RandRange(0.0f, 360.0f), 0.0f);
+
+            AQLCharacter* Bot = GetWorld()->SpawnActor<AQLCharacter>(CharacterClass, RandomLocation.Location, RandomYawRotation, SpawnParameters);
+            Bot->SetIsBot(true);
+            Bot->EquipAll();
         }
     }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLAIHelper::SetCharacterHelper(AQLCharacterHelper* CharacterHelperExt)
-{
-    CharacterHelper = CharacterHelperExt;
 }
 
