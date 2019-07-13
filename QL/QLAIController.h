@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include <vector>
 #include "QLAIController.generated.h"
 
 class UAISenseConfig;
@@ -55,17 +56,17 @@ public:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    FName GetStartingWeaponName();
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
     virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void BroadcastTarget(AQLCharacter* Target);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    FName GetStartingWeaponName();
 
 protected:
     //------------------------------------------------------------
@@ -102,13 +103,20 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FName StartingWeaponName;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FGenericTeamId QLTeamId;
 
     UPROPERTY()
     TWeakObjectPtr<AQLCharacter> QLTarget;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    bool bRandomStartingWeapon;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    FName StartingWeaponName;
+
+    std::vector<FName> StartingWeaponList;
 };

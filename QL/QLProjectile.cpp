@@ -269,7 +269,7 @@ void AQLProjectile::QLSetPlayerController(AQLPlayerController* PlayerControllerE
 //------------------------------------------------------------
 float AQLProjectile::ReduceSelfDamage(const float InDamage)
 {
-    return InDamage * 0.5;
+    return InDamage * 0.3;
 }
 
 //------------------------------------------------------------

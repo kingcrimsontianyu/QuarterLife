@@ -76,6 +76,7 @@ void AQLAIHelper::SpawnBots()
         AQLCharacter* Bot = GetWorld()->SpawnActor<AQLCharacter>(CharacterClass, SpawnLocation, FRotator::ZeroRotator, SpawnParameters);
         Bot->SetIsBot(true);
         Bot->EquipAll();
+
         if (CharacterHelper.IsValid())
         {
             Bot->SetCharacterHelper(CharacterHelper.Get());

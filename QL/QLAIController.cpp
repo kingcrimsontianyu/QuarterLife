@@ -61,6 +61,13 @@ AQLAIController::AQLAIController()
     PerceptionComponent->SetDominantSense(UAISense_Sight::StaticClass());
 
     QLTeamId = FGenericTeamId(1);
+
+    StartingWeaponList.push_back("RailGun");
+    StartingWeaponList.push_back("LightningGun");
+    StartingWeaponList.push_back("RocketLauncher");
+    StartingWeaponList.push_back("NailGun");
+
+    bRandomStartingWeapon = false;
 }
 
 //------------------------------------------------------------
@@ -231,13 +238,6 @@ AQLCharacter* AQLAIController::GetTarget()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-FName AQLAIController::GetStartingWeaponName()
-{
-    return StartingWeaponName;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
 ETeamAttitude::Type AQLAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
     const AQLCharacter* QLCharacter = Cast<AQLCharacter>(&Other);
@@ -280,4 +280,16 @@ void AQLAIController::BroadcastTarget(AQLCharacter* Target)
         );
         UAIPerceptionSystem::OnEvent<FAITeamStimulusEvent, FAITeamStimulusEvent::FSenseClass>(GetWorld(), TeamStimulusEvent);
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+FName AQLAIController::GetStartingWeaponName()
+{
+    if (bRandomStartingWeapon)
+    {
+        StartingWeaponName = StartingWeaponList[FMath::RandRange(0, StartingWeaponList.size() - 1)];
+    }
+
+    return StartingWeaponName;
 }

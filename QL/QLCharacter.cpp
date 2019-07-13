@@ -121,6 +121,9 @@ AQLCharacter::AQLCharacter()
 
     DurationAfterDeathBeforeDestroyed = 3.0f;
     DurationAfterDeathBeforeRespawn = 2.5f;
+
+    // movement
+    GetCharacterMovement()->AirControl = 0.5;
 }
 
 //------------------------------------------------------------
