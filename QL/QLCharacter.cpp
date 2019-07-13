@@ -1217,3 +1217,9 @@ void AQLCharacter::RespawnCharacterRandomly()
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::FellOutOfWorld(const UDamageType& dmgType)
+{
+    Die();
+}

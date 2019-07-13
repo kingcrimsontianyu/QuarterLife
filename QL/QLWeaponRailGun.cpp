@@ -280,5 +280,14 @@ void AQLWeaponRailGun::SetDamageMultiplier(const float Value)
 
     BasicDamageAdjusted = Value * BasicDamage;
     ZoomDamageAdjusted = Value * ZoomDamage;
-    CurrentDamage *= Value;
+
+    if (bZoomedIn)
+    {
+        CurrentDamage = ZoomDamageAdjusted;
+    }
+    else
+    {
+        CurrentDamage = BasicDamageAdjusted;
+    }
+
 }
