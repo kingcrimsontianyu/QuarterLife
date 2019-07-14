@@ -28,6 +28,7 @@
 #include "Classes/Perception/AISense_Damage.h"
 #include "Classes/Perception/AISense_Team.h"
 #include "QLUtility.h"
+#include "QLAIPerceptionComponent.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -41,17 +42,18 @@ AQLAIController::AQLAIController()
     AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
     AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
     AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
+    AISenseConfig_Sight->SetMaxAge(6.0f);
 
     AISenseConfig_Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AISenseConfig_Hearing"));
 
     AISenseConfig_Prediction = CreateDefaultSubobject<UAISenseConfig_Prediction>(TEXT("AISenseConfig_Prediction"));
 
     AISenseConfig_Damage = CreateDefaultSubobject<UAISenseConfig_Damage>(TEXT("AISenseConfig_Damage"));
-    AISenseConfig_Damage->SetMaxAge(4.0f); // after the set duration, damage stimulus expires
+    AISenseConfig_Damage->SetMaxAge(6.0f); // after the set duration, damage stimulus expires
 
     AISenseConfig_Team = CreateDefaultSubobject<UAISenseConfig_Team>(TEXT("AISenseConfig_Team"));
 
-    PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+    PerceptionComponent = CreateDefaultSubobject<UQLAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
     PerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
     PerceptionComponent->ConfigureSense(*AISenseConfig_Hearing);
     PerceptionComponent->ConfigureSense(*AISenseConfig_Prediction);
@@ -180,16 +182,21 @@ void AQLAIController::OnPerceptionUpdatedImpl(const TArray<AActor*>& UpdatedActo
             // OnPerceptionUpdated() is fired when the player enters or leaves the region of sight, or the sense expires
             if (Stimulus.Type == UAISense::GetSenseID(UAISense_Sight::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed() && GetTeamAttitudeTowards(*TargetCharacter))
-                {
-                    bEnemySensed = true;
-                }
+                // currently in UE 4.22.3, OnPerceptionUpdated() never reports sight expiration event
+                // as a workaround, bEnemySensed is set to true whether the player target enters or leaves the region of sight
+                // the target is reset when the sight sense expires, which is handled in PerceptionComponent->HandleExpiredStimulus()
+                //if (Stimulus.WasSuccessfullySensed() && GetTeamAttitudeTowards(*TargetCharacter) == ETeamAttitude::Hostile)
+                //{
+                //    bEnemySensed = true;
+                //}
+
+                bEnemySensed = true;
             }
 
             // check if the bot has taken damage
             else if (Stimulus.Type == UAISense::GetSenseID(UAISense_Damage::StaticClass()))
             {
-                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired())
+                if (Stimulus.WasSuccessfullySensed() && !Stimulus.IsExpired() && GetTeamAttitudeTowards(*TargetCharacter) == ETeamAttitude::Hostile)
                 {
                     bEnemySensed = true;
                 }
@@ -292,4 +299,11 @@ FName AQLAIController::GetStartingWeaponName()
     }
 
     return StartingWeaponName;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAIController::ResetTarget()
+{
+    QLTarget.Reset();
 }
