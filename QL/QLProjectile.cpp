@@ -217,7 +217,11 @@ void AQLProjectile::HandleSplashHit(AActor* OtherActor, bool bDirectHit)
                 // display positive damage
                 if (DamageAmount > 0.0f && PlayerController.IsValid())
                 {
-                    PlaySoundFireAndForget("Hit");
+                    if (Character != PlayerController->GetCharacter())
+                    {
+                        PlaySoundFireAndForget("Hit");
+                    }
+
                     PlayerController->ShowDamageOnScreen(DamageAmount, Character->GetActorLocation());
                 }
             }
