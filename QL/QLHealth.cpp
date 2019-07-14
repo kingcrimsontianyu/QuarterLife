@@ -19,26 +19,15 @@
 AQLHealth::AQLHealth()
 {
     HealthIncrement = 10.0f;
+    RespawnInterval = 15.0f;
+    bCanBeRespawned = false;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLHealth::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    AddHealthToPlayer(OtherActor);
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLHealth::OnComponentHitImpl(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-    AddHealthToPlayer(OtherActor);
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLHealth::AddHealthToPlayer(AActor* OtherActor)
-{
+    // add health to player
     if (OtherActor)
     {
         AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
@@ -49,8 +38,29 @@ void AQLHealth::AddHealthToPlayer(AActor* OtherActor)
                 Character->AddHealth(HealthIncrement);
 
                 PlaySoundFireAndForget("PickUp");
-                Destroy();
+
+                SetActorEnableCollision(false);
+                SetActorHiddenInGame(true);
+
+                if (bCanBeRespawned)
+                {
+                    // until the next respawn
+                    GetWorldTimerManager().SetTimer(RespawnTimerHandle,
+                        this,
+                        &AQLHealth::Respawn,
+                        1.0f, // time interval in second
+                        false, // loop
+                        RespawnInterval); // delay in second
+                }
             }
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLHealth::Respawn()
+{
+    Destroy();
+    GetWorld()->SpawnActor<AQLHealth>(GetClass(), GetActorLocation(), FRotator::ZeroRotator);
 }

@@ -18,26 +18,15 @@
 AQLArmor::AQLArmor()
 {
     ArmorIncrement = 10.0f;
+    RespawnInterval = 15.0f;
+    bCanBeRespawned = false;
 }
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 void AQLArmor::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    AddArmorToPlayer(OtherActor);
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLArmor::OnComponentHitImpl(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-    AddArmorToPlayer(OtherActor);
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLArmor::AddArmorToPlayer(AActor* OtherActor)
-{
+    // add health to player
     if (OtherActor)
     {
         AQLCharacter* Character = Cast<AQLCharacter>(OtherActor);
@@ -48,8 +37,29 @@ void AQLArmor::AddArmorToPlayer(AActor* OtherActor)
                 Character->AddArmor(ArmorIncrement);
 
                 PlaySoundFireAndForget("PickUp");
-                Destroy();
+
+                SetActorEnableCollision(false);
+                SetActorHiddenInGame(true);
+
+                if (bCanBeRespawned)
+                {
+                    // until the next respawn
+                    GetWorldTimerManager().SetTimer(RespawnTimerHandle,
+                        this,
+                        &AQLArmor::Respawn,
+                        1.0f, // time interval in second
+                        false, // loop
+                        RespawnInterval); // delay in second
+                }
             }
         }
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLArmor::Respawn()
+{
+    Destroy();
+    GetWorld()->SpawnActor<AQLArmor>(GetClass(), GetActorLocation(), FRotator::ZeroRotator);
 }
