@@ -19,7 +19,6 @@ class UStaticMeshComponent;
 
 //------------------------------------------------------------
 // The AQLPickup actor is given a custom collision channel
-// that ignores other AQLPickup actor.
 // Project settings --> collision --> add object channels / trace channels
 //------------------------------------------------------------
 UCLASS()

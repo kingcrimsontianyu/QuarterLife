@@ -15,6 +15,7 @@
 #include "Components/BoxComponent.h"
 #include "QLUtility.h"
 #include "NavigationSystem.h"
+#include "Kismet/GameplayStatics.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -59,9 +60,6 @@ void AQLAIHelper::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLAIHelper::SpawnBots()
 {
-    FActorSpawnParameters SpawnParameters;
-    SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
     for (int32 Idx = 0; Idx < NumBotsToSpawn; ++Idx)
     {
         UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
@@ -77,9 +75,13 @@ void AQLAIHelper::SpawnBots()
             RandomLocation.Location.Z += 100.0f;
 
             FRotator RandomYawRotation = FRotator(0.0f, FMath::RandRange(0.0f, 360.0f), 0.0f);
+            FTransform RandomTransform(RandomYawRotation, RandomLocation.Location, FVector(1.0f));
 
-            AQLCharacter* Bot = GetWorld()->SpawnActor<AQLCharacter>(CharacterClass, RandomLocation.Location, RandomYawRotation, SpawnParameters);
+            // deferred spawn in order to timely specify human/bot identity
+            AQLCharacter* Bot = GetWorld()->SpawnActorDeferred<AQLCharacter>(CharacterClass, RandomTransform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
             Bot->SetIsBot(true);
+            UGameplayStatics::FinishSpawningActor(Bot, RandomTransform);
+
             Bot->EquipAll();
         }
     }

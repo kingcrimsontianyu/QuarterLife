@@ -1185,9 +1185,6 @@ void AQLCharacter::EquipAll()
 //------------------------------------------------------------
 void AQLCharacter::RespawnCharacterRandomly()
 {
-    FActorSpawnParameters SpawnParameters;
-    SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
     UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 
     if (NavSys)
@@ -1202,7 +1199,10 @@ void AQLCharacter::RespawnCharacterRandomly()
 
         FRotator RandomYawRotation = FRotator(0.0f, FMath::RandRange(0.0f, 360.0f), 0.0f);
 
-        AQLCharacter* NewCharacter = GetWorld()->SpawnActor<AQLCharacter>(GetClass(), RandomLocation.Location, RandomYawRotation, SpawnParameters);
+        FTransform RandomTransform(RandomYawRotation, RandomLocation.Location, FVector(1.0f));
+
+        // deferred spawn in order to timely specify human/bot identity
+        AQLCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<AQLCharacter>(GetClass(), RandomTransform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
         if (bQLIsBot)
         {
             NewCharacter->SetIsBot(true);
@@ -1210,10 +1210,15 @@ void AQLCharacter::RespawnCharacterRandomly()
         else
         {
             NewCharacter->SetIsBot(false);
-            UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(NewCharacter);
         }
+        UGameplayStatics::FinishSpawningActor(NewCharacter, RandomTransform);
 
         NewCharacter->EquipAll();
+
+        if (!bQLIsBot)
+        {
+            UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(NewCharacter);
+        }
     }
 }
 
