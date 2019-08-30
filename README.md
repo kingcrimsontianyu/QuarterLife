@@ -8,7 +8,7 @@ kingcrimsontianyu@gmail.com
 
 ## Introduction
 
-Quarter Life (QL), based on Unreal Engine, is a first-person adventure game and my personal side project. My inspiration comes from Half Life, Portal, Bioshock, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom and Quake.
+Quarter Life (QL), based on Unreal Engine, is a first-person adventure game and my personal side project. My inspiration comes from Half Life, Portal, Bioshock, Dishonored, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom and Quake.
 
 This game is developed in primarily C++ and a bit of Unreal Blueprint visual scripts. Blueprint classes related to game mechanics are almost all subclassed from C++.
 
@@ -37,6 +37,7 @@ This game is developed and tested on Unreal Engine version: **4.22.3**.
     + Piercing sight 透視 (Quake Champions)
     + Mimic Matter (Prey)
     + Za Warudo (the world) 世界 (manga/anime JoJo's Bizarre Adventure)
+    + Time travel (Dishonored 2, Titanfall 2)
 
 + Powerup
     + Quad damage (Quake Champions)
