@@ -8,13 +8,14 @@ kingcrimsontianyu@gmail.com
 
 ## Introduction
 
-Quarter Life (QL), based on Unreal Engine, is a first-person adventure game and my personal side project. My inspiration comes from Half Life, Portal, Bioshock, Dishonored, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom and Quake.
+Quarter Life (QL), based on Unreal Engine, is a first-person adventure game and my personal side project. My inspiration comes from Half Life, Portal, Bioshock, Dishonored, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom, Quake, Control.
 
 This game is developed in primarily C++ and a bit of Unreal Blueprint visual scripts. Blueprint classes related to game mechanics are almost all subclassed from C++.
 
 Regarding this repository:
-- GNU General Public License version 3 license (GPLv3) is used.
-- Some asset data (for example sound cues) are extracted and modified from other video games or Unreal Engine samples. To strictly comply with EULA, these derivative asset data are never shared.
+- This repository is subject to GNU General Public License version 3 license (GPLv3).
+- Additionally, monetizing any content of this repository on Unreal Engine Marketplace, in the original or derivative form, is expressly prohibited.
+- Some asset data, for example sound cues, are extracted and modified from other video games or Unreal Engine samples. To strictly comply with EULA, these derivative asset data are never included in this repository.
 - Blueprints are not included in this repository, but available on request (kingcrimsontianyu@gmail.com), with all derivative asset data removed.
 
 This game is developed and tested on Unreal Engine version: **4.22.3**.
@@ -64,6 +65,9 @@ This game is developed and tested on Unreal Engine version: **4.22.3**.
 
 + Movement
     + Strafe jump (Quake Champions)
+
++ Puzzle
+	+ Magical traffic light (Control)
 
 + Quest system
 
