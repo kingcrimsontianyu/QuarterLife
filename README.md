@@ -18,7 +18,7 @@ Regarding this repository:
 - Some asset data, for example sound cues, are extracted and modified from other video games or Unreal Engine samples. To strictly comply with EULA, these derivative asset data are never included in this repository.
 - Blueprints are not included in this repository, but available on request (kingcrimsontianyu@gmail.com), with all derivative asset data removed.
 
-This game is developed and tested on Unreal Engine version: **4.22.3**.
+This game is developed and tested on Unreal Engine version: **4.24.2**.
 
 ------
 

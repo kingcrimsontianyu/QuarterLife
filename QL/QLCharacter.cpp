@@ -67,7 +67,7 @@ AQLCharacter::AQLCharacter()
     FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCameraComponent"));
     FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
     //FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
-    FirstPersonCameraComponent->RelativeLocation = FVector(-10.0f, 1.75f, 64.0f);
+    FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.0f, 1.75f, 64.0f));
     FirstPersonCameraComponent->bUsePawnControlRotation = true; // critical! If false, mouse would not change pitch!
     FirstPersonCameraComponent->SetFieldOfView(100.0f);
 
@@ -77,8 +77,8 @@ AQLCharacter::AQLCharacter()
     FirstPersonMesh->SetupAttachment(FirstPersonCameraComponent);
     FirstPersonMesh->SetCollisionProfileName(TEXT("NoCollision"));
     FirstPersonMesh->CastShadow = false;
-    FirstPersonMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-    FirstPersonMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+    FirstPersonMesh->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
+    FirstPersonMesh->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
     // third person
     ThirdPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ThirdPersonMesh"));
