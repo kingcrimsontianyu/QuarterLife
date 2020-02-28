@@ -15,6 +15,10 @@
 #include <vector>
 #include "QLProjectile.generated.h"
 
+class USphereComponent;
+class UStaticMeshComponent;
+class AQLCharacter;
+
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
