@@ -73,12 +73,15 @@ void AQLAbilityTimeTravel::OnUse()
         return;
     }
 
+    // now that teleport succeeds
     // do not rotate character
     // instead rotate the controller
     FRotator NewRotation = MyCharacter->GetController()->GetControlRotation() - NearActor->GetActorRotation() + FarActor->GetActorRotation();
     MyCharacter->GetController()->SetControlRotation(NewRotation);
 
     SwapNearAndFarActor();
+
+    PlaySoundFireAndForget(FName(TEXT("EnergySword")));
 }
 
 //------------------------------------------------------------

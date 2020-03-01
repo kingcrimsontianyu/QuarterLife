@@ -124,6 +124,9 @@ void UQLAbilityManager::AddAbility(AQLAbility* Ability)
     Ability->DisableComponentsSimulatePhysics();
     Ability->SetConstantRotationEnabled(false);
     Ability->SetDamageMultiplier(DamageMultiplier);
+
+    // make ability actor location always the same with character location
+    Ability->AttachToActor(User.Get(), FAttachmentTransformRules::SnapToTargetIncludingScale);
 }
 
 //------------------------------------------------------------

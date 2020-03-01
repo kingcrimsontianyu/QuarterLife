@@ -155,6 +155,9 @@ void AQLPickup::PlaySoundFireAndForget(const FName& SoundName)
 
         if (Sound && SoundAttenuation)
         {
+            // force sound to be always played
+            Sound->VirtualizationMode = EVirtualizationMode::PlayWhenSilent;
+
             UGameplayStatics::PlaySoundAtLocation(GetWorld(),
                 Sound,
                 GetActorLocation(),
@@ -177,6 +180,9 @@ void AQLPickup::PlaySound(const FName& SoundName)
         USoundBase* Sound = *Result;
         if (Sound)
         {
+            // force sound to be always played
+            Sound->VirtualizationMode = EVirtualizationMode::PlayWhenSilent;
+
             SoundComponent->SetSound(Sound);
             SoundComponent->Play(0.0f);
         }
