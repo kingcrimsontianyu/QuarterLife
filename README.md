@@ -2,7 +2,7 @@
 
 Tianyu Liu
 kingcrimsontianyu@gmail.com
-2015-2019
+2015-2020
 
 ------
 
@@ -18,7 +18,7 @@ Regarding this repository:
 - Some asset data, for example sound cues, are extracted and modified from other video games or Unreal Engine samples. To strictly comply with EULA, these derivative asset data are never included in this repository.
 - Blueprints are not included in this repository, but available on request (kingcrimsontianyu@gmail.com), with all derivative asset data removed.
 
-This game is developed and tested on Unreal Engine version: **4.24.2**.
+This game is developed and tested on Unreal Engine version: **4.24.3**.
 
 ------
 
@@ -67,7 +67,7 @@ This game is developed and tested on Unreal Engine version: **4.24.2**.
     + Strafe jump (Quake Champions)
 
 + Puzzle
-	+ Magical traffic light (Control)
+    + Magical traffic light (Control)
 
 + Quest system
 
@@ -76,6 +76,9 @@ This game is developed and tested on Unreal Engine version: **4.24.2**.
 ------
 
 ## Clip
+
+### Bots
+<a href="https://youtu.be/3cK2KJ3Y5zE" target="_blank"><img src="http://i3.ytimg.com/vi/3cK2KJ3Y5zE/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Nailgun, The World ability, Recycler Grenade Launcher
 <a href="https://youtu.be/TGVjuJ0y8JE" target="_blank"><img src="http://i3.ytimg.com/vi/TGVjuJ0y8JE/hqdefault.jpg" width="480" height="360" border="10" /></a>
