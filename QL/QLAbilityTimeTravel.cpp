@@ -13,12 +13,19 @@
 #include "QLUtility.h"
 #include "QLAbilityManager.h"
 #include "QLCharacter.h"
+#include "Components/PostProcessComponent.h"
+#include "Kismet/KismetMaterialLibrary.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 AQLAbilityTimeTravel::AQLAbilityTimeTravel()
 {
     QLName = FName(TEXT("TimeTravel"));
+    PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
+    PostProcessComponent->bEnabled = false;
+
+    TimeTravelTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimeTravelTimeline"));
+    TimeTravelTimelineInterpFunction.BindUFunction(this, FName(TEXT("TimeTravelCallback")));
 
     SoundIdx = 0;
 }
@@ -35,6 +42,23 @@ void AQLAbilityTimeTravel::BeginPlay()
 void AQLAbilityTimeTravel::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    if (PostProcessComponent)
+    {
+        if (MaterialTimeTravel)
+        {
+            FWeightedBlendable WeightedBlendable;
+            DynamicMaterialTimeTravel = UKismetMaterialLibrary::CreateDynamicMaterialInstance(this, MaterialTimeTravel);
+            WeightedBlendable.Object = DynamicMaterialTimeTravel.Get();
+            WeightedBlendable.Weight = 1.0f;
+            PostProcessComponent->Settings.WeightedBlendables.Array.Add(WeightedBlendable);
+        }
+    }
+
+    if (TimeTravelTimeline && TimeTravelCurve)
+    {
+        TimeTravelTimeline->AddInterpFloat(TimeTravelCurve, TimeTravelTimelineInterpFunction, FName(TEXT("TimeTravel")));
+    }
 }
 
 //------------------------------------------------------------
@@ -83,8 +107,11 @@ void AQLAbilityTimeTravel::OnUse()
 
     SwapNearAndFarActor();
 
-    constexpr char* MySoundNames[2] = { "EnergyDagger", "EnergySword" };
+    // enable postprocessing effect
+    PostProcessComponent->bEnabled = true;
 
+    // play sound
+    constexpr char* MySoundNames[2] = { "EnergyDagger", "EnergySword" };
     PlaySoundFireAndForget(FName(MySoundNames[SoundIdx]));
 
     // change sound index for the next play
@@ -95,6 +122,12 @@ void AQLAbilityTimeTravel::OnUse()
     else if (SoundIdx == 1)
     {
         SoundIdx = 0;
+    }
+
+    // postprocessing animation
+    if (TimeTravelTimeline && TimeTravelCurve)
+    {
+        TimeTravelTimeline->PlayFromStart();
     }
 }
 
@@ -122,3 +155,12 @@ void AQLAbilityTimeTravel::SwapNearAndFarActor()
     FarActor = Temp;
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAbilityTimeTravel::TimeTravelCallback(float Val)
+{
+    if (DynamicMaterialTimeTravel.IsValid())
+    {
+        DynamicMaterialTimeTravel->SetScalarParameterValue("InterpParam", Val);
+    }
+}

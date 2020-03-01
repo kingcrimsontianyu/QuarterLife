@@ -13,6 +13,7 @@
 #include "QLAbility.h"
 #include "QLAbilityTimeTravel.generated.h"
 
+class UPostProcessComponent;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -41,12 +42,34 @@ protected:
 
     void SwapNearAndFarActor();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION()
+    void TimeTravelCallback(float Val);
+
 protected:
     UPROPERTY()
     TWeakObjectPtr<AActor> NearActor;
 
     UPROPERTY()
     TWeakObjectPtr<AActor> FarActor;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
+    UPostProcessComponent* PostProcessComponent;
+
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> DynamicMaterialTimeTravel;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    UMaterialInterface* MaterialTimeTravel;
+
+    UPROPERTY()
+    UTimelineComponent* TimeTravelTimeline;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "C++Property")
+    UCurveFloat* TimeTravelCurve;
+
+    FOnTimelineFloat TimeTravelTimelineInterpFunction;
 
     int SoundIdx;
 };
