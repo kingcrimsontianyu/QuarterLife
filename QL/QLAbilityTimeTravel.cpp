@@ -11,6 +11,8 @@
 
 #include "QLAbilityTimeTravel.h"
 #include "QLUtility.h"
+#include "QLAbilityManager.h"
+#include "QLCharacter.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -39,7 +41,34 @@ void AQLAbilityTimeTravel::OnUse()
 {
     Super::OnUse();
 
-    QLUtility::Log("TIME TRAVEL");
+    if (!NearActor.IsValid() ||
+        !FarActor.IsValid() ||
+        !AbilityManager.IsValid() ||
+        !AbilityManager->GetUser())
+    {
+        return;
+    }
+
+    AQLCharacter* MyCharacter = AbilityManager->GetUser();
+
+    FVector NewLocation = MyCharacter->GetActorLocation() - NearActor->GetActorLocation() + FarActor->GetActorLocation();
+    bool bTeleportSuccess = MyCharacter->TeleportTo(NewLocation,
+        FRotator::ZeroRotator,
+        false, // not a test, but actual teleport
+        false); // check if the actor can be teleported
+
+    if (!bTeleportSuccess)
+    {
+        return;
+    }
+
+    FRotator NewRotation = MyCharacter->GetController()->GetControlRotation() - NearActor->GetActorRotation() + FarActor->GetActorRotation();
+    MyCharacter->GetController()->SetControlRotation(NewRotation);
+
+    // swap near and far actor
+    TWeakObjectPtr<AActor> Temp = NearActor;
+    NearActor = FarActor;
+    FarActor = Temp;
 }
 
 //------------------------------------------------------------
@@ -47,5 +76,13 @@ void AQLAbilityTimeTravel::OnUse()
 void AQLAbilityTimeTravel::OnAbilityEnd()
 {
     Super::OnAbilityEnd();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAbilityTimeTravel::SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt)
+{
+    NearActor = NearActorExt;
+    FarActor = FarActorExt;
 }
 

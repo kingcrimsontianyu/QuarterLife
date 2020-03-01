@@ -18,6 +18,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "QLAbilityTimeTravel.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -152,6 +153,32 @@ void UQLAbilityManager::CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbi
         AddAbility(Ability);
         User->SetCurrentAbility(Ability->GetQLName());
         Ability->UpdateProgressOnUMGInternal(1.0f);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLAbilityManager::SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt)
+{
+    if (!User.IsValid())
+    {
+        return;
+    }
+
+    // find time travel ability
+    AQLAbilityTimeTravel* Result = nullptr;
+    for (const auto& Item : AbilityList)
+    {
+        Result = Cast<AQLAbilityTimeTravel>(Item);
+        if (Result)
+        {
+            break;
+        }
+    }
+
+    if (Result)
+    {
+        Result->SetNearAndFarActors(NearActorExt, FarActorExt);
     }
 }
 

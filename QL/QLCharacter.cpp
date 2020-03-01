@@ -1228,3 +1228,10 @@ void AQLCharacter::FellOutOfWorld(const UDamageType& dmgType)
 {
     Die();
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+UQLAbilityManager* AQLCharacter::GetAbilityManager()
+{
+    return AbilityManager;
+}

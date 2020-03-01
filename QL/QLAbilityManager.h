@@ -40,6 +40,9 @@ public:
     void SetDamageMultiplier(const float Value);
 
     void CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbility>>& AbilityClassList);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt);
 protected:
     TWeakObjectPtr<AQLCharacter> User;
 

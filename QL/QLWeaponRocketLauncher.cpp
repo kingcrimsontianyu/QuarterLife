@@ -29,7 +29,7 @@ AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
     RateOfFire = 0.8f;
     RocketProjectileClass = AQLRocketProjectile::StaticClass();
     bIsProjectileWeapon = true;
-    ProjectileSpeed = 2000.0f;
+    ProjectileSpeed = 3000.0f;
 }
 
 //------------------------------------------------------------

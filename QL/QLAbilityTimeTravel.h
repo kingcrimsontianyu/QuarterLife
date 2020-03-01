@@ -27,6 +27,8 @@ public:
 
     virtual void OnAbilityEnd() override;
 
+    void SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt);
+
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned
@@ -39,8 +41,8 @@ protected:
 
 protected:
     UPROPERTY()
-    TWeakObjectPtr<AActor> BlueActor;
+    TWeakObjectPtr<AActor> NearActor;
 
     UPROPERTY()
-    TWeakObjectPtr<AActor> OrangeActor;
+    TWeakObjectPtr<AActor> FarActor;
 };

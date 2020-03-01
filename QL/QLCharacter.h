@@ -228,6 +228,9 @@ public:
     void EquipAll();
 
     virtual void FellOutOfWorld(const UDamageType& dmgType) override;
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    UQLAbilityManager* GetAbilityManager();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
