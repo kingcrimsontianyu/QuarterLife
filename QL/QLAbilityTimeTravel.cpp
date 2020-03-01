@@ -81,7 +81,7 @@ void AQLAbilityTimeTravel::OnUse()
 
     SwapNearAndFarActor();
 
-    PlaySoundFireAndForget(FName(TEXT("EnergySword")));
+    PlaySoundFireAndForget(FName(TEXT("EnergyDagger")));
 }
 
 //------------------------------------------------------------
