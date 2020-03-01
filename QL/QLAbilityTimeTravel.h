@@ -39,6 +39,8 @@ protected:
     //------------------------------------------------------------
     virtual void PostInitializeComponents() override;
 
+    void SwapNearAndFarActor();
+
 protected:
     UPROPERTY()
     TWeakObjectPtr<AActor> NearActor;

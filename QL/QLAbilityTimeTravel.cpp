@@ -51,6 +51,17 @@ void AQLAbilityTimeTravel::OnUse()
 
     AQLCharacter* MyCharacter = AbilityManager->GetUser();
 
+    // check which actor, near or far is actually close to the actor
+    // and use that actor as the near actor
+    // use distance squared directly to reduce calculation
+    float d1 = FVector::DistSquared(MyCharacter->GetActorLocation(), NearActor->GetActorLocation());
+    float d2 = FVector::DistSquared(MyCharacter->GetActorLocation(), FarActor->GetActorLocation());
+    if (d1 > d2)
+    {
+        SwapNearAndFarActor();
+    }
+
+
     FVector NewLocation = MyCharacter->GetActorLocation() - NearActor->GetActorLocation() + FarActor->GetActorLocation();
     bool bTeleportSuccess = MyCharacter->TeleportTo(NewLocation,
         FRotator::ZeroRotator,
@@ -62,13 +73,12 @@ void AQLAbilityTimeTravel::OnUse()
         return;
     }
 
+    // do not rotate character
+    // instead rotate the controller
     FRotator NewRotation = MyCharacter->GetController()->GetControlRotation() - NearActor->GetActorRotation() + FarActor->GetActorRotation();
     MyCharacter->GetController()->SetControlRotation(NewRotation);
 
-    // swap near and far actor
-    TWeakObjectPtr<AActor> Temp = NearActor;
-    NearActor = FarActor;
-    FarActor = Temp;
+    SwapNearAndFarActor();
 }
 
 //------------------------------------------------------------
@@ -84,5 +94,14 @@ void AQLAbilityTimeTravel::SetNearAndFarActors(AActor* NearActorExt, AActor* Far
 {
     NearActor = NearActorExt;
     FarActor = FarActorExt;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAbilityTimeTravel::SwapNearAndFarActor()
+{
+    TWeakObjectPtr<AActor> Temp = NearActor;
+    NearActor = FarActor;
+    FarActor = Temp;
 }
 
