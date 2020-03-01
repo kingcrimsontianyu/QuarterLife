@@ -111,7 +111,7 @@ void AQLAbilityTimeTravel::OnUse()
     PostProcessComponent->bEnabled = true;
 
     // play sound
-    constexpr char* MySoundNames[2] = { "EnergyDagger", "EnergySword" };
+    constexpr char* MySoundNames[2] = { "OutsiderAppear", "OutsiderDisappear" };
     PlaySoundFireAndForget(FName(MySoundNames[SoundIdx]));
 
     // change sound index for the next play
