@@ -19,6 +19,8 @@
 AQLAbilityTimeTravel::AQLAbilityTimeTravel()
 {
     QLName = FName(TEXT("TimeTravel"));
+
+    SoundIdx = 0;
 }
 
 //------------------------------------------------------------
@@ -81,7 +83,19 @@ void AQLAbilityTimeTravel::OnUse()
 
     SwapNearAndFarActor();
 
-    PlaySoundFireAndForget(FName(TEXT("EnergyDagger")));
+    constexpr char* MySoundNames[2] = { "EnergyDagger", "EnergySword" };
+
+    PlaySoundFireAndForget(FName(MySoundNames[SoundIdx]));
+
+    // change sound index for the next play
+    if (SoundIdx == 0)
+    {
+        SoundIdx = 1;
+    }
+    else if (SoundIdx == 1)
+    {
+        SoundIdx = 0;
+    }
 }
 
 //------------------------------------------------------------

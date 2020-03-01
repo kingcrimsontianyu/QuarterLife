@@ -47,4 +47,6 @@ protected:
 
     UPROPERTY()
     TWeakObjectPtr<AActor> FarActor;
+
+    int SoundIdx;
 };

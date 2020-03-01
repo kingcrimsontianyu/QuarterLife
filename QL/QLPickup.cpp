@@ -146,7 +146,7 @@ void AQLPickup::PlayAnimationMontage(const FName& AnimationMontageName)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPickup::PlaySoundFireAndForget(const FName& SoundName)
+void AQLPickup::PlaySoundFireAndForget(const FName& SoundName, EVirtualizationMode VirtualizationMode)
 {
     USoundBase** Result = SoundList.Find(SoundName);
     if (Result)
@@ -155,8 +155,8 @@ void AQLPickup::PlaySoundFireAndForget(const FName& SoundName)
 
         if (Sound && SoundAttenuation)
         {
-            // force sound to be always played
-            Sound->VirtualizationMode = EVirtualizationMode::PlayWhenSilent;
+            // force sound to be always played when EVirtualizationMode::PlayWhenSilent
+            Sound->VirtualizationMode = VirtualizationMode;
 
             UGameplayStatics::PlaySoundAtLocation(GetWorld(),
                 Sound,
@@ -172,7 +172,7 @@ void AQLPickup::PlaySoundFireAndForget(const FName& SoundName)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPickup::PlaySound(const FName& SoundName)
+void AQLPickup::PlaySound(const FName& SoundName, EVirtualizationMode VirtualizationMode)
 {
     USoundBase** Result = SoundList.Find(SoundName);
     if (Result)
@@ -180,8 +180,8 @@ void AQLPickup::PlaySound(const FName& SoundName)
         USoundBase* Sound = *Result;
         if (Sound)
         {
-            // force sound to be always played
-            Sound->VirtualizationMode = EVirtualizationMode::PlayWhenSilent;
+            // force sound to be always played when EVirtualizationMode::PlayWhenSilent
+            Sound->VirtualizationMode = VirtualizationMode;
 
             SoundComponent->SetSound(Sound);
             SoundComponent->Play(0.0f);

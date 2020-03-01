@@ -34,10 +34,10 @@ public:
     virtual void Tick(float DeltaTime) override;
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlaySoundFireAndForget(const FName& SoundName);
+    void PlaySoundFireAndForget(const FName& SoundName, EVirtualizationMode VirtualizationMode = EVirtualizationMode::PlayWhenSilent);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlaySound(const FName& SoundName);
+    void PlaySound(const FName& SoundName, EVirtualizationMode VirtualizationMode = EVirtualizationMode::PlayWhenSilent);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
