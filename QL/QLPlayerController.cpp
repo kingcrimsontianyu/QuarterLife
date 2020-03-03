@@ -172,7 +172,8 @@ void AQLPlayerController::SetupInputComponent()
 //------------------------------------------------------------
 void AQLPlayerController::OnRestartLevel()
 {
-    UGameplayStatics::OpenLevel(GetWorld(), "QLArena");
+    const FString& CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
+    UGameplayStatics::OpenLevel(GetWorld(), FName(*CurrentLevel));
 }
 
 //------------------------------------------------------------
