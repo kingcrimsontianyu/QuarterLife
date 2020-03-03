@@ -48,6 +48,8 @@ This game is developed and tested on Unreal Engine version: **4.24.3**.
     + Floating health bar and armor bar
     + Floating damage numbers
 
++ Bot
+
 ------
 
 ## Planned features
@@ -71,11 +73,12 @@ This game is developed and tested on Unreal Engine version: **4.24.3**.
 
 + Quest system
 
-+ Bot
-
 ------
 
 ## Clip
+
+### Time travel ability
+<a href="https://youtu.be/Vuq2_Q2AwQw" target="_blank"><img src="http://i3.ytimg.com/vi/Vuq2_Q2AwQw/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Bots
 <a href="https://youtu.be/3cK2KJ3Y5zE" target="_blank"><img src="http://i3.ytimg.com/vi/3cK2KJ3Y5zE/hqdefault.jpg" width="480" height="360" border="10" /></a>
