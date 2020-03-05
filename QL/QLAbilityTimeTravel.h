@@ -16,6 +16,17 @@
 class UPostProcessComponent;
 class AQLPortal;
 //------------------------------------------------------------
+// AQLAbilityTimeTravel has several key components
+// --- NearActor, FarActor
+//     Reference actors (such as walls) on the map. NearActor is always closer to the player than FarActor.
+//     If at some point NearActor becomes farther, it is swapped with FarActor.
+// --- ShadowAbility
+//     A pseudo actor that is the shadow of the AQLAbilityTimeTravel actor.
+//     The relative transform between ShadowAbility and FarActor is always equal to that between AQLAbilityTimeTravel and NearActor.
+// --- NearPortal
+//     Actor to display the portal view. NearPortal is attached to the AQLAbilityTimeTravel actor with a fixed relative transform.
+// --- FarPortal
+//     FarPortal is attached to the ShadowAbility actor with a fixed relative transform.
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLAbilityTimeTravel : public AQLAbility
@@ -98,6 +109,7 @@ protected:
     UPROPERTY()
     AQLPortal* FarPortal;
 
+    // If AActor* is used, ShadowAbility cannot be transformed freely
     UPROPERTY()
     AQLPickup* ShadowAbility;
 };

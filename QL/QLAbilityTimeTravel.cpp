@@ -49,6 +49,8 @@ void AQLAbilityTimeTravel::BeginPlay()
 
     NearPortal = GetWorld()->SpawnActorDeferred<AQLPortal>(PortalClass, transform);
     UGameplayStatics::FinishSpawningActor(NearPortal, transform);
+
+    // attach near portal actor to this actor
     NearPortal->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
     NearPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
     NearPortal->SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
@@ -59,6 +61,7 @@ void AQLAbilityTimeTravel::BeginPlay()
     ShadowAbility = GetWorld()->SpawnActorDeferred<AQLPickup>(AQLPickup::StaticClass(), transform);
     UGameplayStatics::FinishSpawningActor(ShadowAbility, transform);
 
+    // attach far portal actor to the shadow ability actor
     FarPortal->AttachToActor(ShadowAbility, FAttachmentTransformRules::KeepRelativeTransform);
     FarPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
     FarPortal->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
