@@ -73,6 +73,7 @@ void UQLAbilityManager::SetCurrentAbility(const FName& QLName)
 
     // change current Ability
     CurrentAbility = AbilityWanted;
+    CurrentAbility->OnAbilitySetCurrent();
     //CurrentAbility->GetGunSkeletalMeshComponent()->SetVisibility(true);
 }
 
@@ -161,7 +162,7 @@ void UQLAbilityManager::CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbi
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLAbilityManager::SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt)
+void UQLAbilityManager::InitializeAbilityTimeTravel(AActor* NearActorExt, AActor* FarActorExt)
 {
     if (!User.IsValid())
     {
@@ -182,6 +183,13 @@ void UQLAbilityManager::SetNearAndFarActors(AActor* NearActorExt, AActor* FarAct
     if (Result)
     {
         Result->SetNearAndFarActors(NearActorExt, FarActorExt);
+        Result->SetActorTickEnabled(true);
     }
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLAbilityManager::Debug()
+{
+    CurrentAbility->Debug();
+}

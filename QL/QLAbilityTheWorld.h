@@ -29,6 +29,7 @@ public:
     virtual void OnUse() override;
 
     virtual void OnAbilityEnd() override;
+
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned

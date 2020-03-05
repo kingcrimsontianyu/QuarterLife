@@ -64,6 +64,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool IsActive();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void OnAbilitySetCurrent();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

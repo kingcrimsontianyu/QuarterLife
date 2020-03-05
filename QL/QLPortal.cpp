@@ -90,9 +90,10 @@ void AQLPortal::PostInitializeComponents()
     RenderTarget->AddressX = TextureAddress::TA_Wrap;
     RenderTarget->AddressY = TextureAddress::TA_Wrap;
 
-    // set up scene campture component and reder target
+    // set up scene capture component and render target
     if (SceneCaptureComponent && RenderTarget)
     {
+        SceneCaptureComponent->bEnableClipPlane = true;
         SceneCaptureComponent->TextureTarget = RenderTarget;
     }
 
@@ -216,4 +217,19 @@ UBoxComponent* AQLPortal::GetBoxComponent()
 UStaticMeshComponent* AQLPortal::GetDisplayPlaneStaticMesh()
 {
     return DisplayPlaneStaticMesh;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::Debug()
+{
+    QLUtility::Log(SceneCaptureComponent->GetComponentLocation().ToString());
+    QLUtility::Log(SceneCaptureComponent->GetComponentRotation().ToString());
+
+    QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentLocation().ToString());
+    QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentRotation().ToString());
+
+    APlayerCameraManager* cm = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+    QLUtility::Log(cm->GetCameraLocation().ToString());
+    QLUtility::Log(cm->GetCameraRotation().ToString());
 }

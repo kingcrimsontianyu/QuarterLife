@@ -216,6 +216,9 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     // "turn" handles devices that provide an absolute delta, such as a mouse.
     PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
     PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+    PlayerInputComponent->BindAction("Debug", EInputEvent::IE_Pressed, this, &AQLCharacter::OnDebug);
+
 }
 
 //------------------------------------------------------------
@@ -1234,4 +1237,11 @@ void AQLCharacter::FellOutOfWorld(const UDamageType& dmgType)
 UQLAbilityManager* AQLCharacter::GetAbilityManager()
 {
     return AbilityManager;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::OnDebug()
+{
+    AbilityManager->Debug();
 }

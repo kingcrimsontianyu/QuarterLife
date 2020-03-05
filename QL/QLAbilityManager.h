@@ -42,7 +42,9 @@ public:
     void CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbility>>& AbilityClassList);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt);
+    void InitializeAbilityTimeTravel(AActor* NearActorExt, AActor* FarActorExt);
+
+    void Debug();
 protected:
     TWeakObjectPtr<AQLCharacter> User;
 

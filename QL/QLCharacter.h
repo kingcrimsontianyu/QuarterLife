@@ -231,6 +231,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UQLAbilityManager* GetAbilityManager();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void OnDebug();
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)

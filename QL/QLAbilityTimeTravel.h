@@ -14,6 +14,7 @@
 #include "QLAbilityTimeTravel.generated.h"
 
 class UPostProcessComponent;
+class AQLPortal;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -28,7 +29,11 @@ public:
 
     virtual void OnAbilityEnd() override;
 
+    virtual void OnAbilitySetCurrent() override;
+
     void SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt);
+
+    virtual void Debug() override;
 
 protected:
     //------------------------------------------------------------
@@ -40,12 +45,23 @@ protected:
     //------------------------------------------------------------
     virtual void PostInitializeComponents() override;
 
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
+
     void SwapNearAndFarActor();
 
     //------------------------------------------------------------
     //------------------------------------------------------------
     UFUNCTION()
     void TimeTravelCallback(float Val);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    FTransform CalculateNearAndFarPortalTransform();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    FTransform CalculateShadowCharacterTransform();
 
 protected:
     UPROPERTY()
@@ -72,4 +88,13 @@ protected:
     FOnTimelineFloat TimeTravelTimelineInterpFunction;
 
     int SoundIdx;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TSubclassOf<AQLPortal> PortalClass;
+
+    UPROPERTY()
+    AQLPortal* NearPortal;
+
+    UPROPERTY()
+    AQLPortal* FarPortal;
 };

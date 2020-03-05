@@ -204,3 +204,9 @@ bool AQLAbility::IsActive()
 void AQLAbility::OnAbilityEnd()
 {
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAbility::OnAbilitySetCurrent()
+{
+}

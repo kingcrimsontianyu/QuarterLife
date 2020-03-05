@@ -77,6 +77,8 @@ public:
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PerformRotationInterpWithDelay(const float Delay);
+
+    virtual void Debug();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

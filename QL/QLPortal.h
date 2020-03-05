@@ -60,6 +60,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     UStaticMeshComponent* GetDisplayPlaneStaticMesh();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    virtual void Debug();
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned

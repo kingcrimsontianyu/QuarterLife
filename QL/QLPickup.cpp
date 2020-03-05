@@ -294,3 +294,10 @@ void AQLPickup::PerformRotationInterpCallback()
 {
     bStartRotationInterp = true;
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::Debug()
+{
+
+}
