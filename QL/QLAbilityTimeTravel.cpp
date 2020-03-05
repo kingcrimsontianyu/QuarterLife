@@ -36,6 +36,7 @@ AQLAbilityTimeTravel::AQLAbilityTimeTravel()
     PortalClass = AQLPortal::StaticClass();
     NearPortal = nullptr;
     FarPortal = nullptr;
+    ShadowAbility = nullptr;
 }
 
 //------------------------------------------------------------
@@ -49,14 +50,18 @@ void AQLAbilityTimeTravel::BeginPlay()
     NearPortal = GetWorld()->SpawnActorDeferred<AQLPortal>(PortalClass, transform);
     UGameplayStatics::FinishSpawningActor(NearPortal, transform);
     NearPortal->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-    NearPortal->SetActorRelativeLocation(FVector(0.0f, -100.0f, 0.0f));
+    NearPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
     NearPortal->SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
 
     FarPortal = GetWorld()->SpawnActorDeferred<AQLPortal>(PortalClass, transform);
     UGameplayStatics::FinishSpawningActor(FarPortal, transform);
-    FarPortal->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-    FarPortal->SetActorRelativeLocation(FVector(100.0f, 100.0f, 0.0f));
-    FarPortal->SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+
+    ShadowAbility = GetWorld()->SpawnActorDeferred<AQLPickup>(AQLPickup::StaticClass(), transform);
+    UGameplayStatics::FinishSpawningActor(ShadowAbility, transform);
+
+    FarPortal->AttachToActor(ShadowAbility, FAttachmentTransformRules::KeepRelativeTransform);
+    FarPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+    FarPortal->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
     if (NearPortal && FarPortal)
     {
@@ -93,7 +98,14 @@ void AQLAbilityTimeTravel::PostInitializeComponents()
 //------------------------------------------------------------
 void AQLAbilityTimeTravel::Tick(float DeltaTime)
 {
-
+    if (bCanBeUsed)
+    {
+        if (ShadowAbility)
+        {
+            FTransform transform = CalculateShadowAbilityTransform();
+            ShadowAbility->SetActorTransform(transform);
+        }
+    }
 }
 
 //------------------------------------------------------------
@@ -221,18 +233,21 @@ FTransform AQLAbilityTimeTravel::CalculateShadowCharacterTransform()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-FTransform AQLAbilityTimeTravel::CalculateNearAndFarPortalTransform()
+FTransform AQLAbilityTimeTravel::CalculateShadowAbilityTransform()
 {
-    if (AbilityManager.IsValid())
-    {
-        AQLCharacter* MyCharacter = AbilityManager->GetUser();
-        if (MyCharacter)
-        {
+    FTransform transform;
 
-        }
+    if (!NearActor.IsValid() ||
+        !FarActor.IsValid())
+    {
+        return transform;
     }
 
-    FTransform transform;
+    FVector NewLocation = this->GetActorLocation() - NearActor->GetActorLocation() + FarActor->GetActorLocation();
+    FRotator NewRotation = this->GetActorRotation() - NearActor->GetActorRotation() + FarActor->GetActorRotation();
+
+    transform.SetLocation(NewLocation);
+    transform.SetRotation(NewRotation.Quaternion());
 
     return transform;
 }
@@ -268,7 +283,7 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
         if (MyCharacter)
         {
             this->AttachToComponent(MyCharacter->GetFirstPersonMesh(), FAttachmentTransformRules::KeepRelativeTransform);
-            this->SetActorRelativeLocation(FVector(300.0f, 0.0f, 100.0f));
+            this->SetActorRelativeLocation(FVector(200.0f, -30.0f, 100.0f));
 
             UStaticMeshComponent* abilityMesh = GetStaticMeshComponent();
             if (abilityMesh)
@@ -276,6 +291,8 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
                 abilityMesh->SetVisibility(true);
             }
         }
+
+        bCanBeUsed = true;
     }
 }
 
@@ -283,18 +300,18 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
 //------------------------------------------------------------
 void AQLAbilityTimeTravel::Debug()
 {
-    //QLUtility::Log("FAR PORTAL SCC");
-    //FarPortal->Debug();
+    QLUtility::Log("FAR");
+    QLUtility::Log(ShadowAbility->GetActorTransform().ToString());
 
-    QLUtility::Log("NEAR PORTAL SCC");
-    NearPortal->Debug();
+    QLUtility::Log("NEAR");
+    QLUtility::Log(this->GetActorTransform().ToString());
 
-    QLUtility::Log("PLAYER");
-    if (AbilityManager.IsValid())
-    {
-        AQLCharacter* MyCharacter = AbilityManager->GetUser();
-        UCameraComponent* MyCamera = MyCharacter->GetFirstPersonCameraComponent();
-        QLUtility::Log(MyCamera->GetComponentLocation().ToString());
-        QLUtility::Log(MyCamera->GetComponentRotation().ToString());
-    }
+    //QLUtility::Log("PLAYER");
+    //if (AbilityManager.IsValid())
+    //{
+    //    AQLCharacter* MyCharacter = AbilityManager->GetUser();
+    //    UCameraComponent* MyCamera = MyCharacter->GetFirstPersonCameraComponent();
+    //    QLUtility::Log(MyCamera->GetComponentLocation().ToString());
+    //    QLUtility::Log(MyCamera->GetComponentRotation().ToString());
+    //}
 }

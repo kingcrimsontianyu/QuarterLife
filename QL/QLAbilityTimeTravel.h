@@ -57,11 +57,11 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    FTransform CalculateNearAndFarPortalTransform();
+    FTransform CalculateShadowCharacterTransform();
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    FTransform CalculateShadowCharacterTransform();
+    FTransform CalculateShadowAbilityTransform();
 
 protected:
     UPROPERTY()
@@ -97,4 +97,7 @@ protected:
 
     UPROPERTY()
     AQLPortal* FarPortal;
+
+    UPROPERTY()
+    AQLPickup* ShadowAbility;
 };

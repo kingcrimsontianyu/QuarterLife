@@ -1178,7 +1178,7 @@ void AQLCharacter::EquipAll()
         WeaponManager->CreateAndAddAllWeapons(WeaponClassList);
     }
 
-    if (AbilityManager)
+    if (!bQLIsBot && AbilityManager)
     {
         AbilityManager->CreateAndAddAllAbilities(AbilityClassList);
     }

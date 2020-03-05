@@ -86,7 +86,7 @@ void AQLPortal::PostInitializeComponents()
     Super::PostInitializeComponents();
 
     RenderTarget = NewObject<UTextureRenderTarget2D>(this);
-    RenderTarget->InitAutoFormat(1920, 1080);
+    RenderTarget->InitAutoFormat(640, 480);
     RenderTarget->AddressX = TextureAddress::TA_Wrap;
     RenderTarget->AddressY = TextureAddress::TA_Wrap;
 
