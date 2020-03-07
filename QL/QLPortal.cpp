@@ -95,6 +95,14 @@ void AQLPortal::PostInitializeComponents()
     {
         SceneCaptureComponent->bEnableClipPlane = true;
         SceneCaptureComponent->TextureTarget = RenderTarget;
+
+        // set up to manually update scene capture instead of automatically
+        // when set to false, the component will render once on load and then only when moved
+        SceneCaptureComponent->bCaptureEveryFrame = false;
+        // when set to false, the capture component's content will not be automatically updated upon movement
+        SceneCaptureComponent->bCaptureOnMovement = false;
+
+        SceneCaptureComponent->bEnableClipPlane = true;
     }
 
     UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
@@ -131,6 +139,9 @@ void AQLPortal::UpdateSCC()
     // update clip plane
     SceneCaptureComponent->ClipPlaneBase = Spouse->GetActorLocation();
     SceneCaptureComponent->ClipPlaneNormal = Spouse->GetActorForwardVector();
+
+    // manually capture the scene after spatial transform is completed
+    SceneCaptureComponent->CaptureScene();
 }
 
 //------------------------------------------------------------

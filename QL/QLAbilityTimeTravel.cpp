@@ -286,7 +286,8 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
         if (MyCharacter)
         {
             this->AttachToComponent(MyCharacter->GetFirstPersonMesh(), FAttachmentTransformRules::KeepRelativeTransform);
-            this->SetActorRelativeLocation(FVector(200.0f, -30.0f, 100.0f));
+            this->SetActorRelativeLocation(FVector(100.0f, -30.0f, 150.0f));
+            this->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
             UStaticMeshComponent* abilityMesh = GetStaticMeshComponent();
             if (abilityMesh)
