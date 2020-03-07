@@ -63,6 +63,12 @@ public:
     //------------------------------------------------------------
     //------------------------------------------------------------
     virtual void Debug();
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCanUpdatePortalView(bool bFlag);
+
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned
@@ -131,4 +137,7 @@ protected:
     //------------------------------------------------------------
     UPROPERTY()
     TWeakObjectPtr <UMaterialInstanceDynamic> DynamicDisplayPlaneMaterial;
+
+    UPROPERTY()
+    bool bCanUpdatePortalView;
 };

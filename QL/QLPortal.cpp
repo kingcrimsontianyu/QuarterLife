@@ -19,6 +19,7 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "QLUtility.h"
+#include "Engine/Engine.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -50,6 +51,8 @@ AQLPortal::AQLPortal()
     SceneCaptureComponent->bCaptureEveryFrame = true;
     SceneCaptureComponent->TextureTarget = nullptr;
     SceneCaptureComponent->SetupAttachment(RootComponent);
+
+    bCanUpdatePortalView = true;
 }
 
 //------------------------------------------------------------
@@ -68,7 +71,10 @@ void AQLPortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    UpdateSCC();
+    if (bCanUpdatePortalView)
+    {
+        UpdateSCC();
+    }
 }
 
 //------------------------------------------------------------
@@ -86,13 +92,19 @@ void AQLPortal::PostInitializeComponents()
     Super::PostInitializeComponents();
 
     RenderTarget = NewObject<UTextureRenderTarget2D>(this);
-    RenderTarget->InitAutoFormat(640, 480);
-    RenderTarget->AddressX = TextureAddress::TA_Wrap;
-    RenderTarget->AddressY = TextureAddress::TA_Wrap;
 
     // set up scene capture component and render target
     if (SceneCaptureComponent && RenderTarget)
     {
+        // todo: (1) how to avoid hardcoded resolution?!
+        //       (2) how to conduct antialiasing for the render target?!
+
+        uint32 ResolutionX = 1920 / 2;
+        uint32 ResolutionY = 1080 / 2;
+        RenderTarget->InitAutoFormat(ResolutionX, ResolutionY);
+        RenderTarget->AddressX = TextureAddress::TA_Wrap;
+        RenderTarget->AddressY = TextureAddress::TA_Wrap;
+
         SceneCaptureComponent->bEnableClipPlane = true;
         SceneCaptureComponent->TextureTarget = RenderTarget;
 
@@ -103,6 +115,11 @@ void AQLPortal::PostInitializeComponents()
         SceneCaptureComponent->bCaptureOnMovement = false;
 
         SceneCaptureComponent->bEnableClipPlane = true;
+
+        // must be identical to player camera's FOV
+        SceneCaptureComponent->FOVAngle = 100.0f;
+
+        SceneCaptureComponent->ProjectionType = ECameraProjectionMode::Perspective;
     }
 
     UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
@@ -237,10 +254,17 @@ void AQLPortal::Debug()
     QLUtility::Log(SceneCaptureComponent->GetComponentLocation().ToString());
     QLUtility::Log(SceneCaptureComponent->GetComponentRotation().ToString());
 
-    QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentLocation().ToString());
-    QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentRotation().ToString());
+    //QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentLocation().ToString());
+    //QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentRotation().ToString());
 
-    APlayerCameraManager* cm = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-    QLUtility::Log(cm->GetCameraLocation().ToString());
-    QLUtility::Log(cm->GetCameraRotation().ToString());
+    //APlayerCameraManager* cm = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+    //QLUtility::Log(cm->GetCameraLocation().ToString());
+    //QLUtility::Log(cm->GetCameraRotation().ToString());
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::SetCanUpdatePortalView(bool bFlag)
+{
+    bCanUpdatePortalView = bFlag;
 }

@@ -66,6 +66,9 @@ void AQLAbilityTimeTravel::BeginPlay()
     FarPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
     FarPortal->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
+    // to improve performance, disallow far portal to update its portal view
+    FarPortal->SetCanUpdatePortalView(false);
+
     if (NearPortal && FarPortal)
     {
         NearPortal->SetSpouse(FarPortal);
@@ -286,8 +289,8 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
         if (MyCharacter)
         {
             this->AttachToComponent(MyCharacter->GetFirstPersonMesh(), FAttachmentTransformRules::KeepRelativeTransform);
-            this->SetActorRelativeLocation(FVector(100.0f, -30.0f, 150.0f));
-            this->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+            this->SetActorRelativeLocation(FVector(100.0f, -45.0f, 150.0f));
+            this->SetActorRelativeRotation(FRotator(0.0f, -60.0f, 0.0f));
 
             UStaticMeshComponent* abilityMesh = GetStaticMeshComponent();
             if (abilityMesh)
@@ -304,18 +307,15 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
 //------------------------------------------------------------
 void AQLAbilityTimeTravel::Debug()
 {
-    QLUtility::Log("FAR");
-    QLUtility::Log(ShadowAbility->GetActorTransform().ToString());
-
     QLUtility::Log("NEAR");
-    QLUtility::Log(this->GetActorTransform().ToString());
+    NearPortal->Debug();
 
-    //QLUtility::Log("PLAYER");
-    //if (AbilityManager.IsValid())
-    //{
-    //    AQLCharacter* MyCharacter = AbilityManager->GetUser();
-    //    UCameraComponent* MyCamera = MyCharacter->GetFirstPersonCameraComponent();
-    //    QLUtility::Log(MyCamera->GetComponentLocation().ToString());
-    //    QLUtility::Log(MyCamera->GetComponentRotation().ToString());
-    //}
+    QLUtility::Log("PLAYER");
+    if (AbilityManager.IsValid())
+    {
+        AQLCharacter* MyCharacter = AbilityManager->GetUser();
+        UCameraComponent* MyCamera = MyCharacter->GetFirstPersonCameraComponent();
+        QLUtility::Log(MyCamera->GetComponentLocation().ToString());
+        QLUtility::Log(MyCamera->GetComponentRotation().ToString());
+    }
 }
