@@ -78,6 +78,8 @@ This game is developed and tested on Unreal Engine version: **4.24.3**.
 ## Clip
 
 ### Time travel ability
+<a href="https://youtu.be/6tU8AoKCccc" target="_blank"><img src="http://i3.ytimg.com/vi/6tU8AoKCccc/hqdefault.jpg" width="480" height="360" border="10" /></a>
+
 <a href="https://youtu.be/Vuq2_Q2AwQw" target="_blank"><img src="http://i3.ytimg.com/vi/Vuq2_Q2AwQw/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Bots
