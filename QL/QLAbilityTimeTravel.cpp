@@ -283,6 +283,20 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
 {
     Super::OnAbilitySetCurrent();
 
+    SetActorTickEnabled(true);
+    SetActorHiddenInGame(false);
+
+
+    if (NearPortal && FarPortal && ShadowAbility)
+    {
+        NearPortal->SetActorTickEnabled(true);
+        NearPortal->SetActorHiddenInGame(false);
+        FarPortal->SetActorTickEnabled(true);
+        FarPortal->SetActorHiddenInGame(false);
+        ShadowAbility->SetActorTickEnabled(true);
+        ShadowAbility->SetActorHiddenInGame(false);
+    }
+
     if (AbilityManager.IsValid())
     {
         AQLCharacter* MyCharacter = AbilityManager->GetUser();
@@ -300,6 +314,24 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
         }
 
         bCanBeUsed = true;
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLAbilityTimeTravel::OnAbilityUnsetCurrent()
+{
+    SetActorTickEnabled(false);
+    SetActorHiddenInGame(true);
+
+    if (NearPortal && FarPortal && ShadowAbility)
+    {
+        NearPortal->SetActorTickEnabled(false);
+        NearPortal->SetActorHiddenInGame(true);
+        FarPortal->SetActorTickEnabled(false);
+        FarPortal->SetActorHiddenInGame(true);
+        ShadowAbility->SetActorTickEnabled(false);
+        ShadowAbility->SetActorHiddenInGame(true);
     }
 }
 

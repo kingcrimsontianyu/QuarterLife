@@ -42,6 +42,8 @@ public:
 
     virtual void OnAbilitySetCurrent() override;
 
+    virtual void OnAbilityUnsetCurrent() override;
+
     void SetNearAndFarActors(AActor* NearActorExt, AActor* FarActorExt);
 
     virtual void Debug() override;

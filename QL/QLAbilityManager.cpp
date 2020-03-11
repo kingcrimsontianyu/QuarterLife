@@ -65,16 +65,15 @@ void UQLAbilityManager::SetCurrentAbility(const FName& QLName)
         return;
     }
 
-    // if the current Ability exists, hide it
+    // if the current Ability exists, call the unset function
     if (CurrentAbility.IsValid())
     {
-        //CurrentAbility->GetGunSkeletalMeshComponent()->SetVisibility(false);
+        CurrentAbility->OnAbilityUnsetCurrent();
     }
 
     // change current Ability
     CurrentAbility = AbilityWanted;
     CurrentAbility->OnAbilitySetCurrent();
-    //CurrentAbility->GetGunSkeletalMeshComponent()->SetVisibility(true);
 }
 
 
@@ -183,7 +182,6 @@ void UQLAbilityManager::InitializeAbilityTimeTravel(AActor* NearActorExt, AActor
     if (Result)
     {
         Result->SetNearAndFarActors(NearActorExt, FarActorExt);
-        Result->SetActorTickEnabled(true);
     }
 }
 
