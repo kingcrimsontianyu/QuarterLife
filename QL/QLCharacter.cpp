@@ -41,7 +41,7 @@
 #include "Classes/Perception/AISense_Team.h"
 #include "NavigationSystem.h"
 #include "QLMoveComponentQuake.h"
-#include "QLMovementDataQuake.h"
+#include "QLMovementParameterQuake.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -125,7 +125,7 @@ Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharact
     DurationAfterDeathBeforeDestroyed = 3.0f;
     DurationAfterDeathBeforeRespawn = 2.5f;
 
-    MovementDataQuakeClass = UQLMovementDataQuake::StaticClass();
+    MovementParameterQuakeClass = UQLMovementParameterQuake::StaticClass();
 }
 
 //------------------------------------------------------------
@@ -177,22 +177,22 @@ void AQLCharacter::PostInitializeComponents()
 
     // movement data
     // If the movement data is instantiated using
-    // NewObject<UQLMovementDataQuake>(this, MovementDataQuakeClass->GetFName()),
+    // NewObject<UQLMovementParameterQuake>(this, MovementParameterQuakeClass->GetFName()),
     // at runtime the default movement data will always be used.
     // To let the movement data be conveniently editable via blueprint subclass,
     // the function call must follow this form:
-    MovementDataQuake = NewObject<UQLMovementDataQuake>(this,
-        MovementDataQuakeClass->GetFName(),
+    MovementParameterQuake = NewObject<UQLMovementParameterQuake>(this,
+        MovementParameterQuakeClass->GetFName(),
         EObjectFlags::RF_NoFlags,
-        MovementDataQuakeClass.GetDefaultObject());
+        MovementParameterQuakeClass.GetDefaultObject());
 
-    if (MovementDataQuake)
+    if (MovementParameterQuake)
     {
         UPawnMovementComponent* MyMovementComp = GetMovementComponent();
         UQLMoveComponentQuake* MyMovementCompQuake = Cast<UQLMoveComponentQuake>(MyMovementComp);
         if (MyMovementCompQuake)
         {
-            MyMovementCompQuake->SetMovementData(MovementDataQuake);
+            MyMovementCompQuake->SetMovementParameter(MovementParameterQuake);
         }
     }
 }

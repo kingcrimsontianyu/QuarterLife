@@ -12,17 +12,17 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "QLMovementDataQuake.generated.h"
+#include "QLMovementParameterQuake.generated.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS(Blueprintable)
-class QL_API UQLMovementDataQuake : public UObject
+class QL_API UQLMovementParameterQuake : public UObject
 {
 	GENERATED_BODY()
 
 public:
-    UQLMovementDataQuake();
+    UQLMovementParameterQuake();
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float MaxWalkSpeed;

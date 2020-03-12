@@ -9,11 +9,11 @@
 //------------------------------------------------------------
 
 
-#include "QLMovementDataQuake.h"
+#include "QLMovementParameterQuake.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UQLMovementDataQuake::UQLMovementDataQuake()
+UQLMovementParameterQuake::UQLMovementParameterQuake()
 {
     MaxWalkSpeed = 600.0f;
     AirControl = 0.3f;

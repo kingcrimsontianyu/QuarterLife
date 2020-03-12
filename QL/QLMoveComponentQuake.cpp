@@ -12,7 +12,7 @@
 #include "QLMoveComponentQuake.h"
 #include "GameFramework/Character.h"
 #include "QLUtility.h"
-#include "QLMovementDataQuake.h"
+#include "QLMovementParameterQuake.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -36,10 +36,10 @@ void UQLMoveComponentQuake::PostInitProperties()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLMoveComponentQuake::SetMovementData(UQLMovementDataQuake* MovementDataQuake)
+void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* MovementParameterQuake)
 {
-    MaxWalkSpeed = MovementDataQuake->MaxWalkSpeed;
-    AirControl = MovementDataQuake->AirControl;
+    MaxWalkSpeed = MovementParameterQuake->MaxWalkSpeed;
+    AirControl = MovementParameterQuake->AirControl;
 }
 
 //------------------------------------------------------------
