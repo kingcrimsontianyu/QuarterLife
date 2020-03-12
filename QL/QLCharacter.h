@@ -23,6 +23,7 @@ class UQLAbilityManager;
 class UWidgetComponent;
 class UQLPowerupManager;
 class UAIPerceptionStimuliSourceComponent;
+class UQLMovementDataQuake;
 
 //------------------------------------------------------------
 // In Blueprint,
@@ -383,4 +384,10 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float DurationAfterDeathBeforeRespawn;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    TSubclassOf<UQLMovementDataQuake> MovementDataQuakeClass;
+
+    UPROPERTY()
+    UQLMovementDataQuake* MovementDataQuake;
 };

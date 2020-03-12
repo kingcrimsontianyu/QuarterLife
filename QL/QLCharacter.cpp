@@ -41,6 +41,7 @@
 #include "Classes/Perception/AISense_Team.h"
 #include "NavigationSystem.h"
 #include "QLMoveComponentQuake.h"
+#include "QLMovementDataQuake.h"
 
 //------------------------------------------------------------
 // Sets default values
@@ -123,6 +124,8 @@ Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharact
 
     DurationAfterDeathBeforeDestroyed = 3.0f;
     DurationAfterDeathBeforeRespawn = 2.5f;
+
+    MovementDataQuakeClass = UQLMovementDataQuake::StaticClass();
 }
 
 //------------------------------------------------------------
@@ -171,6 +174,27 @@ void AQLCharacter::PostInitializeComponents()
 
     QLSetVisibility(bQLIsVisible);
     QLSetVulnerability(bQLIsVulnerable);
+
+    // movement data
+    // If the movement data is instantiated using
+    // NewObject<UQLMovementDataQuake>(this, MovementDataQuakeClass->GetFName()),
+    // at runtime the default movement data will always be used.
+    // To let the movement data be conveniently editable via blueprint subclass,
+    // the function call must follow this form:
+    MovementDataQuake = NewObject<UQLMovementDataQuake>(this,
+        MovementDataQuakeClass->GetFName(),
+        EObjectFlags::RF_NoFlags,
+        MovementDataQuakeClass.GetDefaultObject());
+
+    if (MovementDataQuake)
+    {
+        UPawnMovementComponent* MyMovementComp = GetMovementComponent();
+        UQLMoveComponentQuake* MyMovementCompQuake = Cast<UQLMoveComponentQuake>(MyMovementComp);
+        if (MyMovementCompQuake)
+        {
+            MyMovementCompQuake->SetMovementData(MovementDataQuake);
+        }
+    }
 }
 
 //------------------------------------------------------------

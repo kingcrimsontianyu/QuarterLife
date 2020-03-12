@@ -12,33 +12,7 @@
 #include "QLMoveComponentQuake.h"
 #include "GameFramework/Character.h"
 #include "QLUtility.h"
-
-//#include "GameFramework/CharacterMovementComponent.h"
-//#include "EngineStats.h"
-//#include "Components/PrimitiveComponent.h"
-//#include "AI/NavigationSystemBase.h"
-//#include "AI/Navigation/NavigationDataInterface.h"
-//#include "UObject/Package.h"
-//#include "GameFramework/PlayerController.h"
-//#include "GameFramework/PhysicsVolume.h"
-//#include "Components/SkeletalMeshComponent.h"
-//#include "Engine/NetDriver.h"
-//#include "DrawDebugHelpers.h"
-//#include "GameFramework/GameNetworkManager.h"
-//#include "GameFramework/Character.h"
-//#include "Components/CapsuleComponent.h"
-//#include "GameFramework/GameStateBase.h"
-//#include "Engine/Canvas.h"
-//#include "AI/Navigation/PathFollowingAgentInterface.h"
-//#include "AI/Navigation/AvoidanceManager.h"
-//#include "Components/BrushComponent.h"
-//#include "Misc/App.h"
-//
-//#include "Engine/DemoNetDriver.h"
-//#include "Engine/NetworkObjectList.h"
-//
-//#include "Net/PerfCountersHelpers.h"
-//#include "ProfilingDebugging/CsvProfiler.h"
+#include "QLMovementDataQuake.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -51,9 +25,6 @@ UQLMoveComponentQuake::UQLMoveComponentQuake()
 void UQLMoveComponentQuake::BeginPlay()
 {
     Super::BeginPlay();
-
-    MaxWalkSpeed = 600.0f;
-    AirControl = 0.3f;
 }
 
 //------------------------------------------------------------
@@ -61,6 +32,14 @@ void UQLMoveComponentQuake::BeginPlay()
 void UQLMoveComponentQuake::PostInitProperties()
 {
     Super::PostInitProperties();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::SetMovementData(UQLMovementDataQuake* MovementDataQuake)
+{
+    MaxWalkSpeed = MovementDataQuake->MaxWalkSpeed;
+    AirControl = MovementDataQuake->AirControl;
 }
 
 //------------------------------------------------------------
@@ -77,6 +56,8 @@ void UQLMoveComponentQuake::PostInitProperties()
 void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     const FVector InputVector = ConsumeInputVector();
+
+    //QLUtility::Log(InputVector.ToString());
     if (!HasValidData() || ShouldSkipUpdate(DeltaTime))
     {
         return;

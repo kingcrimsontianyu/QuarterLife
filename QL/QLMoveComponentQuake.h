@@ -14,6 +14,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "QLMoveComponentQuake.generated.h"
 
+class UQLMovementDataQuake;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -25,6 +26,8 @@ public:
     UQLMoveComponentQuake();
 
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
+    void SetMovementData(UQLMovementDataQuake* DataAssetQuake);
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
