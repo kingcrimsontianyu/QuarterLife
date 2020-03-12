@@ -54,4 +54,18 @@ namespace QLUtility
     //------------------------------------------------------------
     //------------------------------------------------------------
     FVector SamplePointFromSquareOnXYPlane(const float XHalfSide, const float YHalfSide, const FVector& Center);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    template<typename TEnum>
+    static FString GetEnumValueAsString(const FString& Name, TEnum Value)
+    {
+        const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, *Name, true);
+        if (!enumPtr)
+        {
+            return FString("Invalid");
+        }
+        return enumPtr->GetNameByValue((int64)Value).ToString();
+    }
+
 }

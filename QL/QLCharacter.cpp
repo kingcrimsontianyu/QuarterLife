@@ -40,11 +40,13 @@
 #include "Classes/Perception/AISense_Damage.h"
 #include "Classes/Perception/AISense_Team.h"
 #include "NavigationSystem.h"
+#include "QLMoveComponentQuake.h"
 
 //------------------------------------------------------------
 // Sets default values
 //------------------------------------------------------------
-AQLCharacter::AQLCharacter()
+AQLCharacter::AQLCharacter(const class FObjectInitializer& ObjectInitializer) :
+Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharacter::CharacterMovementComponentName))
 {
     Health = 150.0f;
     MaxHealth = 200.0f;
@@ -121,9 +123,6 @@ AQLCharacter::AQLCharacter()
 
     DurationAfterDeathBeforeDestroyed = 3.0f;
     DurationAfterDeathBeforeRespawn = 2.5f;
-
-    // movement
-    GetCharacterMovement()->AirControl = 0.5;
 }
 
 //------------------------------------------------------------
@@ -1243,5 +1242,5 @@ UQLAbilityManager* AQLCharacter::GetAbilityManager()
 //------------------------------------------------------------
 void AQLCharacter::OnDebug()
 {
-    AbilityManager->Debug();
+    QLUtility::Log(GetMovementComponent()->GetClass()->GetName());
 }

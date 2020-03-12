@@ -46,7 +46,7 @@ class QL_API AQLCharacter : public ACharacter
 
 public:
     // Sets default values for this character's properties
-    AQLCharacter();
+    AQLCharacter(const class FObjectInitializer& ObjectInitializer);
 
     // Called every frame
     // virtual void Tick(float DeltaTime) override;
