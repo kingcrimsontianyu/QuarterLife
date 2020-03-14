@@ -13,11 +13,13 @@
 #include "GameFramework/Character.h"
 #include "QLUtility.h"
 #include "QLMovementParameterQuake.h"
+#include "QLCharacter.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UQLMoveComponentQuake::UQLMoveComponentQuake()
 {
+    bFallingLastFrame = false;
 }
 
 //------------------------------------------------------------
@@ -39,7 +41,11 @@ void UQLMoveComponentQuake::PostInitProperties()
 void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* MovementParameterQuake)
 {
     MaxWalkSpeed = MovementParameterQuake->MaxWalkSpeed;
+    MaxAcceleration = MovementParameterQuake->MaxAcceleration;
     AirControl = MovementParameterQuake->AirControl;
+
+    GroundAccelerationMultiplier = MovementParameterQuake->GroundAccelerationMultiplier;
+    AirAccelerationMultiplier = MovementParameterQuake->AirAccelerationMultiplier;
 }
 
 //------------------------------------------------------------
@@ -55,9 +61,8 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
 //------------------------------------------------------------
 void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-    const FVector InputVector = ConsumeInputVector();
+    InputVectorCached = ConsumeInputVector();
 
-    //QLUtility::Log(InputVector.ToString());
     if (!HasValidData() || ShouldSkipUpdate(DeltaTime))
     {
         return;
@@ -94,7 +99,9 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
             CharacterOwner->CheckJumpInput(DeltaTime);
 
             // apply input to acceleration
-            Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVector));
+            Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached));
+            AccelerationCached = Acceleration;
+
             AnalogInputModifier = ComputeAnalogInputModifier();
         }
 
@@ -111,4 +118,123 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
         ApplyDownwardForce(DeltaTime);
         ApplyRepulsionForce(DeltaTime);
     }
+
+    bFallingLastFrame = !IsMovingOnGround();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration)
+{
+    // Do not update velocity when using root motion or when SimulatedProxy and not simulating root motion - SimulatedProxy are repped their Velocity
+    if (!HasValidData() || HasAnimRootMotion() || DeltaTime < MIN_TICK_TIME || (CharacterOwner && CharacterOwner->GetLocalRole() == ROLE_SimulatedProxy && !bWasSimulatingRootMotion))
+    {
+        return;
+    }
+
+    Friction = FMath::Max(0.0f, Friction);
+    const float MaxAccel = GetMaxAcceleration();
+    float MaxSpeed = GetMaxSpeed();
+
+    // Check if path following requested movement
+    bool bZeroRequestedAcceleration = true;
+    FVector RequestedAcceleration = FVector::ZeroVector;
+    float RequestedSpeed = 0.0f;
+    if (ApplyRequestedMove(DeltaTime, MaxAccel, MaxSpeed, Friction, BrakingDeceleration, RequestedAcceleration, RequestedSpeed))
+    {
+        bZeroRequestedAcceleration = false;
+    }
+
+    // todo: bForceMaxAccel always evaluates to false ?!
+    if (bForceMaxAccel)
+    {
+        // Force acceleration at full speed.
+        // In consideration order for direction: Acceleration, then Velocity, then Pawn's rotation.
+        if (Acceleration.SizeSquared() > SMALL_NUMBER)
+        {
+            Acceleration = Acceleration.GetSafeNormal() * MaxAccel;
+        }
+        else
+        {
+            Acceleration = MaxAccel * (Velocity.SizeSquared() < SMALL_NUMBER ? UpdatedComponent->GetForwardVector() : Velocity.GetSafeNormal());
+        }
+
+        AnalogInputModifier = 1.0f;
+    }
+
+    // apply braking
+    const bool bZeroAcceleration = AccelerationCached.IsZero();
+    const bool bVelocityOverMax = IsExceedingMaxSpeed(MaxSpeed);
+
+    // brake is applicable only when
+    // --- there is no input
+    // --- the player is on the ground in the current frame
+    // --- the player is not falling in the last frame
+    if (bZeroAcceleration &&
+        IsMovingOnGround() &&
+        !bFallingLastFrame)
+    {
+        const FVector OldVelocity = Velocity;
+
+        const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+        ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, BrakingDeceleration);
+
+        //// Don't allow braking to lower us below max speed if we started above it.
+        //if (bVelocityOverMax && Velocity.SizeSquared() < FMath::Square(MaxSpeed) && FVector::DotProduct(Acceleration, OldVelocity) > 0.0f)
+        //{
+        //    Velocity = OldVelocity.GetSafeNormal() * MaxSpeed;
+        //}
+    }
+
+    // Apply fluid friction
+    if (bFluid)
+    {
+        Velocity = Velocity * (1.0f - FMath::Min(Friction * DeltaTime, 1.0f));
+    }
+
+    // Apply input acceleration, the section of paramount importance to advanced movement!
+    if (!bZeroAcceleration)
+    {
+        if (IsMovingOnGround() &&
+            !bFallingLastFrame)
+        {
+            Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
+            Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
+            QLUtility::Log(Velocity.Size());
+        }
+        else if(bFallingLastFrame || IsFalling())
+        {
+            const FVector AccelDir = AccelerationCached.GetSafeNormal2D();
+
+            const float SpeedProjection = Velocity.X * AccelDir.X + Velocity.Y * AccelDir.Y;
+
+            const float AddSpeed = MaxSpeed - SpeedProjection;
+            if (AddSpeed > 0.0f)
+            {
+                // Apply acceleration
+                FVector CurrentAcceleration = AccelerationCached * AirAccelerationMultiplier * DeltaTime;
+
+                Velocity += CurrentAcceleration;
+            }
+        }
+    }
+
+    // todo: bZeroRequestedAcceleration always evaluates to true,
+    // i.e. !bZeroRequestedAcceleration always evaluates to false
+    // Apply additional requested acceleration
+    if (!bZeroRequestedAcceleration)
+    {
+        Velocity += RequestedAcceleration * DeltaTime;
+    }
+
+    if (bUseRVOAvoidance)
+    {
+        CalcAvoidanceVelocity(DeltaTime);
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::QueueJump()
+{
 }

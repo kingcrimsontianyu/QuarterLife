@@ -50,7 +50,9 @@ float AQLPlayerController::GetControlledPawnSpeed() const
         // !!! todo: for super power mimic matter, the pawn does not use movement component by design
         // !!! how to obtain the velocity then?
         FVector temp = ControlledPawn->GetVelocity();
-        return temp.Size();
+
+        // only consider x and y components of the velocity
+        return temp.Size2D();
     }
     else
     {

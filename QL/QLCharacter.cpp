@@ -63,8 +63,8 @@ Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharact
     GetCapsuleComponent()->InitCapsuleSize(30.0f, 85.0f);
 
     // set our turn rates for input
-    BaseTurnRate = 45.0f;
-    BaseLookUpRate = 45.0f;
+    BaseTurnRate = 20.0f;
+    BaseLookUpRate = 20.0f;
 
     // Create a CameraComponent
     FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCameraComponent"));

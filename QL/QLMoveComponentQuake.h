@@ -28,9 +28,29 @@ public:
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
     void SetMovementParameter(UQLMovementParameterQuake* DataAssetQuake);
+
+    virtual void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration) override;
+
+    virtual void QueueJump();
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
     virtual void PostInitProperties() override;
+
+    // If the player has already landed for a frame, and breaking may be applied.
+    bool bFallingLastFrame;
+
+    // The multiplier for acceleration when on ground.
+    UPROPERTY()
+    float GroundAccelerationMultiplier;
+
+    // The multiplier for acceleration when in air.
+    UPROPERTY()
+    float AirAccelerationMultiplier;
+
+    FVector InputVectorCached;
+
+    FVector AccelerationCached;
 };
