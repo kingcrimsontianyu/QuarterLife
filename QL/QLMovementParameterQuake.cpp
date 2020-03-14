@@ -20,4 +20,6 @@ UQLMovementParameterQuake::UQLMovementParameterQuake()
     AirControl = 0.3f;
     GroundAccelerationMultiplier = 10.0f;
     AirAccelerationMultiplier = 1.0f;
+    NumOfJumpRequestToleranceFrames = 5;
+    BrakingDecelerationWalking = MaxAcceleration;
 }

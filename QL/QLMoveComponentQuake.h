@@ -15,6 +15,7 @@
 #include "QLMoveComponentQuake.generated.h"
 
 class UQLMovementParameterQuake;
+class AQLCharacter;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -50,7 +51,19 @@ protected:
     UPROPERTY()
     float AirAccelerationMultiplier;
 
+    UPROPERTY()
+    int NumOfJumpRequestToleranceFrames;
+
+    // in the last k frames, if the jump button has been pressed
+    bool bHasJumpRequested;
+
+    int FirstElementIndex;
+
+    TArray<bool> HasJumpRequestedList;
+
     FVector InputVectorCached;
 
     FVector AccelerationCached;
+
+    TWeakObjectPtr<AQLCharacter> MyCharacter;
 };

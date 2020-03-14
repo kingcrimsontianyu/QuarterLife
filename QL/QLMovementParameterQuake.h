@@ -44,4 +44,10 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float AirAccelerationMultiplier;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    int NumOfJumpRequestToleranceFrames;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float BrakingDecelerationWalking;
 };

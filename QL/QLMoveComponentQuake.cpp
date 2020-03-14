@@ -20,6 +20,10 @@
 UQLMoveComponentQuake::UQLMoveComponentQuake()
 {
     bFallingLastFrame = false;
+    bHasJumpRequested = false;
+
+    // according to UE4 source code comment, 1.0f would be more appropriate than the default 2.0f in the engine.
+    BrakingFrictionFactor = 1.0f;
 }
 
 //------------------------------------------------------------
@@ -43,9 +47,13 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
     MaxWalkSpeed = MovementParameterQuake->MaxWalkSpeed;
     MaxAcceleration = MovementParameterQuake->MaxAcceleration;
     AirControl = MovementParameterQuake->AirControl;
-
     GroundAccelerationMultiplier = MovementParameterQuake->GroundAccelerationMultiplier;
     AirAccelerationMultiplier = MovementParameterQuake->AirAccelerationMultiplier;
+    NumOfJumpRequestToleranceFrames = MovementParameterQuake->NumOfJumpRequestToleranceFrames;
+    BrakingDecelerationWalking = MovementParameterQuake->BrakingDecelerationWalking;
+
+    HasJumpRequestedList.Init(false, NumOfJumpRequestToleranceFrames);
+    FirstElementIndex = 0;
 }
 
 //------------------------------------------------------------
@@ -62,6 +70,26 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
 void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     InputVectorCached = ConsumeInputVector();
+
+    MyCharacter = Cast<AQLCharacter>(CharacterOwner);
+
+    if (MyCharacter.IsValid())
+    {
+        if (HasJumpRequestedList.Num() > 0)
+        {
+            HasJumpRequestedList[FirstElementIndex] = MyCharacter->IsJumpButtonDown();
+
+            bHasJumpRequested = false;
+            for (auto&& item : HasJumpRequestedList)
+            {
+                if (item)
+                {
+                    bHasJumpRequested = true;
+                    break;
+                }
+            }
+        }
+    }
 
     if (!HasValidData() || ShouldSkipUpdate(DeltaTime))
     {
@@ -106,6 +134,17 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
         }
 
         PerformMovement(DeltaTime);
+
+        if (IsMovingOnGround() &&
+            bFallingLastFrame &&
+            bHasJumpRequested)
+        {
+            if (MyCharacter.IsValid())
+            {
+                MyCharacter->PlaySoundFireAndForget(FName(TEXT("QuakeJump")));
+            }
+            DoJump(true);
+        }
     }
 
     if (bUseRVOAvoidance)
@@ -120,6 +159,12 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
     }
 
     bFallingLastFrame = !IsMovingOnGround();
+
+    ++FirstElementIndex;
+    if (FirstElementIndex >= NumOfJumpRequestToleranceFrames)
+    {
+        FirstElementIndex = 0;
+    }
 }
 
 //------------------------------------------------------------
@@ -200,19 +245,25 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
         {
             Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
             Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
-            QLUtility::Log(Velocity.Size());
         }
         else if(bFallingLastFrame || IsFalling())
         {
-            const FVector AccelDir = AccelerationCached.GetSafeNormal2D();
+            const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
 
-            const float SpeedProjection = Velocity.X * AccelDir.X + Velocity.Y * AccelDir.Y;
+            const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
 
             const float AddSpeed = MaxSpeed - SpeedProjection;
             if (AddSpeed > 0.0f)
             {
+                float AnotherAddSpeedCandidate = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+
+                if (AnotherAddSpeedCandidate > AddSpeed)
+                {
+                    AnotherAddSpeedCandidate = AddSpeed;
+                }
+
                 // Apply acceleration
-                FVector CurrentAcceleration = AccelerationCached * AirAccelerationMultiplier * DeltaTime;
+                FVector CurrentAcceleration = AnotherAddSpeedCandidate * AccelDirection;
 
                 Velocity += CurrentAcceleration;
             }

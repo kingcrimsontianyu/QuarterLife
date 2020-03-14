@@ -235,6 +235,12 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnDebug();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlaySoundFireAndForget(const FName& SoundName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void PlaySound(const FName& SoundName);
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)
@@ -307,12 +313,6 @@ protected:
     // Fires a projectile.
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void OnUseAbility();
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlaySoundFireAndForget(const FName& SoundName);
-
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlaySound(const FName& SoundName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
