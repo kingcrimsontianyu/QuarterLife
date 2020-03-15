@@ -241,6 +241,10 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlaySound(const FName& SoundName);
+
+    virtual void AddControllerYawInput(float Val) override;
+
+    virtual void AddControllerPitchInput(float Val) override;
 protected:
 
     // Pawn mesh : 1st person view(arms; seen only by self)

@@ -52,6 +52,9 @@ protected:
     float AirAccelerationMultiplier;
 
     UPROPERTY()
+    float SpeedUpperLimit;
+
+    UPROPERTY()
     int NumOfJumpRequestToleranceFrames;
 
     // in the last k frames, if the jump button has been pressed

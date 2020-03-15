@@ -63,8 +63,8 @@ Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharact
     GetCapsuleComponent()->InitCapsuleSize(30.0f, 85.0f);
 
     // set our turn rates for input
-    BaseTurnRate = 20.0f;
-    BaseLookUpRate = 20.0f;
+    BaseTurnRate = 40.0f;
+    BaseLookUpRate = 40.0f;
 
     // Create a CameraComponent
     FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCameraComponent"));
@@ -237,8 +237,8 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
     // We have 2 versions of the rotation bindings to handle different kinds of devices differently
     // "turn" handles devices that provide an absolute delta, such as a mouse.
-    PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-    PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+    PlayerInputComponent->BindAxis("Turn", this, &AQLCharacter::AddControllerYawInput);
+    PlayerInputComponent->BindAxis("LookUp", this, &AQLCharacter::AddControllerPitchInput);
 
     PlayerInputComponent->BindAction("Debug", EInputEvent::IE_Pressed, this, &AQLCharacter::OnDebug);
 
@@ -1267,4 +1267,18 @@ UQLAbilityManager* AQLCharacter::GetAbilityManager()
 void AQLCharacter::OnDebug()
 {
     QLUtility::Log(GetMovementComponent()->GetClass()->GetName());
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::AddControllerYawInput(float Val)
+{
+    Super::AddControllerYawInput(0.6f * Val);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::AddControllerPitchInput(float Val)
+{
+    Super::AddControllerPitchInput(0.6f * Val);
 }

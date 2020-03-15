@@ -49,6 +49,7 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
     AirControl = MovementParameterQuake->AirControl;
     GroundAccelerationMultiplier = MovementParameterQuake->GroundAccelerationMultiplier;
     AirAccelerationMultiplier = MovementParameterQuake->AirAccelerationMultiplier;
+    SpeedUpperLimit = MovementParameterQuake->SpeedUpperLimit;
     NumOfJumpRequestToleranceFrames = MovementParameterQuake->NumOfJumpRequestToleranceFrames;
     BrakingDecelerationWalking = MovementParameterQuake->BrakingDecelerationWalking;
 
@@ -276,6 +277,12 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
     if (!bZeroRequestedAcceleration)
     {
         Velocity += RequestedAcceleration * DeltaTime;
+    }
+
+    // impose final speed cap
+    if (Velocity.Size2D() > SpeedUpperLimit)
+    {
+        Velocity = Velocity.GetClampedToMaxSize2D(SpeedUpperLimit);
     }
 
     if (bUseRVOAvoidance)
