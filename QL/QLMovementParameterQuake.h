@@ -53,4 +53,7 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float BrakingDecelerationWalking;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float PenaltyScaleFactorForHoldingJumpButton;
 };

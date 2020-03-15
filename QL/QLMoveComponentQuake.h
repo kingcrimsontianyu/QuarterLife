@@ -40,6 +40,11 @@ protected:
 
     virtual void PostInitProperties() override;
 
+    // check if jump button has been pressed and released in the past k frames, including the current frame
+    void CheckJumpInfo();
+
+    void PrepareForNextFrame();
+
     // If the player has already landed for a frame, and breaking may be applied.
     bool bFallingLastFrame;
 
@@ -57,12 +62,22 @@ protected:
     UPROPERTY()
     int NumOfJumpRequestToleranceFrames;
 
+    UPROPERTY()
+    float PenaltyScaleFactorForHoldingJumpButton;
+
     // in the last k frames, if the jump button has been pressed
-    bool bHasJumpRequested;
+    bool bHasJumpPressed;
 
-    int FirstElementIndex;
+    int FirstElementIndexForJumpPressed;
 
-    TArray<bool> HasJumpRequestedList;
+    TArray<bool> HasJumpPressedList;
+
+    // in the last k frames, if the jump button has been released
+    bool bHasJumpReleased;
+
+    int FirstElementIndexForJumpReleased;
+
+    TArray<bool> HasJumpReleasedList;
 
     FVector InputVectorCached;
 

@@ -20,7 +20,8 @@
 UQLMoveComponentQuake::UQLMoveComponentQuake()
 {
     bFallingLastFrame = false;
-    bHasJumpRequested = false;
+    bHasJumpPressed = false;
+    bHasJumpReleased = false;
 
     // according to UE4 source code comment, 1.0f would be more appropriate than the default 2.0f in the engine.
     BrakingFrictionFactor = 1.0f;
@@ -52,20 +53,24 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
     SpeedUpperLimit = MovementParameterQuake->SpeedUpperLimit;
     NumOfJumpRequestToleranceFrames = MovementParameterQuake->NumOfJumpRequestToleranceFrames;
     BrakingDecelerationWalking = MovementParameterQuake->BrakingDecelerationWalking;
+    PenaltyScaleFactorForHoldingJumpButton = MovementParameterQuake->PenaltyScaleFactorForHoldingJumpButton;
 
-    HasJumpRequestedList.Init(false, NumOfJumpRequestToleranceFrames);
-    FirstElementIndex = 0;
+    HasJumpPressedList.Init(false, NumOfJumpRequestToleranceFrames);
+    FirstElementIndexForJumpPressed = 0;
+
+    HasJumpReleasedList.Init(false, NumOfJumpRequestToleranceFrames);
+    FirstElementIndexForJumpReleased = 0;
 }
 
 //------------------------------------------------------------
-//enum ENetRole
-//{
-//    ROLE_None,
-//    ROLE_SimulatedProxy,
-//    ROLE_AutonomousProxy,
-//    ROLE_Authority,
-//    ROLE_MAX,
-//}
+// enum ENetRole
+// {
+//     ROLE_None,
+//     ROLE_SimulatedProxy,
+//     ROLE_AutonomousProxy,
+//     ROLE_Authority,
+//     ROLE_MAX,
+// }
 // For the single player game, by default ENetRole::ROLE_Authority is used
 //------------------------------------------------------------
 void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
@@ -74,23 +79,7 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
 
     MyCharacter = Cast<AQLCharacter>(CharacterOwner);
 
-    if (MyCharacter.IsValid())
-    {
-        if (HasJumpRequestedList.Num() > 0)
-        {
-            HasJumpRequestedList[FirstElementIndex] = MyCharacter->IsJumpButtonDown();
-
-            bHasJumpRequested = false;
-            for (auto&& item : HasJumpRequestedList)
-            {
-                if (item)
-                {
-                    bHasJumpRequested = true;
-                    break;
-                }
-            }
-        }
-    }
+    CheckJumpInfo();
 
     if (!HasValidData() || ShouldSkipUpdate(DeltaTime))
     {
@@ -135,25 +124,6 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
         }
 
         PerformMovement(DeltaTime);
-
-        if (IsMovingOnGround() &&
-            bFallingLastFrame &&
-            bHasJumpRequested)
-        {
-            DoJump(true);
-        }
-
-        // play the "huh" sound only if the strafe jump is not successfully chained
-        // and regular jump is performed
-        if (IsFalling() &&
-            !bFallingLastFrame &&
-            bHasJumpRequested)
-        {
-            if (MyCharacter.IsValid())
-            {
-                MyCharacter->PlaySoundFireAndForget(FName(TEXT("QuakeJump")));
-            }
-        }
     }
 
     if (bUseRVOAvoidance)
@@ -167,12 +137,84 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
         ApplyRepulsionForce(DeltaTime);
     }
 
+    PrepareForNextFrame();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::CheckJumpInfo()
+{
+    if (MyCharacter.IsValid())
+    {
+        if (HasJumpPressedList.Num() > 0)
+        {
+            HasJumpPressedList[FirstElementIndexForJumpPressed] = MyCharacter->IsJumpButtonDown();
+
+            bHasJumpPressed = false;
+            for (auto&& item : HasJumpPressedList)
+            {
+                if (item)
+                {
+                    bHasJumpPressed = true;
+                    break;
+                }
+            }
+        }
+
+        if (HasJumpReleasedList.Num() > 0)
+        {
+            HasJumpReleasedList[FirstElementIndexForJumpReleased] = !MyCharacter->IsJumpButtonDown();
+
+            bHasJumpReleased = false;
+            for (auto&& item : HasJumpReleasedList)
+            {
+                if (item)
+                {
+                    bHasJumpReleased = true;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::PrepareForNextFrame()
+{
+    // call DoJump to change the movement mode to falling
+    if (IsMovingOnGround() && // in current frame the player is on the ground
+        bFallingLastFrame && // in last frame the player is falling
+        bHasJumpPressed) // the player has recently pressed jump button
+    {
+        // jump in the next frame
+        DoJump(true);
+    }
+
+    // play the "huh" sound only if the strafe jump is not successfully chained
+    // and regular jump is just performed
+    if (IsFalling() && // in current frame the player is falling
+        !bFallingLastFrame && // in last frame the player is on the ground
+        bHasJumpPressed) // the player has recently pressed jump button
+    {
+        if (MyCharacter.IsValid())
+        {
+            MyCharacter->PlaySoundFireAndForget(FName(TEXT("QuakeJump")));
+        }
+    }
+
     bFallingLastFrame = !IsMovingOnGround();
 
-    ++FirstElementIndex;
-    if (FirstElementIndex >= NumOfJumpRequestToleranceFrames)
+    ++FirstElementIndexForJumpPressed;
+    if (FirstElementIndexForJumpPressed >= NumOfJumpRequestToleranceFrames)
     {
-        FirstElementIndex = 0;
+        FirstElementIndexForJumpPressed = 0;
+    }
+
+    ++FirstElementIndexForJumpReleased;
+    if (FirstElementIndexForJumpReleased >= NumOfJumpRequestToleranceFrames)
+    {
+        FirstElementIndexForJumpReleased = 0;
     }
 }
 
@@ -246,16 +288,22 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
         Velocity = Velocity * (1.0f - FMath::Min(Friction * DeltaTime, 1.0f));
     }
 
-    // Apply input acceleration, the section of paramount importance to advanced movement!
+    // Apply input acceleration
+    // This part is of paramount importance to advanced movement!
     if (!bZeroAcceleration)
     {
-        if (IsMovingOnGround() &&
-            !bFallingLastFrame)
+        // case 1: ground
+        if (IsMovingOnGround() && // in current frame the player is on the ground
+            !bFallingLastFrame) // in last frame the player is on the ground as well
         {
             Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
             Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
         }
-        else if(bFallingLastFrame || IsFalling())
+
+        // case 2: air strafe
+        else if(bFallingLastFrame || // in last frame the player is falling
+                                     // in the current frame the player may or may not be on the ground
+            IsFalling()) // in the current frame the player is falling as well
         {
             const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
 
@@ -269,6 +317,13 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
                 if (AnotherAddSpeedCandidate > AddSpeed)
                 {
                     AnotherAddSpeedCandidate = AddSpeed;
+                }
+
+                // if the player keeps pressing the jump button to strafe jump,
+                // as a punishment, the acceleration is reduced
+                if (bHasJumpPressed && !bHasJumpReleased)
+                {
+                    AnotherAddSpeedCandidate *= PenaltyScaleFactorForHoldingJumpButton;
                 }
 
                 // Apply acceleration
