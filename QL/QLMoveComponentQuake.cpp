@@ -140,11 +140,19 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
             bFallingLastFrame &&
             bHasJumpRequested)
         {
+            DoJump(true);
+        }
+
+        // play the "huh" sound only if the strafe jump is not successfully chained
+        // and regular jump is performed
+        if (IsFalling() &&
+            !bFallingLastFrame &&
+            bHasJumpRequested)
+        {
             if (MyCharacter.IsValid())
             {
                 MyCharacter->PlaySoundFireAndForget(FName(TEXT("QuakeJump")));
             }
-            DoJump(true);
         }
     }
 
