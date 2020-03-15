@@ -50,6 +50,9 @@ This game is developed and tested on Unreal Engine version: **4.24.3**.
 
 + Bot
 
++ Movement
+    + Strafe jump (Quake Champions)
+
 ------
 
 ## Planned features
@@ -65,9 +68,6 @@ This game is developed and tested on Unreal Engine version: **4.24.3**.
     + Dual wield 雙剎 (Quake Champions)
     + Barrier shield 天盾 (Quake Champions)
 
-+ Movement
-    + Strafe jump (Quake Champions)
-
 + Puzzle
     + Magical traffic light (Control)
 
@@ -76,6 +76,9 @@ This game is developed and tested on Unreal Engine version: **4.24.3**.
 ------
 
 ## Clip
+
+### Strafe Jump
+<a href="https://youtu.be/3dOVJwDpYko" target="_blank"><img src="http://i3.ytimg.com/vi/3dOVJwDpYko/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Time travel ability
 <a href="https://youtu.be/6tU8AoKCccc" target="_blank"><img src="http://i3.ytimg.com/vi/6tU8AoKCccc/hqdefault.jpg" width="480" height="360" border="10" /></a>
