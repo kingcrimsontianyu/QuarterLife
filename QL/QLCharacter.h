@@ -14,6 +14,7 @@
 #include "GameFramework/Character.h"
 #include "QLPlayerHealthArmorBarUserWidget.h"
 #include "Components/TimelineComponent.h"
+#include "QLMoveComponentQuake.h"
 #include "QLCharacter.generated.h"
 
 class AQLWeapon;
@@ -97,6 +98,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetCurrentAbility(const FName& QLName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetCurrentMovementStyle(EQLMovementStyle MyStyle);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     bool AddPowerup(AQLPowerup* Powerup);

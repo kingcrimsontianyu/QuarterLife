@@ -11,6 +11,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QLMovementStyle.h"
 #include "Engine/DataAsset.h"
 #include "QLMovementParameterQuake.generated.h"
 

@@ -1205,6 +1205,15 @@ void AQLCharacter::EquipAll()
     {
         AbilityManager->CreateAndAddAllAbilities(AbilityClassList);
     }
+
+    if (bQLIsBot)
+    {
+        SetCurrentMovementStyle(EQLMovementStyle::Default);
+    }
+    else
+    {
+        SetCurrentMovementStyle(EQLMovementStyle::QuakeVallina);
+    }
 }
 
 //------------------------------------------------------------
@@ -1266,7 +1275,6 @@ UQLAbilityManager* AQLCharacter::GetAbilityManager()
 //------------------------------------------------------------
 void AQLCharacter::OnDebug()
 {
-    QLUtility::Log(GetMovementComponent()->GetClass()->GetName());
 }
 
 //------------------------------------------------------------
@@ -1281,4 +1289,16 @@ void AQLCharacter::AddControllerYawInput(float Val)
 void AQLCharacter::AddControllerPitchInput(float Val)
 {
     Super::AddControllerPitchInput(0.6f * Val);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SetCurrentMovementStyle(EQLMovementStyle MyStyle)
+{
+    UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
+    UQLMoveComponentQuake* MoveComponentQuake = Cast<UQLMoveComponentQuake>(CharacterMovementComponent);
+    if (MoveComponentQuake)
+    {
+        MoveComponentQuake->SetMovementStyle(MyStyle);
+    }
 }

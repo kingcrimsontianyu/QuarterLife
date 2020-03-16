@@ -11,11 +11,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QLMovementStyle.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "QLMoveComponentQuake.generated.h"
 
 class UQLMovementParameterQuake;
 class AQLCharacter;
+
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
@@ -25,6 +27,10 @@ class QL_API UQLMoveComponentQuake : public UCharacterMovementComponent
 
 public:
     UQLMoveComponentQuake();
+
+    void SetMovementStyle(EQLMovementStyle MyStyle);
+
+    EQLMovementStyle GetMovementStyle();
 
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
@@ -84,4 +90,6 @@ protected:
     FVector AccelerationCached;
 
     TWeakObjectPtr<AQLCharacter> MyCharacter;
+
+    EQLMovementStyle MovementStyle;
 };

@@ -25,6 +25,8 @@ UQLMoveComponentQuake::UQLMoveComponentQuake()
 
     // according to UE4 source code comment, 1.0f would be more appropriate than the default 2.0f in the engine.
     BrakingFrictionFactor = 1.0f;
+
+    MovementStyle = EQLMovementStyle::Default;
 }
 
 //------------------------------------------------------------
@@ -75,69 +77,76 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
 //------------------------------------------------------------
 void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-    InputVectorCached = ConsumeInputVector();
-
-    MyCharacter = Cast<AQLCharacter>(CharacterOwner);
-
-    CheckJumpInfo();
-
-    if (!HasValidData() || ShouldSkipUpdate(DeltaTime))
+    if (MovementStyle == EQLMovementStyle::Default)
     {
-        return;
+        Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     }
-
-    // Super tick may destroy/invalidate CharacterOwner or UpdatedComponent, so we need to re-check.
-    if (!HasValidData())
+    else
     {
-        return;
-    }
+        InputVectorCached = ConsumeInputVector();
 
-    // See if we fell out of the world.
-    const bool bIsSimulatingPhysics = UpdatedComponent->IsSimulatingPhysics();
-    if ((!bCheatFlying || bIsSimulatingPhysics) && !CharacterOwner->CheckStillInWorld())
-    {
-        return;
-    }
+        MyCharacter = Cast<AQLCharacter>(CharacterOwner);
 
-    // We don't update if simulating physics (eg ragdolls).
-    if (bIsSimulatingPhysics)
-    {
-        ClearAccumulatedForces();
-        return;
-    }
+        CheckJumpInfo();
 
-    AvoidanceLockTimer -= DeltaTime;
-
-    // Allow root motion to move characters that have no controller.
-    if (CharacterOwner->IsLocallyControlled() || (!CharacterOwner->Controller && bRunPhysicsWithNoController) || (!CharacterOwner->Controller && CharacterOwner->IsPlayingRootMotion()))
-    {
+        if (!HasValidData() || ShouldSkipUpdate(DeltaTime))
         {
-            // We need to check the jump state before adjusting input acceleration, to minimize latency
-            // and to make sure acceleration respects our potentially new falling state.
-            CharacterOwner->CheckJumpInput(DeltaTime);
-
-            // apply input to acceleration
-            Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached));
-            AccelerationCached = Acceleration;
-
-            AnalogInputModifier = ComputeAnalogInputModifier();
+            return;
         }
 
-        PerformMovement(DeltaTime);
-    }
+        // Super tick may destroy/invalidate CharacterOwner or UpdatedComponent, so we need to re-check.
+        if (!HasValidData())
+        {
+            return;
+        }
 
-    if (bUseRVOAvoidance)
-    {
-        UpdateDefaultAvoidance();
-    }
+        // See if we fell out of the world.
+        const bool bIsSimulatingPhysics = UpdatedComponent->IsSimulatingPhysics();
+        if ((!bCheatFlying || bIsSimulatingPhysics) && !CharacterOwner->CheckStillInWorld())
+        {
+            return;
+        }
 
-    if (bEnablePhysicsInteraction)
-    {
-        ApplyDownwardForce(DeltaTime);
-        ApplyRepulsionForce(DeltaTime);
-    }
+        // We don't update if simulating physics (eg ragdolls).
+        if (bIsSimulatingPhysics)
+        {
+            ClearAccumulatedForces();
+            return;
+        }
 
-    PrepareForNextFrame();
+        AvoidanceLockTimer -= DeltaTime;
+
+        // Allow root motion to move characters that have no controller.
+        if (CharacterOwner->IsLocallyControlled() || (!CharacterOwner->Controller && bRunPhysicsWithNoController) || (!CharacterOwner->Controller && CharacterOwner->IsPlayingRootMotion()))
+        {
+            {
+                // We need to check the jump state before adjusting input acceleration, to minimize latency
+                // and to make sure acceleration respects our potentially new falling state.
+                CharacterOwner->CheckJumpInput(DeltaTime);
+
+                // apply input to acceleration
+                Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached));
+                AccelerationCached = Acceleration;
+
+                AnalogInputModifier = ComputeAnalogInputModifier();
+            }
+
+            PerformMovement(DeltaTime);
+        }
+
+        if (bUseRVOAvoidance)
+        {
+            UpdateDefaultAvoidance();
+        }
+
+        if (bEnablePhysicsInteraction)
+        {
+            ApplyDownwardForce(DeltaTime);
+            ApplyRepulsionForce(DeltaTime);
+        }
+
+        PrepareForNextFrame();
+    }
 }
 
 //------------------------------------------------------------
@@ -222,135 +231,142 @@ void UQLMoveComponentQuake::PrepareForNextFrame()
 //------------------------------------------------------------
 void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration)
 {
-    // Do not update velocity when using root motion or when SimulatedProxy and not simulating root motion - SimulatedProxy are repped their Velocity
-    if (!HasValidData() || HasAnimRootMotion() || DeltaTime < MIN_TICK_TIME || (CharacterOwner && CharacterOwner->GetLocalRole() == ROLE_SimulatedProxy && !bWasSimulatingRootMotion))
+    if (MovementStyle == EQLMovementStyle::Default)
     {
-        return;
+        Super::CalcVelocity(DeltaTime, Friction, bFluid, BrakingDeceleration);
     }
-
-    Friction = FMath::Max(0.0f, Friction);
-    const float MaxAccel = GetMaxAcceleration();
-    float MaxSpeed = GetMaxSpeed();
-
-    // Check if path following requested movement
-    bool bZeroRequestedAcceleration = true;
-    FVector RequestedAcceleration = FVector::ZeroVector;
-    float RequestedSpeed = 0.0f;
-    if (ApplyRequestedMove(DeltaTime, MaxAccel, MaxSpeed, Friction, BrakingDeceleration, RequestedAcceleration, RequestedSpeed))
+    else
     {
-        bZeroRequestedAcceleration = false;
-    }
-
-    // todo: bForceMaxAccel always evaluates to false ?!
-    if (bForceMaxAccel)
-    {
-        // Force acceleration at full speed.
-        // In consideration order for direction: Acceleration, then Velocity, then Pawn's rotation.
-        if (Acceleration.SizeSquared() > SMALL_NUMBER)
+        // Do not update velocity when using root motion or when SimulatedProxy and not simulating root motion - SimulatedProxy are repped their Velocity
+        if (!HasValidData() || HasAnimRootMotion() || DeltaTime < MIN_TICK_TIME || (CharacterOwner && CharacterOwner->GetLocalRole() == ROLE_SimulatedProxy && !bWasSimulatingRootMotion))
         {
-            Acceleration = Acceleration.GetSafeNormal() * MaxAccel;
-        }
-        else
-        {
-            Acceleration = MaxAccel * (Velocity.SizeSquared() < SMALL_NUMBER ? UpdatedComponent->GetForwardVector() : Velocity.GetSafeNormal());
+            return;
         }
 
-        AnalogInputModifier = 1.0f;
-    }
+        Friction = FMath::Max(0.0f, Friction);
+        const float MaxAccel = GetMaxAcceleration();
+        float MaxSpeed = GetMaxSpeed();
 
-    // apply braking
-    const bool bZeroAcceleration = AccelerationCached.IsZero();
-    const bool bVelocityOverMax = IsExceedingMaxSpeed(MaxSpeed);
-
-    // brake is applicable only when
-    // --- there is no input
-    // --- the player is on the ground in the current frame
-    // --- the player is not falling in the last frame
-    if (bZeroAcceleration &&
-        IsMovingOnGround() &&
-        !bFallingLastFrame)
-    {
-        const FVector OldVelocity = Velocity;
-
-        const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
-        ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, BrakingDeceleration);
-
-        //// Don't allow braking to lower us below max speed if we started above it.
-        //if (bVelocityOverMax && Velocity.SizeSquared() < FMath::Square(MaxSpeed) && FVector::DotProduct(Acceleration, OldVelocity) > 0.0f)
-        //{
-        //    Velocity = OldVelocity.GetSafeNormal() * MaxSpeed;
-        //}
-    }
-
-    // Apply fluid friction
-    if (bFluid)
-    {
-        Velocity = Velocity * (1.0f - FMath::Min(Friction * DeltaTime, 1.0f));
-    }
-
-    // Apply input acceleration
-    // This part is of paramount importance to advanced movement!
-    if (!bZeroAcceleration)
-    {
-        // case 1: ground
-        if (IsMovingOnGround() && // in current frame the player is on the ground
-            !bFallingLastFrame) // in last frame the player is on the ground as well
+        // Check if path following requested movement
+        bool bZeroRequestedAcceleration = true;
+        FVector RequestedAcceleration = FVector::ZeroVector;
+        float RequestedSpeed = 0.0f;
+        if (ApplyRequestedMove(DeltaTime, MaxAccel, MaxSpeed, Friction, BrakingDeceleration, RequestedAcceleration, RequestedSpeed))
         {
-            Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
-            Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
+            bZeroRequestedAcceleration = false;
         }
 
-        // case 2: air strafe
-        else if(bFallingLastFrame || // in last frame the player is falling
-                                     // in the current frame the player may or may not be on the ground
-            IsFalling()) // in the current frame the player is falling as well
+        // todo: bForceMaxAccel always evaluates to false ?!
+        if (bForceMaxAccel)
         {
-            const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
-
-            const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
-
-            const float AddSpeed = MaxSpeed - SpeedProjection;
-            if (AddSpeed > 0.0f)
+            // Force acceleration at full speed.
+            // In consideration order for direction: Acceleration, then Velocity, then Pawn's rotation.
+            if (Acceleration.SizeSquared() > SMALL_NUMBER)
             {
-                float AnotherAddSpeedCandidate = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+                Acceleration = Acceleration.GetSafeNormal() * MaxAccel;
+            }
+            else
+            {
+                Acceleration = MaxAccel * (Velocity.SizeSquared() < SMALL_NUMBER ? UpdatedComponent->GetForwardVector() : Velocity.GetSafeNormal());
+            }
 
-                if (AnotherAddSpeedCandidate > AddSpeed)
+            AnalogInputModifier = 1.0f;
+        }
+
+        // apply braking
+        const bool bZeroAcceleration = AccelerationCached.IsZero();
+        const bool bVelocityOverMax = IsExceedingMaxSpeed(MaxSpeed);
+
+        // brake is applicable only when
+        // --- there is no input
+        // --- the player is on the ground in the current frame
+        // --- the player is not falling in the last frame
+        if (bZeroAcceleration &&
+            IsMovingOnGround() &&
+            !bFallingLastFrame)
+        {
+            const FVector OldVelocity = Velocity;
+
+            const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+            ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, BrakingDeceleration);
+
+            //// Don't allow braking to lower us below max speed if we started above it.
+            //if (bVelocityOverMax && Velocity.SizeSquared() < FMath::Square(MaxSpeed) && FVector::DotProduct(Acceleration, OldVelocity) > 0.0f)
+            //{
+            //    Velocity = OldVelocity.GetSafeNormal() * MaxSpeed;
+            //}
+        }
+
+        // Apply fluid friction
+        if (bFluid)
+        {
+            Velocity = Velocity * (1.0f - FMath::Min(Friction * DeltaTime, 1.0f));
+        }
+
+        // Apply input acceleration
+        // This part is of paramount importance to advanced movement!
+        if (!bZeroAcceleration)
+        {
+            // case 1: ground
+            if (IsMovingOnGround() && // in current frame the player is on the ground
+                !bFallingLastFrame) // in last frame the player is on the ground as well
+            {
+                Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
+                Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
+            }
+
+            // case 2: air strafe
+            else if (bFallingLastFrame || // in last frame the player is falling
+                                         // in the current frame the player may or may not be on the ground
+                IsFalling()) // in the current frame the player is falling as well
+            {
+                const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
+
+                const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
+
+                const float AddSpeed = MaxSpeed - SpeedProjection;
+                if (AddSpeed > 0.0f)
                 {
-                    AnotherAddSpeedCandidate = AddSpeed;
+                    float AnotherAddSpeedCandidate = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+
+                    if (AnotherAddSpeedCandidate > AddSpeed)
+                    {
+                        AnotherAddSpeedCandidate = AddSpeed;
+                    }
+
+                    // if the player keeps pressing the jump button to strafe jump,
+                    // as a punishment, the acceleration is reduced
+                    if (bHasJumpPressed && !bHasJumpReleased)
+                    {
+                        AnotherAddSpeedCandidate *= PenaltyScaleFactorForHoldingJumpButton;
+                    }
+
+                    // Apply acceleration
+                    FVector CurrentAcceleration = AnotherAddSpeedCandidate * AccelDirection;
+
+                    Velocity += CurrentAcceleration;
                 }
-
-                // if the player keeps pressing the jump button to strafe jump,
-                // as a punishment, the acceleration is reduced
-                if (bHasJumpPressed && !bHasJumpReleased)
-                {
-                    AnotherAddSpeedCandidate *= PenaltyScaleFactorForHoldingJumpButton;
-                }
-
-                // Apply acceleration
-                FVector CurrentAcceleration = AnotherAddSpeedCandidate * AccelDirection;
-
-                Velocity += CurrentAcceleration;
             }
         }
-    }
 
-    // todo: bZeroRequestedAcceleration always evaluates to true,
-    // i.e. !bZeroRequestedAcceleration always evaluates to false
-    // Apply additional requested acceleration
-    if (!bZeroRequestedAcceleration)
-    {
-        Velocity += RequestedAcceleration * DeltaTime;
-    }
+        // todo: bZeroRequestedAcceleration always evaluates to true,
+        // i.e. !bZeroRequestedAcceleration always evaluates to false
+        // Apply additional requested acceleration
+        if (!bZeroRequestedAcceleration)
+        {
+            Velocity += RequestedAcceleration * DeltaTime;
+        }
 
-    // impose final speed cap
-    if (Velocity.Size2D() > SpeedUpperLimit)
-    {
-        Velocity = Velocity.GetClampedToMaxSize2D(SpeedUpperLimit);
-    }
+        // impose final speed cap
+        if (Velocity.Size2D() > SpeedUpperLimit)
+        {
+            Velocity = Velocity.GetClampedToMaxSize2D(SpeedUpperLimit);
+        }
 
-    if (bUseRVOAvoidance)
-    {
-        CalcAvoidanceVelocity(DeltaTime);
+        if (bUseRVOAvoidance)
+        {
+            CalcAvoidanceVelocity(DeltaTime);
+        }
     }
 }
 
@@ -358,4 +374,18 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
 //------------------------------------------------------------
 void UQLMoveComponentQuake::QueueJump()
 {
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::SetMovementStyle(EQLMovementStyle MyStyle)
+{
+    MovementStyle = MyStyle;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+EQLMovementStyle UQLMoveComponentQuake::GetMovementStyle()
+{
+    return MovementStyle;
 }
