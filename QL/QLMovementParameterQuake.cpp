@@ -16,7 +16,7 @@
 UQLMovementParameterQuake::UQLMovementParameterQuake()
 {
     MaxWalkSpeed = 600.0f;
-    MaxAcceleration = 1000.0f;
+    MaxAcceleration = 600.0f;
     AirControl = 0.0f;
     GroundAccelerationMultiplier = 10.0f;
     AirAccelerationMultiplier = 2.0f;

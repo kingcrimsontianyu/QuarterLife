@@ -8,7 +8,6 @@
 // (")-(")o
 //------------------------------------------------------------
 
-
 #include "QLMoveComponentQuake.h"
 #include "GameFramework/Character.h"
 #include "QLUtility.h"
@@ -125,6 +124,17 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
                 CharacterOwner->CheckJumpInput(DeltaTime);
 
                 // apply input to acceleration
+                // --- note 1:
+                // InputVectorCached = ConsumeInputVector(): is the unnormalized input vector in the world coordinate.
+                // In the local coordinate, pressing W/S results in X=1/-1, and pressing A/D results in Y=-1/1.
+                // So the unnormalized local input vector has 3 discrete possible length: 0, 1, sqrt(2).
+                // InputVectorCached is a transform of such vector into the world coordinate.
+                //
+                // --- note 2:
+                // Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached)): is the normalized
+                // acceleration vector in the world coordinate.
+                // If MaxAcceleration is set to 1000, then Acceleration here has a length of 1000 and has the same direction
+                // with InputVectorCached.
                 Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached));
                 AccelerationCached = Acceleration;
 
@@ -191,6 +201,7 @@ void UQLMoveComponentQuake::CheckJumpInfo()
 //------------------------------------------------------------
 void UQLMoveComponentQuake::PrepareForNextFrame()
 {
+    // immediately jump once the player reaches the ground
     // call DoJump to change the movement mode to falling
     if (IsMovingOnGround() && // in current frame the player is on the ground
         bFallingLastFrame && // in last frame the player is falling
@@ -202,7 +213,7 @@ void UQLMoveComponentQuake::PrepareForNextFrame()
 
     // play the "huh" sound only if the strafe jump is not successfully chained
     // and regular jump is just performed
-    if (IsFalling() && // in current frame the player is falling
+    if (IsFalling() && // in current frame the player just jumps (in falling state)
         !bFallingLastFrame && // in last frame the player is on the ground
         bHasJumpPressed) // the player has recently pressed jump button
     {
@@ -277,10 +288,12 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
         const bool bZeroAcceleration = AccelerationCached.IsZero();
         const bool bVelocityOverMax = IsExceedingMaxSpeed(MaxSpeed);
 
-        // brake is applicable only when
-        // --- there is no input
-        // --- the player is on the ground in the current frame
-        // --- the player is not falling in the last frame
+        // apply braking friction here when
+        //     (1) there is no input
+        //     (2) the player is on the ground in the current frame
+        //     (3) the player is not falling in the last frame
+        // for an important case where (1) is not satisfied (i.e. input exists)
+        // but (2) and (3) are satisfied, braking friction is applied in the "case 1: ground" section below
         if (bZeroAcceleration &&
             IsMovingOnGround() &&
             !bFallingLastFrame)
@@ -288,6 +301,8 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
             const FVector OldVelocity = Velocity;
 
             const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+            // BrakingDeceleration is passed as an argument via CalcVelocity().
+            // If the player is considered walking on the ground, BrakingDeceleration is BrakingDecelerationWalking
             ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, BrakingDeceleration);
 
             //// Don't allow braking to lower us below max speed if we started above it.
@@ -308,6 +323,8 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
         if (!bZeroAcceleration)
         {
             // case 1: ground
+            // This logic provides acceleration when the player changes from stationary to walking.
+            // It also instantly imposes speed limit if the player is moving on the ground during the current and last frames
             if (IsMovingOnGround() && // in current frame the player is on the ground
                 !bFallingLastFrame) // in last frame the player is on the ground as well
             {
@@ -316,6 +333,8 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
             }
 
             // case 2: air strafe
+            // This includes mid air, and also includes a special one-frame case where
+            // the player is on the ground in the current frame but falling in the last frame
             else if (bFallingLastFrame || // in last frame the player is falling
                                          // in the current frame the player may or may not be on the ground
                 IsFalling()) // in the current frame the player is falling as well
