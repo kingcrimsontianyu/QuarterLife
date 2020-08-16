@@ -19,6 +19,8 @@ UENUM()
 enum class EQLMovementStyle : uint8
 {
     Default,
-    QuakeVallina,
+    QuakeVanilla,
     QuakeCPMA, // Challenge ProMode Arena
+    DoomGuy,
+    QuakeCrouchSlide, // Slash, Strogg & Peeker
 };

@@ -28,7 +28,7 @@ class AQLCharacter;
 UCLASS()
 class QL_API AQLAIController : public AAIController
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     //------------------------------------------------------------

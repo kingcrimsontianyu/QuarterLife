@@ -12,7 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Classes/GenericTeamAgentInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "QLPlayerController.generated.h"
 
 class UQLUmgFirstPerson;

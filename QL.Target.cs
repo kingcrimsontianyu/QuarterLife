@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class QLTarget : TargetRules
 {
-	public QLTarget(TargetInfo Target) : base(Target)
-	{
-		Type = TargetType.Game;
+    public QLTarget(TargetInfo Target) : base(Target)
+    {
+        Type = TargetType.Game;
 
-		ExtraModuleNames.AddRange( new string[] { "QL" } );
-	}
+        ExtraModuleNames.AddRange( new string[] { "QL" } );
+    }
 }

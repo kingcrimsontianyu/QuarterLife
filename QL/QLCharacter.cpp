@@ -32,13 +32,13 @@
 #include "QLUmgInventory.h"
 #include "Components/AudioComponent.h"
 #include "QLAIController.h"
-#include "Classes/Perception/AIPerceptionStimuliSourceComponent.h"
-#include "Classes/Perception/AISense.h"
-#include "Classes/Perception/AISense_Sight.h"
-#include "Classes/Perception/AISense_Hearing.h"
-#include "Classes/Perception/AISense_Prediction.h"
-#include "Classes/Perception/AISense_Damage.h"
-#include "Classes/Perception/AISense_Team.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense.h"
+#include "Perception/AISense_Sight.h"
+#include "Perception/AISense_Hearing.h"
+#include "Perception/AISense_Prediction.h"
+#include "Perception/AISense_Damage.h"
+#include "Perception/AISense_Team.h"
 #include "NavigationSystem.h"
 #include "QLMoveComponentQuake.h"
 #include "QLMovementParameterQuake.h"
@@ -1212,7 +1212,7 @@ void AQLCharacter::EquipAll()
     }
     else
     {
-        SetCurrentMovementStyle(EQLMovementStyle::QuakeVallina);
+        SetCurrentMovementStyle(EQLMovementStyle::QuakeVanilla);
     }
 }
 

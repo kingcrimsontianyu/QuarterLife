@@ -5,10 +5,14 @@ using System.Collections.Generic;
 
 public class QLEditorTarget : TargetRules
 {
-	public QLEditorTarget(TargetInfo Target) : base(Target)
-	{
-		Type = TargetType.Editor;
+    public QLEditorTarget(TargetInfo Target) : base(Target)
+    {
+        Type = TargetType.Editor;
 
-		ExtraModuleNames.AddRange( new string[] { "QL" } );
-	}
+        bLegacyPublicIncludePaths = false;
+
+        ShadowVariableWarningLevel = WarningLevel.Error;
+
+        ExtraModuleNames.AddRange( new string[] { "QL" } );
+    }
 }
