@@ -339,29 +339,44 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
                                          // in the current frame the player may or may not be on the ground
                 IsFalling()) // in the current frame the player is falling as well
             {
+                // theory in a nutshell:
+                // current speed: Velocity (v_3d)
+                // acceleration direction: AccelDirection (d_3d)
+                // acceleration length: m = AccelerationCached.Size() * AirAccelerationMultiplier
+                // proposed speed increase along d_3d: ProposedSpeedIncrease = m * delta_T (A)
+                // projection of current speed onto acceleration direction: p = DotProduct(v_3d, d_3d)
+                // max speed increase allowed along d_3d: MaxSpeedIncrease = MaxSpeed - p (K)
+                // if A <= K, new speed: v_3d + d_3d * A
+                // if A > K, new speed: v_3d + d_3d * K
+
                 const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
 
                 const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
 
-                const float AddSpeed = MaxSpeed - SpeedProjection;
-                if (AddSpeed > 0.0f)
+                const float MaxSpeedIncrease = MaxSpeed - SpeedProjection;
+                if (MaxSpeedIncrease > 0.0f)
                 {
-                    float AnotherAddSpeedCandidate = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+                    float ProposedSpeedIncrease = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+                    float ActualSpeedIncrease;
 
-                    if (AnotherAddSpeedCandidate > AddSpeed)
+                    if (ProposedSpeedIncrease > MaxSpeedIncrease)
                     {
-                        AnotherAddSpeedCandidate = AddSpeed;
+                        ActualSpeedIncrease = MaxSpeedIncrease;
+                    }
+                    else
+                    {
+                        ActualSpeedIncrease = ProposedSpeedIncrease;
                     }
 
                     // if the player keeps pressing the jump button to strafe jump,
                     // as a punishment, the acceleration is reduced
                     if (bHasJumpPressed && !bHasJumpReleased)
                     {
-                        AnotherAddSpeedCandidate *= PenaltyScaleFactorForHoldingJumpButton;
+                        ActualSpeedIncrease *= PenaltyScaleFactorForHoldingJumpButton;
                     }
 
                     // Apply acceleration
-                    FVector CurrentAcceleration = AnotherAddSpeedCandidate * AccelDirection;
+                    FVector CurrentAcceleration = ActualSpeedIncrease * AccelDirection;
 
                     Velocity += CurrentAcceleration;
                 }
