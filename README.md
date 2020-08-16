@@ -8,7 +8,7 @@ kingcrimsontianyu@gmail.com
 
 ## Introduction
 
-Quarter Life (QL), based on Unreal Engine, is a first-person adventure game and my personal side project. My inspiration comes from Half Life, Portal, Bioshock, Dishonored, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom, Quake, Control.
+Quarter Life (QL), based on Unreal Engine, is a first-person adventure game and my personal side project. It is intended to combine fun gameplay elements with advanced movement mechanics. **Advanced movement** specifically refers to Quake-style movement where players apply strafe jumping, bunny hopping and other advanced movement techniques to gain exceptionally high speed, which provides a unique feeling of conquering and transcending space. Apart from Quake, my inspiration comes from Half Life, Portal, Bioshock, Dishonored, Prey, Witcher, Shadow Warrior, Unreal Tournament, Doom, Control.
 
 This game is developed in primarily C++ and a bit of Unreal Blueprint visual scripts. Blueprint classes related to game mechanics are almost all subclassed from C++.
 
@@ -23,6 +23,9 @@ This game is developed and tested on Unreal Engine version: **4.25.3**.
 ------
 
 ## Work-in-progress features
++ Movement
+    + Strafe jumping (Vanilla Quake 3, Quake Champions)
+
 + Weapon
     + Unholy trinity (Quake Champions)
         + Lightning gun
@@ -50,12 +53,12 @@ This game is developed and tested on Unreal Engine version: **4.25.3**.
 
 + Bot
 
-+ Movement
-    + Strafe jump (Quake Champions)
-
 ------
 
 ## Planned features
++ Movement
+    + Bunny hopping (Quake 3 CPMA, Quake Champions)
+    + Crouch sliding (Quake Champions)
 
 + Weapon
     + Big Fucking Gun (BFG) (Doom)
