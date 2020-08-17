@@ -387,7 +387,7 @@ void UQLMoveComponentQuake::HandleAirStrafeForVanilla(float MaxSpeed, float Delt
             const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
             ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, 100.0f);
         }
-        // if not input key is pressed, lose speed more quickly
+        // if no input key is pressed, lose speed more quickly
         else if (moveForwardInputValue == 0.0f && moveRightInputValue == 0.0f)
         {
             // to do: more elegant specification of friction and braking

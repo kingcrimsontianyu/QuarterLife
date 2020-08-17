@@ -1,5 +1,7 @@
 # Quarter Life
 
+[![DOI](https://zenodo.org/badge/191197167.svg)](https://zenodo.org/badge/latestdoi/191197167)
+
 Tianyu Liu
 kingcrimsontianyu@gmail.com
 2015-2020
