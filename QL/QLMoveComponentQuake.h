@@ -51,6 +51,8 @@ protected:
 
     void PrepareForNextFrame();
 
+    void HandleAirStrafeForVanilla(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration);
+
     // If the player has already landed for a frame, and breaking may be applied.
     bool bFallingLastFrame;
 

@@ -242,6 +242,8 @@ void UQLMoveComponentQuake::PrepareForNextFrame()
 //------------------------------------------------------------
 void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration)
 {
+    float moveForwardInputValue = MyCharacter->GetMoveForwardInputValue();
+
     if (MovementStyle == EQLMovementStyle::Default)
     {
         Super::CalcVelocity(DeltaTime, Friction, bFluid, BrakingDeceleration);
@@ -320,66 +322,26 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
 
         // Apply input acceleration
         // This part is of paramount importance to advanced movement!
-        if (!bZeroAcceleration)
+        // case 1: ground
+        // This logic provides acceleration when the player changes from stationary to walking.
+        // It also instantly imposes speed limit if the player is moving on the ground during the current and last frames
+        if (IsMovingOnGround() && // in current frame the player is on the ground
+            !bFallingLastFrame) // in last frame the player is on the ground as well
         {
-            // case 1: ground
-            // This logic provides acceleration when the player changes from stationary to walking.
-            // It also instantly imposes speed limit if the player is moving on the ground during the current and last frames
-            if (IsMovingOnGround() && // in current frame the player is on the ground
-                !bFallingLastFrame) // in last frame the player is on the ground as well
+            Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
+            Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
+        }
+
+        // case 2: air strafe
+        // This includes mid air, and also includes a special one-frame case where
+        // the player is on the ground in the current frame but falling in the last frame
+        else if (bFallingLastFrame || // in last frame the player is falling
+                                        // in the current frame the player may or may not be on the ground
+            IsFalling()) // in the current frame the player is falling as well
+        {
+            if (MovementStyle == EQLMovementStyle::QuakeVanilla)
             {
-                Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
-                Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
-            }
-
-            // case 2: air strafe
-            // This includes mid air, and also includes a special one-frame case where
-            // the player is on the ground in the current frame but falling in the last frame
-            else if (bFallingLastFrame || // in last frame the player is falling
-                                         // in the current frame the player may or may not be on the ground
-                IsFalling()) // in the current frame the player is falling as well
-            {
-                // theory in a nutshell:
-                // current speed: Velocity (v_3d)
-                // acceleration direction: AccelDirection (d_3d)
-                // acceleration length: m = AccelerationCached.Size() * AirAccelerationMultiplier
-                // proposed speed increase along d_3d: ProposedSpeedIncrease = m * delta_T (A)
-                // projection of current speed onto acceleration direction: p = DotProduct(v_3d, d_3d)
-                // max speed increase allowed along d_3d: MaxSpeedIncrease = MaxSpeed - p (K)
-                // if A <= K, new speed: v_3d + d_3d * A
-                // if A > K, new speed: v_3d + d_3d * K
-
-                const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
-
-                const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
-
-                const float MaxSpeedIncrease = MaxSpeed - SpeedProjection;
-                if (MaxSpeedIncrease > 0.0f)
-                {
-                    float ProposedSpeedIncrease = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
-                    float ActualSpeedIncrease;
-
-                    if (ProposedSpeedIncrease > MaxSpeedIncrease)
-                    {
-                        ActualSpeedIncrease = MaxSpeedIncrease;
-                    }
-                    else
-                    {
-                        ActualSpeedIncrease = ProposedSpeedIncrease;
-                    }
-
-                    // if the player keeps pressing the jump button to strafe jump,
-                    // as a punishment, the acceleration is reduced
-                    if (bHasJumpPressed && !bHasJumpReleased)
-                    {
-                        ActualSpeedIncrease *= PenaltyScaleFactorForHoldingJumpButton;
-                    }
-
-                    // Apply acceleration
-                    FVector CurrentAcceleration = ActualSpeedIncrease * AccelDirection;
-
-                    Velocity += CurrentAcceleration;
-                }
+                HandleAirStrafeForVanilla(MaxSpeed, DeltaTime, Friction, BrakingDeceleration);
             }
         }
 
@@ -400,6 +362,80 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
         if (bUseRVOAvoidance)
         {
             CalcAvoidanceVelocity(DeltaTime);
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLMoveComponentQuake::HandleAirStrafeForVanilla(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration)
+{
+    MyCharacter = Cast<AQLCharacter>(CharacterOwner);
+
+    if (MyCharacter.IsValid())
+    {
+        float moveForwardInputValue = MyCharacter->GetMoveForwardInputValue();
+        float moveRightInputValue = MyCharacter->GetMoveRightInputValue();
+
+        // Disallow the use of CPMA movement style. In other words, to gain acceleration,
+        // players must hold forward key while strafe jumping.
+        // Otherwise deceleration applies.
+        if (moveForwardInputValue == 0.0f && moveRightInputValue != 0.0f)
+        {
+            // to do: figure out the relation between braking and friction
+            const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+            ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, 100.0f);
+        }
+        // if not input key is pressed, lose speed more quickly
+        else if (moveForwardInputValue == 0.0f && moveRightInputValue == 0.0f)
+        {
+            // to do: more elegant specification of friction and braking
+            const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+            ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, 600.0f);
+        }
+        else
+        {
+            // theory in a nutshell:
+            // current speed: Velocity (v_3d)
+            // acceleration direction: AccelDirection (d_3d)
+            // acceleration length: m = AccelerationCached.Size() * AirAccelerationMultiplier
+            // proposed speed increase along d_3d: ProposedSpeedIncrease = m * delta_T (A)
+            // projection of current speed onto acceleration direction: p = DotProduct(v_3d, d_3d)
+            // max speed increase allowed along d_3d: MaxSpeedIncrease = MaxSpeed - p (K)
+            // if A <= K, new speed: v_3d + d_3d * A
+            // if A > K, new speed: v_3d + d_3d * K
+
+            const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
+
+            const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
+
+            const float MaxSpeedIncrease = MaxSpeed - SpeedProjection;
+            if (MaxSpeedIncrease > 0.0f)
+            {
+                float ProposedSpeedIncrease = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+                float ActualSpeedIncrease;
+
+                if (ProposedSpeedIncrease > MaxSpeedIncrease)
+                {
+                    ActualSpeedIncrease = MaxSpeedIncrease;
+                }
+                else
+                {
+                    ActualSpeedIncrease = ProposedSpeedIncrease;
+                }
+
+                // if the player keeps pressing the jump button to strafe jump,
+                // as a punishment, the acceleration is reduced
+                if (bHasJumpPressed && !bHasJumpReleased)
+                {
+                    ActualSpeedIncrease *= PenaltyScaleFactorForHoldingJumpButton;
+                }
+
+                // Apply acceleration
+                FVector CurrentAcceleration = ActualSpeedIncrease * AccelDirection;
+
+                Velocity += CurrentAcceleration;
+            }
         }
     }
 }

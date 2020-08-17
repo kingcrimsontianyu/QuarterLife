@@ -113,6 +113,8 @@ Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharact
     bQLIsVulnerable = true;
 
     bJumpButtonDown = false;
+    moveForwardInputValue = 0.0f;
+    moveRightInputValue = 0.0f;
 
     bQLIsBot = false;
 
@@ -278,6 +280,8 @@ void AQLCharacter::MoveForward(float Value)
         // add movement in that direction
         AddMovementInput(GetActorForwardVector(), Value);
     }
+
+    moveForwardInputValue = Value;
 }
 
 //------------------------------------------------------------
@@ -289,6 +293,22 @@ void AQLCharacter::MoveRight(float Value)
         // add movement in that direction
         AddMovementInput(GetActorRightVector(), Value);
     }
+
+    moveRightInputValue = Value;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::GetMoveForwardInputValue()
+{
+    return moveForwardInputValue;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+float AQLCharacter::GetMoveRightInputValue()
+{
+    return moveRightInputValue;
 }
 
 //------------------------------------------------------------

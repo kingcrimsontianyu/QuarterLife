@@ -230,6 +230,12 @@ public:
     bool IsJumpButtonDown();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetMoveForwardInputValue();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    float GetMoveRightInputValue();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void EquipAll();
 
     virtual void FellOutOfWorld(const UDamageType& dmgType) override;
@@ -383,6 +389,12 @@ protected:
     // monitor jump status for animation purpose
     UPROPERTY()
     bool bJumpButtonDown;
+
+    UPROPERTY()
+    float moveForwardInputValue;
+
+    UPROPERTY()
+    float moveRightInputValue;
 
     UPROPERTY()
     bool bQLIsBot;
