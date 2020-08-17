@@ -24,4 +24,5 @@ UQLMovementParameterQuake::UQLMovementParameterQuake()
     NumOfJumpRequestToleranceFrames = 5;
     BrakingDecelerationWalking = MaxAcceleration;
     PenaltyScaleFactorForHoldingJumpButton = 0.25f;
+    JumpZVelocity = 420.0f;
 }

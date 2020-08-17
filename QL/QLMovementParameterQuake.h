@@ -57,4 +57,7 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float PenaltyScaleFactorForHoldingJumpButton;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float JumpZVelocity;
 };

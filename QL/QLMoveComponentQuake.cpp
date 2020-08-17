@@ -55,6 +55,7 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
     NumOfJumpRequestToleranceFrames = MovementParameterQuake->NumOfJumpRequestToleranceFrames;
     BrakingDecelerationWalking = MovementParameterQuake->BrakingDecelerationWalking;
     PenaltyScaleFactorForHoldingJumpButton = MovementParameterQuake->PenaltyScaleFactorForHoldingJumpButton;
+    JumpZVelocity = MovementParameterQuake->JumpZVelocity;
 
     HasJumpPressedList.Init(false, NumOfJumpRequestToleranceFrames);
     FirstElementIndexForJumpPressed = 0;
