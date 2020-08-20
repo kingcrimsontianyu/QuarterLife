@@ -12,7 +12,7 @@
 #include "QLColoredPortal.h"
 #include "Materials/Material.h"
 #include "Components/BoxComponent.h"
-#include "ConstructorHelpers.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "QLUtility.h"
 

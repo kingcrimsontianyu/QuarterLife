@@ -13,7 +13,7 @@
 #include "Components/PostProcessComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Classes/Camera/CameraComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "QLUtility.h"
 #include "Kismet/KismetMaterialLibrary.h"

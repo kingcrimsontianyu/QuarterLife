@@ -344,6 +344,10 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
             {
                 HandleAirStrafeForVanilla(MaxSpeed, DeltaTime, Friction, BrakingDeceleration);
             }
+            else if (MovementStyle == EQLMovementStyle::QuakeCPMA)
+            {
+                HandleAirStrafeForCPMA(MaxSpeed, DeltaTime, Friction, BrakingDeceleration);
+            }
         }
 
         // todo: bZeroRequestedAcceleration always evaluates to true,
@@ -443,8 +447,68 @@ void UQLMoveComponentQuake::HandleAirStrafeForVanilla(float MaxSpeed, float Delt
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLMoveComponentQuake::QueueJump()
+void UQLMoveComponentQuake::HandleAirStrafeForCPMA(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration)
 {
+    MyCharacter = Cast<AQLCharacter>(CharacterOwner);
+
+    if (MyCharacter.IsValid())
+    {
+        float moveForwardInputValue = MyCharacter->GetMoveForwardInputValue();
+        float moveRightInputValue = MyCharacter->GetMoveRightInputValue();
+
+        // Disallow the use of VQ3 movement style. In other words, to gain acceleration,
+        // players must NOT hold forward key while strafe jumping.
+        // Otherwise deceleration applies.
+        if (moveForwardInputValue != 0.0f && moveRightInputValue != 0.0f)
+        {
+            // to do: figure out the relation between braking and friction
+            const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+            ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, 100.0f);
+        }
+        // if no input key is pressed, lose speed more quickly
+        else if (moveForwardInputValue == 0.0f && moveRightInputValue == 0.0f)
+        {
+            // to do: more elegant specification of friction and braking
+            const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+            ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, 600.0f);
+        }
+        else
+        {
+            QLUtility::Log(FString("CPMA boost"));
+
+            const FVector AccelDirection = AccelerationCached.GetSafeNormal2D();
+
+            const float SpeedProjection = Velocity.X * AccelDirection.X + Velocity.Y * AccelDirection.Y;
+
+            const float MaxSpeedIncrease = MaxSpeed - SpeedProjection;
+            if (MaxSpeedIncrease > 0.0f)
+            {
+                float ProposedSpeedIncrease = AccelerationCached.Size() * AirAccelerationMultiplier * DeltaTime;
+                float ActualSpeedIncrease;
+
+                if (ProposedSpeedIncrease > MaxSpeedIncrease)
+                {
+                    ActualSpeedIncrease = MaxSpeedIncrease;
+                }
+                else
+                {
+                    ActualSpeedIncrease = ProposedSpeedIncrease;
+                }
+
+                // if the player keeps pressing the jump button to strafe jump,
+                // as a punishment, the acceleration is reduced
+                if (bHasJumpPressed && !bHasJumpReleased)
+                {
+                    ActualSpeedIncrease *= PenaltyScaleFactorForHoldingJumpButton;
+                }
+
+                // Apply acceleration
+                FVector CurrentAcceleration = ActualSpeedIncrease * AccelDirection;
+
+                Velocity += CurrentAcceleration;
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------

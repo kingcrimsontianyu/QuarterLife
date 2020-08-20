@@ -38,8 +38,6 @@ public:
 
     virtual void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration) override;
 
-    virtual void QueueJump();
-
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -52,6 +50,8 @@ protected:
     void PrepareForNextFrame();
 
     void HandleAirStrafeForVanilla(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration);
+
+    void HandleAirStrafeForCPMA(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration);
 
     // If the player has already landed for a frame, and breaking may be applied.
     bool bFallingLastFrame;

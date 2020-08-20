@@ -1233,6 +1233,7 @@ void AQLCharacter::EquipAll()
     else
     {
         SetCurrentMovementStyle(EQLMovementStyle::QuakeVanilla);
+        //SetCurrentMovementStyle(EQLMovementStyle::QuakeCPMA);
     }
 }
 
