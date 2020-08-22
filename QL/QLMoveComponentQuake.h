@@ -56,6 +56,12 @@ protected:
     // If the player has already landed for a frame, and breaking may be applied.
     bool bFallingLastFrame;
 
+    bool bJustlanded;
+
+    // If the player is exempt from ground friction in the current frame
+    // reset this counter to zero
+    uint64 trailingFrameCounter;
+
     // The multiplier for acceleration when on ground.
     UPROPERTY()
     float GroundAccelerationMultiplier;
@@ -68,10 +74,25 @@ protected:
     float SpeedUpperLimit;
 
     UPROPERTY()
+    float NumOfJumpRequestToleranceTimeInterval;
+
     int NumOfJumpRequestToleranceFrames;
 
     UPROPERTY()
+    float NumOfTrailingTimeInterval;
+
+    int NumOfTrailingFrame;
+
+    UPROPERTY()
     float PenaltyScaleFactorForHoldingJumpButton;
+
+    UPROPERTY()
+    float PenaltyScaleFactorForUnchainedStrafeJump;
+
+    float PenaltyForUnchainedStrafeJumpReductionPerFrame;
+    float PenaltyForUnchainedStrafeJumpCurrent;
+
+    FVector VelocityCached;
 
     // in the last k frames, if the jump button has been pressed
     bool bHasJumpPressed;

@@ -13,6 +13,8 @@
 #include "QLUtility.h"
 #include "QLMovementParameterQuake.h"
 #include "QLCharacter.h"
+#include <limits>
+#include "Misc/App.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -21,6 +23,8 @@ UQLMoveComponentQuake::UQLMoveComponentQuake()
     bFallingLastFrame = false;
     bHasJumpPressed = false;
     bHasJumpReleased = false;
+    bJustlanded = false;
+    trailingFrameCounter = std::numeric_limits<uint64>::max();
 
     // according to UE4 source code comment, 1.0f would be more appropriate than the default 2.0f in the engine.
     BrakingFrictionFactor = 1.0f;
@@ -52,9 +56,20 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
     GroundAccelerationMultiplier = MovementParameterQuake->GroundAccelerationMultiplier;
     AirAccelerationMultiplier = MovementParameterQuake->AirAccelerationMultiplier;
     SpeedUpperLimit = MovementParameterQuake->SpeedUpperLimit;
-    NumOfJumpRequestToleranceFrames = MovementParameterQuake->NumOfJumpRequestToleranceFrames;
+
+    NumOfJumpRequestToleranceTimeInterval = MovementParameterQuake->NumOfJumpRequestToleranceTimeInterval;
+    NumOfJumpRequestToleranceFrames = int(1.0f / FApp::GetDeltaTime() * NumOfJumpRequestToleranceTimeInterval);
+
+    NumOfTrailingTimeInterval = MovementParameterQuake->NumOfTrailingTimeInterval;
+    NumOfTrailingFrame = int(1.0f / FApp::GetDeltaTime() * NumOfTrailingTimeInterval);
+
     BrakingDecelerationWalking = MovementParameterQuake->BrakingDecelerationWalking;
+
     PenaltyScaleFactorForHoldingJumpButton = MovementParameterQuake->PenaltyScaleFactorForHoldingJumpButton;
+
+    PenaltyScaleFactorForUnchainedStrafeJump = MovementParameterQuake->PenaltyScaleFactorForUnchainedStrafeJump;
+    PenaltyForUnchainedStrafeJumpReductionPerFrame = (1.0f - PenaltyScaleFactorForUnchainedStrafeJump) / NumOfTrailingFrame;
+
     JumpZVelocity = MovementParameterQuake->JumpZVelocity;
 
     HasJumpPressedList.Init(false, NumOfJumpRequestToleranceFrames);
@@ -132,7 +147,7 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
                 // InputVectorCached is a transform of such vector into the world coordinate.
                 //
                 // --- note 2:
-                // Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached)): is the normalized
+                // Acceleration = ScaleInputAcceleration(ConstrainInputAcceleration(InputVectorCached)): is the unnormalized
                 // acceleration vector in the world coordinate.
                 // If MaxAcceleration is set to 1000, then Acceleration here has a length of 1000 and has the same direction
                 // with InputVectorCached.
@@ -202,14 +217,20 @@ void UQLMoveComponentQuake::CheckJumpInfo()
 //------------------------------------------------------------
 void UQLMoveComponentQuake::PrepareForNextFrame()
 {
-    // immediately jump once the player reaches the ground
-    // call DoJump to change the movement mode to falling
+    // immediately make the player jump once they reach the ground
     if (IsMovingOnGround() && // in current frame the player is on the ground
         bFallingLastFrame && // in last frame the player is falling
         bHasJumpPressed) // the player has recently pressed jump button
     {
         // jump in the next frame
+        // the movement mode will be set to falling in the next frame
         DoJump(true);
+
+        bJustlanded = true;
+    }
+    else
+    {
+        bJustlanded = false;
     }
 
     // play the "huh" sound only if the strafe jump is not successfully chained
@@ -287,58 +308,68 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
             AnalogInputModifier = 1.0f;
         }
 
-        // apply braking
         const bool bZeroAcceleration = AccelerationCached.IsZero();
         const bool bVelocityOverMax = IsExceedingMaxSpeed(MaxSpeed);
 
-        // apply braking friction here when
-        //     (1) there is no input
-        //     (2) the player is on the ground in the current frame
-        //     (3) the player is not falling in the last frame
-        // for an important case where (1) is not satisfied (i.e. input exists)
-        // but (2) and (3) are satisfied, braking friction is applied in the "case 1: ground" section below
-        if (bZeroAcceleration &&
-            IsMovingOnGround() &&
+        if (IsMovingOnGround() && bFallingLastFrame)
+        {
+            bJustlanded = true;
+        }
+
+        if (bJustlanded)
+        {
+            trailingFrameCounter = 0ULL;
+            VelocityCached = Velocity;
+            PenaltyForUnchainedStrafeJumpCurrent; = 1.0f;
+        }
+        else
+        {
+            if (trailingFrameCounter < std::numeric_limits<uint64>::max())
+            {
+                ++trailingFrameCounter;
+            }
+        }
+
+        // case 1: the player is on the ground in both the current frame and last frame
+        if (IsMovingOnGround() &&
             !bFallingLastFrame)
         {
-            const FVector OldVelocity = Velocity;
+            // sub-case 1: if there is no input
+            if (bZeroAcceleration)
+            {
+                const FVector OldVelocity = Velocity;
 
-            const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
-            // BrakingDeceleration is passed as an argument via CalcVelocity().
-            // If the player is considered walking on the ground, BrakingDeceleration is BrakingDecelerationWalking
-            ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, BrakingDeceleration);
-
-            //// Don't allow braking to lower us below max speed if we started above it.
-            //if (bVelocityOverMax && Velocity.SizeSquared() < FMath::Square(MaxSpeed) && FVector::DotProduct(Acceleration, OldVelocity) > 0.0f)
-            //{
-            //    Velocity = OldVelocity.GetSafeNormal() * MaxSpeed;
-            //}
+                const float ActualBrakingFriction = (bUseSeparateBrakingFriction ? BrakingFriction : Friction);
+                // BrakingDeceleration is passed as an argument via CalcVelocity().
+                // If the player is considered walking on the ground, BrakingDeceleration is BrakingDecelerationWalking
+                ApplyVelocityBraking(DeltaTime, ActualBrakingFriction, BrakingDeceleration);
+            }
+            // sub-case 2: input exists
+            else
+            {
+                if (Velocity.Size() < MaxSpeed ||
+                    trailingFrameCounter > NumOfTrailingFrame)
+                {
+                    // sub-sub-case 2: the player is normally walking
+                    // a large acceleration is applied, followed by a speed cap,
+                    // so that the player can change from stationary to moving in a short period of time
+                    Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
+                    Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
+                }
+                else
+                {
+                    PenaltyForUnchainedStrafeJumpCurrent -= PenaltyForUnchainedStrafeJumpReductionPerFrame;
+                    Velocity = MyCharacter->GetActorForwardVector() * VelocityCached.Size() * PenaltyForUnchainedStrafeJumpCurrent;
+                }
+            }
         }
-
-        // Apply fluid friction
-        if (bFluid)
-        {
-            Velocity = Velocity * (1.0f - FMath::Min(Friction * DeltaTime, 1.0f));
-        }
-
-        // Apply input acceleration
-        // This part is of paramount importance to advanced movement!
-        // case 1: ground
-        // This logic provides acceleration when the player changes from stationary to walking.
-        // It also instantly imposes speed limit if the player is moving on the ground during the current and last frames
-        if (IsMovingOnGround() && // in current frame the player is on the ground
-            !bFallingLastFrame) // in last frame the player is on the ground as well
-        {
-            Velocity += AccelerationCached * GroundAccelerationMultiplier * DeltaTime;
-            Velocity = Velocity.GetClampedToMaxSize(MaxSpeed);
-        }
-
         // case 2: air strafe
-        // This includes mid air, and also includes a special one-frame case where
-        // the player is on the ground in the current frame but falling in the last frame
+        // This includes the general case for mid air, and also includes a special one-frame case where
+        // the player is on the ground in the current frame (but still rendered in the
+        // falling state due to calling DoJump() in the last frame), but falling in the last frame
         else if (bFallingLastFrame || // in last frame the player is falling
-                                        // in the current frame the player may or may not be on the ground
-            IsFalling()) // in the current frame the player is falling as well
+                                      // in the current frame the player may or may not be on the ground
+                 IsFalling()) // in the current frame the player is falling as well
         {
             if (MovementStyle == EQLMovementStyle::QuakeVanilla)
             {
@@ -348,6 +379,12 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
             {
                 HandleAirStrafeForCPMA(MaxSpeed, DeltaTime, Friction, BrakingDeceleration);
             }
+        }
+
+        // Apply fluid friction
+        if (bFluid)
+        {
+            Velocity = Velocity * (1.0f - FMath::Min(Friction * DeltaTime, 1.0f));
         }
 
         // todo: bZeroRequestedAcceleration always evaluates to true,
@@ -375,8 +412,6 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
 //------------------------------------------------------------
 void UQLMoveComponentQuake::HandleAirStrafeForVanilla(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration)
 {
-    MyCharacter = Cast<AQLCharacter>(CharacterOwner);
-
     if (MyCharacter.IsValid())
     {
         float moveForwardInputValue = MyCharacter->GetMoveForwardInputValue();
@@ -449,8 +484,6 @@ void UQLMoveComponentQuake::HandleAirStrafeForVanilla(float MaxSpeed, float Delt
 //------------------------------------------------------------
 void UQLMoveComponentQuake::HandleAirStrafeForCPMA(float MaxSpeed, float DeltaTime, float Friction, float BrakingDeceleration)
 {
-    MyCharacter = Cast<AQLCharacter>(CharacterOwner);
-
     if (MyCharacter.IsValid())
     {
         float moveForwardInputValue = MyCharacter->GetMoveForwardInputValue();

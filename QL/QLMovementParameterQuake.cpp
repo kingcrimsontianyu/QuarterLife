@@ -17,12 +17,15 @@ UQLMovementParameterQuake::UQLMovementParameterQuake()
 {
     MaxWalkSpeed = 600.0f;
     MaxAcceleration = 600.0f;
-    AirControl = 0.0f;
+    AirControl = 0.5f;
     GroundAccelerationMultiplier = 10.0f;
-    AirAccelerationMultiplier = 2.0f;
+    AirAccelerationMultiplier = 1.5f;
     SpeedUpperLimit = 3000.0f;
-    NumOfJumpRequestToleranceFrames = 5;
-    BrakingDecelerationWalking = MaxAcceleration;
+    NumOfJumpRequestToleranceTimeInterval = 0.2f;
+    NumOfTrailingTimeInterval = 0.2f;
+    BrakingDecelerationChainStrafeJump = 50.0f;
+    BrakingDecelerationWalking = 600.0f;
+    PenaltyScaleFactorForUnchainedStrafeJump = 0.8f;
     PenaltyScaleFactorForHoldingJumpButton = 0.25f;
-    JumpZVelocity = 420.0f;
+    JumpZVelocity = 380.0f;
 }
