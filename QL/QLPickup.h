@@ -14,7 +14,7 @@
 #include "GameFramework/Actor.h"
 #include "QLPickup.generated.h"
 
-class UBoxComponent;
+class USphereComponent;
 class UStaticMeshComponent;
 
 //------------------------------------------------------------

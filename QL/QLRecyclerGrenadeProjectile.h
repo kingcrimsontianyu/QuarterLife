@@ -22,6 +22,7 @@ class AQLPlayerController;
 class UPostProcessComponent;
 class AQLHealth;
 class AQLArmor;
+class AQLPickup;
 
 //------------------------------------------------------------
 // The recycler grenade projectile has several stages

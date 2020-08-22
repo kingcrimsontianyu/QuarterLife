@@ -21,7 +21,6 @@
 #include "Components/AudioComponent.h"
 #include "QLPlayerController.h"
 #include "QLWeaponManager.h"
-#include "Kismet/GameplayStatics.h"
 #include "QLUtility.h"
 #include "TimerManager.h"
 
