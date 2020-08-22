@@ -320,7 +320,7 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
         {
             trailingFrameCounter = 0ULL;
             VelocityCached = Velocity;
-            PenaltyForUnchainedStrafeJumpCurrent; = 1.0f;
+            PenaltyForUnchainedStrafeJumpCurrent = 1.0f;
         }
         else
         {
