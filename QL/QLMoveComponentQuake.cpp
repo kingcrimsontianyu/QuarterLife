@@ -30,6 +30,9 @@ UQLMoveComponentQuake::UQLMoveComponentQuake()
     BrakingFrictionFactor = 1.0f;
 
     MovementStyle = EQLMovementStyle::Default;
+
+    elapsedTime = 0.0f;
+    reinitializeMovementParameterTimeInterval = 1.0f; // seconds
 }
 
 //------------------------------------------------------------
@@ -47,6 +50,8 @@ void UQLMoveComponentQuake::PostInitProperties()
 }
 
 //------------------------------------------------------------
+// This function shall only copy external movement parameters to local variables.
+// Computation relying on delta time shall be performed by calling ReinitializeParameter()
 //------------------------------------------------------------
 void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* MovementParameterQuake)
 {
@@ -56,27 +61,14 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
     GroundAccelerationMultiplier = MovementParameterQuake->GroundAccelerationMultiplier;
     AirAccelerationMultiplier = MovementParameterQuake->AirAccelerationMultiplier;
     SpeedUpperLimit = MovementParameterQuake->SpeedUpperLimit;
-
     NumOfJumpRequestToleranceTimeInterval = MovementParameterQuake->NumOfJumpRequestToleranceTimeInterval;
-    NumOfJumpRequestToleranceFrames = int(1.0f / FApp::GetDeltaTime() * NumOfJumpRequestToleranceTimeInterval);
-
     NumOfTrailingTimeInterval = MovementParameterQuake->NumOfTrailingTimeInterval;
-    NumOfTrailingFrame = int(1.0f / FApp::GetDeltaTime() * NumOfTrailingTimeInterval);
-
     BrakingDecelerationWalking = MovementParameterQuake->BrakingDecelerationWalking;
-
     PenaltyScaleFactorForHoldingJumpButton = MovementParameterQuake->PenaltyScaleFactorForHoldingJumpButton;
-
     PenaltyScaleFactorForUnchainedStrafeJump = MovementParameterQuake->PenaltyScaleFactorForUnchainedStrafeJump;
-    PenaltyForUnchainedStrafeJumpReductionPerFrame = (1.0f - PenaltyScaleFactorForUnchainedStrafeJump) / NumOfTrailingFrame;
-
     JumpZVelocity = MovementParameterQuake->JumpZVelocity;
 
-    HasJumpPressedList.Init(false, NumOfJumpRequestToleranceFrames);
-    FirstElementIndexForJumpPressed = 0;
-
-    HasJumpReleasedList.Init(false, NumOfJumpRequestToleranceFrames);
-    FirstElementIndexForJumpReleased = 0;
+    ReinitializeParameter(FApp::GetDeltaTime());
 }
 
 //------------------------------------------------------------
@@ -92,6 +84,15 @@ void UQLMoveComponentQuake::SetMovementParameter(UQLMovementParameterQuake* Move
 //------------------------------------------------------------
 void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
+    // reinitialize movement parameters regularly
+    elapsedTime += DeltaTime;
+
+    if (elapsedTime >= reinitializeMovementParameterTimeInterval)
+    {
+        ReinitializeParameter(DeltaTime);
+        elapsedTime = 0.0f;
+    }
+
     if (MovementStyle == EQLMovementStyle::Default)
     {
         Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -173,6 +174,28 @@ void UQLMoveComponentQuake::TickComponent(float DeltaTime, enum ELevelTick TickT
 
         PrepareForNextFrame();
     }
+}
+
+//------------------------------------------------------------
+// Reinitializing movement parameters on a regular basis is necessary.
+// Delta time is varying and unstable particularly
+// when the game starts. Parameters relying on delta time would be problematic
+// if only the initial value of delta time is used, which can lead to
+// confusion situation where parameters in PIE and standalone modes appear
+// different. For PIE, data are readily available in memory and the game start
+// is not subject to low FPS (large delta time value) from initialization cost.
+//------------------------------------------------------------
+void UQLMoveComponentQuake::ReinitializeParameter(float DeltaTime)
+{
+    NumOfJumpRequestToleranceFrames = int(1.0f / DeltaTime * NumOfJumpRequestToleranceTimeInterval);
+    NumOfTrailingFrame = int(1.0f / DeltaTime * NumOfTrailingTimeInterval);
+    PenaltyForUnchainedStrafeJumpReductionPerFrame = (1.0f - PenaltyScaleFactorForUnchainedStrafeJump) / NumOfTrailingFrame;
+
+    HasJumpPressedList.Init(false, NumOfJumpRequestToleranceFrames);
+    FirstElementIndexForJumpPressed = 0;
+
+    HasJumpReleasedList.Init(false, NumOfJumpRequestToleranceFrames);
+    FirstElementIndexForJumpReleased = 0;
 }
 
 //------------------------------------------------------------
@@ -347,8 +370,10 @@ void UQLMoveComponentQuake::CalcVelocity(float DeltaTime, float Friction, bool b
             // sub-case 2: input exists
             else
             {
-                if (Velocity.Size() < MaxSpeed ||
-                    trailingFrameCounter > NumOfTrailingFrame)
+                bool bNormalGroundCase = (Velocity.Size() < MaxSpeed ||
+                    trailingFrameCounter > NumOfTrailingFrame) ||
+                    FVector::DotProduct(Velocity, VelocityCached) <= 0.0f;
+                if (bNormalGroundCase)
                 {
                     // sub-sub-case 2: the player is normally walking
                     // a large acceleration is applied, followed by a speed cap,

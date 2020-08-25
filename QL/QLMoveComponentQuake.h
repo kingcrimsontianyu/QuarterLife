@@ -39,6 +39,8 @@ public:
     virtual void CalcVelocity(float DeltaTime, float Friction, bool bFluid, float BrakingDeceleration) override;
 
 protected:
+    void ReinitializeParameter(float DeltaTime);
+
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
@@ -115,4 +117,9 @@ protected:
     TWeakObjectPtr<AQLCharacter> MyCharacter;
 
     EQLMovementStyle MovementStyle;
+
+    float elapsedTime;
+
+    // movement parameters are reinitialized every x seconds
+    float reinitializeMovementParameterTimeInterval;
 };
