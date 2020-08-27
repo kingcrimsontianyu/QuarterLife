@@ -914,7 +914,8 @@ void AQLCharacter::OnDie()
 //------------------------------------------------------------
 void AQLCharacter::OnRespawnNewCharacter()
 {
-    RespawnCharacterRandomly();
+    // to do: a separate class to manage respawn explicitly
+    // RespawnCharacterRandomly();
 }
 
 //------------------------------------------------------------

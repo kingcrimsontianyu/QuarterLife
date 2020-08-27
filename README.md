@@ -83,6 +83,8 @@ This game is developed and tested on Unreal Engine version: **4.25.3**.
 ## Clip
 
 ### Strafe Jump
+<a href="https://youtu.be/jhcCQMhP6bs" target="_blank"><img src="http://i3.ytimg.com/vi/jhcCQMhP6bs/hqdefault.jpg" width="480" height="360" border="10" /></a>
+
 <a href="https://youtu.be/3dOVJwDpYko" target="_blank"><img src="http://i3.ytimg.com/vi/3dOVJwDpYko/hqdefault.jpg" width="480" height="360" border="10" /></a>
 
 ### Time travel ability
