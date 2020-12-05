@@ -53,6 +53,8 @@ AQLPortal::AQLPortal()
     SceneCaptureComponent->SetupAttachment(RootComponent);
 
     bCanUpdatePortalView = true;
+
+    bCanTeleport = true;
 }
 
 //------------------------------------------------------------
@@ -131,6 +133,10 @@ void AQLPortal::PostInitializeComponents()
             DynamicDisplayPlaneMaterial->SetTextureParameterValue("PortalTexture", RenderTarget);
         }
     }
+
+    // built-in dynamic delegate
+    OnActorBeginOverlap.AddDynamic(this, &AQLPortal::OnOverlapBeginForActor);
+    OnActorEndOverlap.AddDynamic(this, &AQLPortal::OnOverlapEndForActor);
 }
 
 //------------------------------------------------------------
@@ -267,4 +273,41 @@ void AQLPortal::Debug()
 void AQLPortal::SetCanUpdatePortalView(bool bFlag)
 {
     bCanUpdatePortalView = bFlag;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::OnOverlapBeginForActor(AActor* OverlappedActor, AActor* OtherActor)
+{
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::OnOverlapEndForActor(AActor* OverlappedActor, AActor* OtherActor)
+{
+    // remove actor from my own roll if any
+    RemoveFromRoll(OtherActor);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::AddToRoll(AActor* GivenActor)
+{
+    // if key exists, overwrite the value
+    Roll.Add(GivenActor);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::RemoveFromRoll(AActor* GivenActor)
+{
+    // remove all the elements that match the given parameter
+    Roll.Remove(GivenActor);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+bool AQLPortal::IsInMyRoll(AActor* GivenActor)
+{
+    return Roll.Contains(GivenActor);
 }

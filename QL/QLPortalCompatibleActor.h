@@ -35,10 +35,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UBoxComponent* BoxComponent;
+    ////------------------------------------------------------------
+    ////------------------------------------------------------------
+    //UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    //UBoxComponent* BoxComponent;
 
     //------------------------------------------------------------
     //------------------------------------------------------------

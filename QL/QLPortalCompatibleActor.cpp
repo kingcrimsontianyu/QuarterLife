@@ -29,13 +29,14 @@ AQLPortalCompatibleActor::AQLPortalCompatibleActor()
     //// otherwise this actor will become transparent to gravity gun compatible actor
     //BoxComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 
-    //StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-    //StaticMeshComponent->SetupAttachment(RootComponent);
+    StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+    RootComponent = StaticMeshComponent;
+
     //StaticMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
-    ////float zDim = StaticMeshComponent->Bounds.BoxExtent.Z; // note: extent refers to half of the side
-    ////StaticMeshComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -2.0f * zDim));
-    ////StaticMeshComponent->SetWorldScale3D(FVector(0.4f, 2.0f, 2.0f));
-    ////StaticMeshComponent->bCastDynamicShadow = false; // avoid performance hit when the actor has large volume
+    //float zDim = StaticMeshComponent->Bounds.BoxExtent.Z; // note: extent refers to half of the side
+    //StaticMeshComponent->SetRelativeLocation(FVector(0.0f, 0.0f, -2.0f * zDim));
+    //StaticMeshComponent->SetWorldScale3D(FVector(0.4f, 2.0f, 2.0f));
+    //StaticMeshComponent->bCastDynamicShadow = false; // avoid performance hit when the actor has large volume
 }
 
 //------------------------------------------------------------

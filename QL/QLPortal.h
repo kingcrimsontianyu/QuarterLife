@@ -69,6 +69,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetCanUpdatePortalView(bool bFlag);
 
+    UFUNCTION()
+    void OnOverlapBeginForActor(AActor* OverlappedActor, AActor* OtherActor);
+
+    UFUNCTION()
+    void OnOverlapEndForActor(AActor* OverlappedActor, AActor* OtherActor);
+
+    void AddToRoll(AActor* GivenActor);
+
+    void RemoveFromRoll(AActor* GivenActor);
+
+    bool IsInMyRoll(AActor* GivenActor);
+
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned
@@ -140,4 +152,9 @@ protected:
 
     UPROPERTY()
     bool bCanUpdatePortalView;
+
+    UPROPERTY()
+    bool bCanTeleport;
+
+    TArray<AActor*> Roll;
 };
