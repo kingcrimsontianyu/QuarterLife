@@ -29,7 +29,7 @@ AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
     RateOfFire = 0.8f;
     RocketProjectileClass = AQLRocketProjectile::StaticClass();
     bIsProjectileWeapon = true;
-    ProjectileSpeed = 3000.0f;
+    ProjectileSpeed = 2500.0f; // 1000 ups = 2500 cm/s
 }
 
 //------------------------------------------------------------
@@ -89,7 +89,7 @@ void AQLWeaponRocketLauncher::OnFire()
         return;
     }
 
-    FVector SourceLocation = GetMuzzleLocation() + CameraComponent->GetForwardVector() * 10.0f;
+    FVector SourceLocation = CameraComponent->GetComponentLocation() + CameraComponent->GetForwardVector() * 200.0f;
     FVector TargetLocation;
 
     // if hit occurs
@@ -99,7 +99,7 @@ void AQLWeaponRocketLauncher::OnFire()
     }
     else
     {
-        TargetLocation = GetMuzzleLocation() + CameraComponent->GetForwardVector() * HitRange;
+        TargetLocation = SourceLocation + CameraComponent->GetForwardVector() * HitRange;
     }
 
     FVector ProjectileForwardVector = TargetLocation - SourceLocation;

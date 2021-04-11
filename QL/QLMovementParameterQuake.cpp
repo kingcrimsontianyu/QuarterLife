@@ -15,8 +15,8 @@
 //------------------------------------------------------------
 UQLMovementParameterQuake::UQLMovementParameterQuake()
 {
-    MaxWalkSpeed = 600.0f;
-    MaxAcceleration = 600.0f;
+    MaxWalkSpeed = 775.0f; // Ranger in QC: 310 ups = 775 cm/s
+    MaxAcceleration = 775.0f;
     AirControl = 0.5f;
     GroundAccelerationMultiplier = 10.0f;
     AirAccelerationMultiplier = 1.5f;
