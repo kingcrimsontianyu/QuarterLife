@@ -77,11 +77,6 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    bool bCanCastShadow;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FLinearColor BaseColor;
 
     //------------------------------------------------------------

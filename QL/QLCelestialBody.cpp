@@ -28,7 +28,6 @@ AQLCelestialBody::AQLCelestialBody()
     bCanRevolve = false;
     RevolutionRateInDegree = 30.0f;
     RevolutionAxisApproximate = FVector(0.0f, 0.0f, 1.0f);
-    bCanCastShadow = false;
     BaseColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     BasicStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameStaticMesh"));
@@ -52,8 +51,6 @@ void AQLCelestialBody::PostInitializeComponents()
             DynamicBasicStaticMeshMaterial->SetVectorParameterValue("BaseColor", BaseColor);
         }
     }
-
-    BasicStaticMesh->CastShadow = bCanCastShadow;
 }
 
 //------------------------------------------------------------
