@@ -29,11 +29,19 @@ AQLCelestialBody::AQLCelestialBody()
     RevolutionRateInDegree = 30.0f;
     RevolutionAxisApproximate = FVector(0.0f, 0.0f, 1.0f);
     BaseColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    GlowIntensity = 0.0f;
 
     BasicStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameStaticMesh"));
     BasicStaticMesh->SetupAttachment(RootComponent);
     BasicStaticMesh->SetSimulatePhysics(false);
     BasicStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCelestialBody::OnConstruction(const FTransform& Transform)
+{
+    Super::OnConstruction(Transform);
 }
 
 //------------------------------------------------------------
@@ -49,7 +57,21 @@ void AQLCelestialBody::PostInitializeComponents()
         if (DynamicBasicStaticMeshMaterial)
         {
             DynamicBasicStaticMeshMaterial->SetVectorParameterValue("BaseColor", BaseColor);
+            DynamicBasicStaticMeshMaterial->SetScalarParameterValue("GlowIntensity", GlowIntensity);
         }
+    }
+
+    if (bCanRevolve && RevolveAroundActor.IsValid())
+    {
+        FVector SunLocation(RevolveAroundActor->GetActorLocation());
+
+        FVector TempLocation = GetActorLocation() - SunLocation;
+
+        FVector Vb(-TempLocation);
+        Vb.Normalize(); // in-place normalize
+
+        RevolutionAxisNorm = RevolutionAxisApproximate - Vb * FVector::DotProduct(Vb, RevolutionAxisApproximate);
+        RevolutionAxisNorm.Normalize();
     }
 }
 
@@ -59,19 +81,6 @@ void AQLCelestialBody::PostInitializeComponents()
 void AQLCelestialBody::BeginPlay()
 {
 	Super::BeginPlay();
-
-    if (bCanRevolve && RevolveAroundActor.IsValid())
-    {
-        FVector SunLocation(RevolveAroundActor->GetActorLocation());
-
-        FVector TempLocation = GetActorLocation() - SunLocation;
-
-        FVector V1(-TempLocation);
-        V1.Normalize(); // in-place normalize
-
-        RevolutionAxisNorm = RevolutionAxisApproximate - V1 * FVector::DotProduct(V1, RevolutionAxisApproximate);
-        RevolutionAxisNorm.Normalize();
-    }
 }
 
 //------------------------------------------------------------

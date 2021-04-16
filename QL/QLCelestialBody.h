@@ -32,6 +32,10 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
+    virtual void OnConstruction(const FTransform& Transform) override;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
     virtual void PostInitializeComponents() override;
 
 public:
@@ -78,6 +82,11 @@ protected:
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     FLinearColor BaseColor;
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
+    float GlowIntensity;
 
     //------------------------------------------------------------
     //------------------------------------------------------------
