@@ -15,7 +15,6 @@
 #include "QLColoredPortal.h"
 #include "Engine/World.h"
 #include "Components/BoxComponent.h"
-#include "QLPortalCompatibleActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "QLWeaponManager.h"
 
@@ -84,16 +83,17 @@ void AQLWeaponPortalGun::CreatePortalIfConditionsAreMet(EPortalColor PortalColor
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: no hit");
-        PlaySound(FName(TEXT("NoPortal")));
         return;
     }
 
     // if hit occurs
+    AActor* pgcActor = HitResult.GetActor();
+
     // check if the hit actor is compatible with the portal gun
-    auto* pgcActor = Cast<AQLPortalCompatibleActor>(HitResult.GetActor());
+    bool bPortalCompatible = QLUtility::CheckIfActorIsPortalCompatible(pgcActor);
 
     // if the hit actor is not compatible
-    if (!pgcActor)
+    if (!bPortalCompatible)
     {
         // do sth
         QLUtility::Log("AQLWeaponPortalGun: not compatible");

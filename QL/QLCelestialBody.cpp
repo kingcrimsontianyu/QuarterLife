@@ -34,7 +34,8 @@ AQLCelestialBody::AQLCelestialBody()
     BasicStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameStaticMesh"));
     BasicStaticMesh->SetupAttachment(RootComponent);
     BasicStaticMesh->SetSimulatePhysics(false);
-    BasicStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
+    BasicStaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    BasicStaticMesh->SetCollisionObjectType(ECollisionChannel::ECC_Camera);
 }
 
 //------------------------------------------------------------
