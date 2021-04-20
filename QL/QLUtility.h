@@ -87,10 +87,4 @@ namespace QLUtility
         }
         return enumPtr->GetNameByValue((int64)Value).ToString();
     }
-
-    //------------------------------------------------------------
-    // Check if an actor has a UProperty named QLPortalCompatible,
-    // regardless of its type.
-    //------------------------------------------------------------
-    bool CheckIfActorIsPortalCompatible(AActor* TargetActor);
 }

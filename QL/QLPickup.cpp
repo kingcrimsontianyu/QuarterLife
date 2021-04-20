@@ -190,6 +190,13 @@ void AQLPickup::PlaySound(const FName& SoundName, EVirtualizationMode Virtualiza
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+bool AQLPickup::IsPlayingSound()
+{
+    return SoundComponent->IsPlaying();
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLPickup::StopSound()
 {
     if (SoundComponent)

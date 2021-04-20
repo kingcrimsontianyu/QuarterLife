@@ -40,6 +40,9 @@ public:
     void PlaySound(const FName& SoundName, EVirtualizationMode VirtualizationMode = EVirtualizationMode::PlayWhenSilent);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    bool IsPlayingSound();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

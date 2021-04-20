@@ -12,29 +12,25 @@
 
 #include "CoreMinimal.h"
 #include "QLWeapon.h"
-#include "QLWeaponRocketLauncher.generated.h"
+#include "QLWeaponGauntlet.generated.h"
 
-class AQLRocketProjectile;
 //------------------------------------------------------------
 //------------------------------------------------------------
 UCLASS()
-class QL_API AQLWeaponRocketLauncher : public AQLWeapon
+class QL_API AQLWeaponGauntlet : public AQLWeapon
 {
 	GENERATED_BODY()
 
 public:
-    AQLWeaponRocketLauncher();
+    AQLWeaponGauntlet();
 
     virtual void OnFire() override;
 
     virtual void OnFireRelease() override;
 
-    virtual void SpawnProjectile() override;
+    virtual void PerformDrill();
 protected:
     virtual void Tick(float DeltaTime) override;
 
     virtual void PostInitializeComponents() override;
-
-    UPROPERTY(EditDefaultsOnly, Category = "C++Property")
-    TSubclassOf<AQLRocketProjectile> RocketProjectileClass;
 };

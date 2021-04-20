@@ -73,6 +73,7 @@ void UQLWeaponManager::SetCurrentWeapon(const FName& QLName)
 
     // change current weapon
     CurrentWeapon = WeaponWanted;
+
     CurrentWeapon->GetGunSkeletalMeshComponent()->SetVisibility(true);
 
     // change cross-hair
@@ -159,7 +160,7 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
 
     if (User->GetIsBot())
     {
-        Weapon->AttachToComponent(User->GetThirdPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+        Weapon->AttachToComponent(User->GetThirdPersonMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("GripPoint"));
         // hardcoded adjustment
         // todo: come up with a more elegant solution!
         Weapon->SetActorRelativeLocation(FVector(-2.0f, 8.0f, -4.0f));
@@ -167,7 +168,14 @@ void UQLWeaponManager::AddWeapon(AQLWeapon* Weapon)
     }
     else
     {
-        Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+        if (Weapon->GetQLName() == FName(TEXT("Gauntlet")))
+        {
+            Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("GripPointDrill"));
+        }
+        else
+        {
+            Weapon->AttachToComponent(User->GetFirstPersonMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("GripPoint"));
+        }
     }
 
     if (bIsGlowing)

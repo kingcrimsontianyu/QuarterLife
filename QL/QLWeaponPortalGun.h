@@ -45,6 +45,11 @@ protected:
 
     void CreatePortalIfConditionsAreMet(EPortalColor PortalColor);
 
+    //------------------------------------------------------------
+    // Check if an actor can be shot at by a portal gun and generate portals
+    //------------------------------------------------------------
+    bool CheckIfActorIsPortalCompatible(AActor* TargetActor);
+
     UPROPERTY()
     TWeakObjectPtr<AQLColoredPortal> BluePortal;
 

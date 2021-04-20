@@ -307,6 +307,9 @@ protected:
     void LookUpAtRate(float Rate);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SwitchToGauntlet();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SwitchToRocketLauncher();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")

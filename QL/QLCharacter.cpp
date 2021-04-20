@@ -224,6 +224,7 @@ void AQLCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
     PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Pressed, this, &AQLCharacter::OnAltFire);
     PlayerInputComponent->BindAction("AltFire", EInputEvent::IE_Released, this, &AQLCharacter::OnAltFireRelease);
 
+    PlayerInputComponent->BindAction("SwitchToGauntlet", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToGauntlet);
     PlayerInputComponent->BindAction("SwitchToRocketLauncher", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRocketLauncher);
     PlayerInputComponent->BindAction("SwitchToLightningGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToLightningGun);
     PlayerInputComponent->BindAction("SwitchToRailGun", EInputEvent::IE_Pressed, this, &AQLCharacter::SwitchToRailGun);
@@ -541,6 +542,20 @@ void AQLCharacter::SetCurrentWeapon(const FName& QLName)
     }
 
     WeaponManager->SetCurrentWeapon(QLName);
+
+    // for melee weapon, hide first person mesh for the time being
+    if (GetCurrentWeapon() != nullptr)
+    {
+        if (GetCurrentWeapon()->GetQLName() == FName(TEXT("Gauntlet")))
+        {
+            FirstPersonMesh->SetVisibility(false);
+        }
+        else
+        {
+            FirstPersonMesh->SetVisibility(true);
+        }
+    }
+
 }
 
 //------------------------------------------------------------
@@ -800,6 +815,16 @@ AQLPlayerController* AQLCharacter::GetQLPlayerController()
     }
 
     return MyQLPlayerController;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLCharacter::SwitchToGauntlet()
+{
+    if (bCanSwitchWeapon)
+    {
+        SetCurrentWeapon(FName(TEXT("Gauntlet")));
+    }
 }
 
 //------------------------------------------------------------

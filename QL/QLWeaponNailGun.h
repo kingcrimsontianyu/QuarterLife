@@ -31,11 +31,7 @@ public:
 
     virtual void OnFireRelease() override;
 
-    virtual void OnFireHold() override;
-
-    virtual void SpawnNailProjectile();
-
-    virtual void StopFire() override;
+    virtual void SpawnProjectile() override;
 protected:
     virtual void PostInitializeComponents() override;
 

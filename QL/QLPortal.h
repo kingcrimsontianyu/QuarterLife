@@ -18,7 +18,7 @@
 //         Project settings --> Engine rendering --> Lighting --> Support global clip plane for planar reflections
 //
 // Portal gun compatible actor
-//    Any actor with a UPROPERTY() named QLPortalCompatible (regardless of its type) is compatible with the portal gun
+//    Any actor with a tag QLPortalCompatible is compatible with the portal gun
 //------------------------------------------------------------
 
 #pragma once

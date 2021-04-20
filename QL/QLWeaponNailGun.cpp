@@ -53,6 +53,23 @@ void AQLWeaponNailGun::Tick(float DeltaTime)
 //------------------------------------------------------------
 void AQLWeaponNailGun::OnFire()
 {
+    // if we are still in the fire disabled window, the weapon cannot be used
+    if (!bFireEnabled)
+    {
+        return;
+    }
+
+    // enforce rate of fire
+    bFireEnabled = false;
+    GetWorldTimerManager().SetTimer(DisableFireTimerHandle,
+        this,
+        &AQLWeaponNailGun::EnableFireCallBack,
+        1.0f, // time interval in second. since loop is not used,
+              // this parameter can be an arbitrary value except 0.0f.
+        false, // loop
+        RateOfFire); // delay in second
+
+    // allow continuous shooting
     if (bIsFireHeld)
     {
         return;
@@ -62,7 +79,7 @@ void AQLWeaponNailGun::OnFire()
 
     GetWorldTimerManager().SetTimer(HoldFireTimerHandle,
         this,
-        &AQLWeaponNailGun::SpawnNailProjectile,
+        &AQLWeaponNailGun::SpawnProjectile,
         RateOfFire, // time interval in second
         true, // loop
         0.0f); // delay in second
@@ -84,25 +101,7 @@ void AQLWeaponNailGun::OnFireRelease()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLWeaponNailGun::OnFireHold()
-{
-
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponNailGun::StopFire()
-{
-    // stop firing
-    if (bIsFireHeld)
-    {
-        OnFireRelease();
-    }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-void AQLWeaponNailGun::SpawnNailProjectile()
+void AQLWeaponNailGun::SpawnProjectile()
 {
     PlaySoundFireAndForget(FName(TEXT("Fire")));
 

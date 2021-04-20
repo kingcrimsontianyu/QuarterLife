@@ -165,24 +165,5 @@ namespace QLUtility
         float y = Center.Y + FMath::RandRange(-YHalfSide, YHalfSide);
         return FVector(x, y, Center.Z);
     }
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    bool CheckIfActorIsPortalCompatible(AActor* TargetActor)
-    {
-        bool found = false;
-
-        for (TFieldIterator<FProperty> PropIt(TargetActor->GetClass()); PropIt; ++PropIt)
-        {
-            FProperty* Property = *PropIt;
-            if (Property->GetName() == "QLPortalCompatible")
-            {
-                found = true;
-                break;
-            }
-        }
-
-        return found;
-    }
 }
 

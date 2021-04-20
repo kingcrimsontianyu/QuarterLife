@@ -28,6 +28,9 @@ public:
 
     virtual void OnFire() override;
 
+    virtual void OnFireRelease() override;
+
+    virtual void SpawnProjectile() override;
 protected:
     virtual void Tick(float DeltaTime) override;
 

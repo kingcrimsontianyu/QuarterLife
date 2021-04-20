@@ -68,6 +68,25 @@ void AQLWeaponRocketLauncher::OnFire()
                                     false, // loop
                                     RateOfFire); // delay in second
 
+    // allow continuous shooting
+    if (bIsFireHeld)
+    {
+        return;
+    }
+
+    bIsFireHeld = true;
+    GetWorldTimerManager().SetTimer(HoldFireTimerHandle,
+        this,
+        &AQLWeaponRocketLauncher::SpawnProjectile,
+        RateOfFire, // time interval in second
+        true, // loop
+        0.0f); // delay in second
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRocketLauncher::SpawnProjectile()
+{
     PlayAnimationMontage(FName(TEXT("Fire")));
 
     PlaySoundFireAndForget(FName(TEXT("Fire")));
@@ -134,4 +153,18 @@ void AQLWeaponRocketLauncher::OnFire()
         FVector FinalVelocity = ProjectileForwardVector * ProjectileSpeed;
         Rocket->GetProjectileMovementComponent()->Velocity = FinalVelocity;
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeaponRocketLauncher::OnFireRelease()
+{
+    if (!bIsFireHeld)
+    {
+        return;
+    }
+
+    bIsFireHeld = false;
+
+    GetWorldTimerManager().ClearTimer(HoldFireTimerHandle);
 }

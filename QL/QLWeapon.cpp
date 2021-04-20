@@ -135,6 +135,13 @@ void AQLWeapon::OnAltFireHold()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void AQLWeapon::SpawnProjectile()
+{
+
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 USkeletalMeshComponent* AQLWeapon::GetGunSkeletalMeshComponent()
 {
     return GunSkeletalMeshComponent;
@@ -195,6 +202,11 @@ UQLWeaponManager* AQLWeapon::GetWeaponManager()
 //------------------------------------------------------------
 void AQLWeapon::StopFire()
 {
+    // stop firing
+    if (bIsFireHeld)
+    {
+        OnFireRelease();
+    }
 }
 
 //------------------------------------------------------------
@@ -253,6 +265,44 @@ void AQLWeapon::PlayAnimationMontage(const FName& AnimationMontageName)
                         AnimInstance->Montage_Play(Animation, 1.0f);
                     }
                 }
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PlayWeaponAnimationMontage(const FName& AnimationMontageName)
+{
+    UAnimMontage** Result = AnimationMontageList.Find(AnimationMontageName);
+    if (Result)
+    {
+        UAnimMontage* MyAnimationMontage = *Result;
+        if (MyAnimationMontage)
+        {
+            UAnimInstance* AnimInstance = GunSkeletalMeshComponent->GetAnimInstance();
+            if (AnimInstance)
+            {
+                AnimInstance->Montage_Play(MyAnimationMontage, 1.0f);
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLWeapon::PlayWeaponAnimationMontageJumpToSectionsEnd(const FName& AnimationMontageName, const FName& SectionName)
+{
+    UAnimMontage** Result = AnimationMontageList.Find(AnimationMontageName);
+    if (Result)
+    {
+        UAnimMontage* MyAnimationMontage = *Result;
+        if (MyAnimationMontage)
+        {
+            UAnimInstance* AnimInstance = GunSkeletalMeshComponent->GetAnimInstance();
+            if (AnimInstance)
+            {
+                AnimInstance->Montage_JumpToSectionsEnd(SectionName, MyAnimationMontage);
             }
         }
     }
