@@ -59,6 +59,9 @@ void AQLWeaponGauntlet::Tick(float DeltaTime)
 }
 
 //------------------------------------------------------------
+// Enforce rate of fire
+// Allow for click spam that circumvents rate of fire limitation, which feels more fun
+// Allow continuous fire
 //------------------------------------------------------------
 void AQLWeaponGauntlet::OnFire()
 {
@@ -92,6 +95,12 @@ void AQLWeaponGauntlet::OnFire()
         RateOfFire, // time interval in second
         true, // loop
         0.0f); // delay in second
+
+    if (AnimInstanceWeapon.IsValid() && FireMontage)
+    {
+        AnimInstanceWeapon->Montage_Play(FireMontage);
+        AnimInstanceWeapon->Montage_JumpToSection(FName(TEXT("SecEngineStart")), FireMontage);
+    }
 }
 
 //------------------------------------------------------------
@@ -106,6 +115,7 @@ void AQLWeaponGauntlet::OnFireRelease()
     bIsFireHeld = false;
 
     GetWorldTimerManager().ClearTimer(HoldFireTimerHandle);
+    GetWorldTimerManager().ClearTimer(DisableFireTimerHandle);
 
     if (AnimInstanceWeapon.IsValid() && FireMontage)
     {
@@ -117,16 +127,4 @@ void AQLWeaponGauntlet::OnFireRelease()
 //------------------------------------------------------------
 void AQLWeaponGauntlet::PerformDrill()
 {
-    if (AnimInstanceWeapon.IsValid() && FireMontage)
-    {
-        // prevent the animation from repeatedly returning to the start when fire button is held
-        if (!AnimInstanceWeapon->Montage_IsPlaying(FireMontage))
-        {
-            // Note: If the gauntlet is fired at high rate by rapidly left clicking the mouse,
-            // it will appear as if the section SecEngineStart is repeatedly played. That is not true.
-            // It is actually the section SecEngineStop that is being repeatedly played.
-            AnimInstanceWeapon->Montage_Play(FireMontage);
-            AnimInstanceWeapon->Montage_JumpToSection(FName(TEXT("SecEngineStart")), FireMontage);
-        }
-    }
 }
