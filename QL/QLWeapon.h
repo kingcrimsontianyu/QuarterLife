@@ -52,11 +52,13 @@ public:
 
     virtual void SpawnProjectile();
 
-    virtual void PlayAnimationMontage(const FName& AnimationName) override;
+    UAnimMontage* GetAnimationMontage(const FName& MontageName);
 
-    virtual void PlayWeaponAnimationMontage(const FName& AnimationMontageName);
+    virtual void PlayAnimationMontage(const FName& MontageName) override;
 
-    virtual void PlayWeaponAnimationMontageJumpToSectionsEnd(const FName& AnimationMontageName, const FName& SectionName);
+    virtual void PlayAnimationMontageJumpToSection(const FName& MontageName, const FName& SectionName);
+
+    virtual void PlayAnimationMontageForCharacter(const FName& MontageName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     USkeletalMeshComponent* GetGunSkeletalMeshComponent();
@@ -159,4 +161,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float ProjectileSpeed;
+
+    UPROPERTY()
+    TWeakObjectPtr<UAnimInstance> AnimInstanceWeapon;
 };

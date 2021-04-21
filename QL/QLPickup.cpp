@@ -138,10 +138,15 @@ void AQLPickup::PostInitializeComponents()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLPickup::PlayAnimationMontage(const FName& AnimationMontageName)
+void AQLPickup::PlayAnimationMontage(const FName& MontageName)
 {
 }
 
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPickup::PlayAnimationMontageJumpToSection(const FName& MontageName, const FName& SectionName)
+{
+}
 
 //------------------------------------------------------------
 //------------------------------------------------------------
@@ -171,6 +176,27 @@ void AQLPickup::PlaySoundFireAndForget(const FName& SoundName, EVirtualizationMo
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+USoundBase* AQLPickup::GetSoundBase(const FName& SoundName)
+{
+    USoundBase* MySoundBase = nullptr;
+    USoundBase** Result = SoundList.Find(SoundName);
+    if (Result)
+    {
+        USoundBase* Sound = *Result;
+        if (Sound)
+        {
+            // force sound to be always played when EVirtualizationMode::PlayWhenSilent
+            Sound->VirtualizationMode = EVirtualizationMode::PlayWhenSilent;
+
+            MySoundBase = Sound;
+        }
+    }
+
+    return MySoundBase;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLPickup::PlaySound(const FName& SoundName, EVirtualizationMode VirtualizationMode)
 {
     USoundBase** Result = SoundList.Find(SoundName);
@@ -186,13 +212,6 @@ void AQLPickup::PlaySound(const FName& SoundName, EVirtualizationMode Virtualiza
             SoundComponent->Play(0.0f);
         }
     }
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
-bool AQLPickup::IsPlayingSound()
-{
-    return SoundComponent->IsPlaying();
 }
 
 //------------------------------------------------------------

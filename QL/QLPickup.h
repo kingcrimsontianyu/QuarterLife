@@ -36,17 +36,19 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void PlaySoundFireAndForget(const FName& SoundName, EVirtualizationMode VirtualizationMode = EVirtualizationMode::PlayWhenSilent);
 
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void PlaySound(const FName& SoundName, EVirtualizationMode VirtualizationMode = EVirtualizationMode::PlayWhenSilent);
+    USoundBase* GetSoundBase(const FName& SoundName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    bool IsPlayingSound();
+    void PlaySound(const FName& SoundName, EVirtualizationMode VirtualizationMode = EVirtualizationMode::PlayWhenSilent);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void StopSound();
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    virtual void PlayAnimationMontage(const FName& AnimationMontageName);
+    virtual void PlayAnimationMontage(const FName& MontageName);
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    virtual void PlayAnimationMontageJumpToSection(const FName& MontageName, const FName& SectionName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetConstantRotationEnabled(const bool bFlag);
