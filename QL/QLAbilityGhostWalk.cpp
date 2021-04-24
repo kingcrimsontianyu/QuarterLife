@@ -26,6 +26,8 @@
 AQLAbilityGhostWalk::AQLAbilityGhostWalk()
 {
     QLName = FName(TEXT("GhostWalk"));
+    AbilityType = EQLAbility::GhostWalk;
+
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
     TelefragDamage = 8000.0f;

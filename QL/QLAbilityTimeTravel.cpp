@@ -25,6 +25,8 @@
 AQLAbilityTimeTravel::AQLAbilityTimeTravel()
 {
     QLName = FName(TEXT("TimeTravel"));
+    AbilityType = EQLAbility::TimeTravel;
+
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
 
@@ -43,8 +45,6 @@ AQLAbilityTimeTravel::AQLAbilityTimeTravel()
 //------------------------------------------------------------
 void AQLAbilityTimeTravel::BeginPlay()
 {
-    Super::BeginPlay();
-
     FTransform transform;
 
     NearPortal = GetWorld()->SpawnActorDeferred<AQLPortal>(PortalClass, transform);
@@ -53,7 +53,7 @@ void AQLAbilityTimeTravel::BeginPlay()
     // attach near portal actor to this actor
     NearPortal->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
     NearPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-    NearPortal->SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+    NearPortal->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
     FarPortal = GetWorld()->SpawnActorDeferred<AQLPortal>(PortalClass, transform);
     UGameplayStatics::FinishSpawningActor(FarPortal, transform);
@@ -64,7 +64,7 @@ void AQLAbilityTimeTravel::BeginPlay()
     // attach far portal actor to the shadow ability actor
     FarPortal->AttachToActor(ShadowAbility, FAttachmentTransformRules::KeepRelativeTransform);
     FarPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-    FarPortal->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+    FarPortal->SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
 
     // to improve performance, disallow far portal to update its portal view
     FarPortal->SetCanUpdatePortalView(false);
@@ -74,6 +74,11 @@ void AQLAbilityTimeTravel::BeginPlay()
         NearPortal->SetSpouse(FarPortal);
         FarPortal->SetSpouse(NearPortal);
     }
+
+    // blueprint event begin play function is called by c++ AActor::BeginPlay()
+    // to ensure NearPortal and FarPortal are created before portal material setup,
+    // this call must be placed at the end
+    Super::BeginPlay();
 }
 
 //------------------------------------------------------------
@@ -302,9 +307,14 @@ void AQLAbilityTimeTravel::OnAbilitySetCurrent()
         AQLCharacter* MyCharacter = AbilityManager->GetUser();
         if (MyCharacter)
         {
-            this->AttachToComponent(MyCharacter->GetFirstPersonMesh(), FAttachmentTransformRules::KeepRelativeTransform);
-            this->SetActorRelativeLocation(FVector(100.0f, -45.0f, 150.0f));
-            this->SetActorRelativeRotation(FRotator(0.0f, -60.0f, 0.0f));
+            //this->AttachToComponent(MyCharacter->GetFirstPersonMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+            //this->SetActorRelativeLocation(FVector(100.0f, -45.0f, 150.0f));
+            //this->SetActorRelativeRotation(FRotator(0.0f, -60.0f, 0.0f));
+
+            AttachToComponent(
+                MyCharacter->GetFirstPersonMesh(),
+                FAttachmentTransformRules::KeepRelativeTransform,
+                FName(TEXT("GripPointTimepiece")));
 
             UStaticMeshComponent* abilityMesh = GetStaticMeshComponent();
             if (abilityMesh)

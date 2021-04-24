@@ -28,6 +28,8 @@
 AQLAbilityTheWorld::AQLAbilityTheWorld()
 {
     QLName = FName(TEXT("TheWorld"));
+    AbilityType = EQLAbility::TheWorld;
+
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
 

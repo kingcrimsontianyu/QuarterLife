@@ -11,6 +11,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QLWeaponEnum.h"
+#include "QLAbilityEnum.h"
 #include "GameFramework/Character.h"
 #include "QLPlayerHealthArmorBarUserWidget.h"
 #include "Components/TimelineComponent.h"
@@ -88,7 +90,7 @@ public:
     void AddWeapon(AQLWeapon* Weapon);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCurrentWeapon(const FName& QLName);
+    void SetCurrentWeapon(const EQLWeapon WeaponType);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     AQLWeapon* GetCurrentWeapon();
@@ -97,7 +99,7 @@ public:
     void AddAbility(AQLAbility* Ability);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    void SetCurrentAbility(const FName& QLName);
+    void SetCurrentAbility(const EQLAbility AbilityType);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetCurrentMovementStyle(EQLMovementStyle MyStyle);
@@ -160,7 +162,7 @@ public:
     virtual UAnimSequence* PlayAnimationSequence(const FName& AnimationSequenceName);
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    bool HasWeapon(const FName& WeaponName);
+    bool HasWeapon(const EQLWeapon WeaponType);
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float Health;

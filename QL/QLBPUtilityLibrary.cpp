@@ -19,8 +19,8 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLBPUtilityLibrary::InitializePlayer(const FString& InitialAbility,
-    const FString& InitialWeapon,
+void UQLBPUtilityLibrary::InitializePlayer(const EQLAbility InitialAbility,
+    const EQLWeapon InitialWeapon,
     const UObject* WorldContextObj,
     const AActor* NearActor,
     const AActor* FarActor)
@@ -39,8 +39,8 @@ void UQLBPUtilityLibrary::InitializePlayer(const FString& InitialAbility,
         if (MyQLCharacter)
         {
             MyQLCharacter->EquipAll();
-            MyQLCharacter->SetCurrentAbility(FName(InitialAbility));
-            MyQLCharacter->SetCurrentWeapon(FName(InitialWeapon));
+            MyQLCharacter->SetCurrentAbility(InitialAbility);
+            MyQLCharacter->SetCurrentWeapon(InitialWeapon);
 
             if (NearActor != nullptr && FarActor != nullptr)
             {

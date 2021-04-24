@@ -35,16 +35,6 @@ AQLPortal::AQLPortal()
     BoxComponent->SetSimulatePhysics(false);
     BoxComponent->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 
-    FrameStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameStaticMesh"));
-    FrameStaticMesh->SetupAttachment(RootComponent);
-    FrameStaticMesh->SetSimulatePhysics(false);
-    FrameStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
-
-    DisplayPlaneStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DisplayPlaneStaticMesh"));
-    DisplayPlaneStaticMesh->SetupAttachment(RootComponent);
-    DisplayPlaneStaticMesh->SetSimulatePhysics(false);
-    DisplayPlaneStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
-
     SceneCaptureComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCaptureComponent"));
     SceneCaptureComponent->SetRelativeLocation(FVector(200.0f, 0.0f, 0.0f));
     SceneCaptureComponent->bEnableClipPlane = true;
@@ -62,8 +52,15 @@ AQLPortal::AQLPortal()
 //------------------------------------------------------------
 void AQLPortal::BeginPlay()
 {
-	Super::BeginPlay();
+    // call Blueprint "event begin play" function
+    Super::BeginPlay();
 
+    // Blueprint subclass of AQLPortal should call SetPortalMaterialInstanceDynamic() to
+    // initialize PortalMaterialInstanceDynamic
+    if (PortalMaterialInstanceDynamic.IsValid())
+    {
+        PortalMaterialInstanceDynamic->SetTextureParameterValue("PortalTexture", RenderTarget);
+    }
 }
 
 //------------------------------------------------------------
@@ -83,7 +80,7 @@ void AQLPortal::Tick(float DeltaTime)
 // To list the available material parameters, use:
 // TArray<FMaterialParameterInfo> outParamInfo;
 // TArray<FGuid> outParamIds;
-// DynamicDisplayPlaneMaterial->GetAllTextureParameterInfo(outParamInfo, outParamIds);
+// PortalMaterialInstanceDynamic->GetAllTextureParameterInfo(outParamInfo, outParamIds);
 // for (auto&& item : outParamInfo)
 // {
 //     QLUtility::Screen(item.Name.ToString());
@@ -122,16 +119,6 @@ void AQLPortal::PostInitializeComponents()
         SceneCaptureComponent->FOVAngle = 100.0f;
 
         SceneCaptureComponent->ProjectionType = ECameraProjectionMode::Perspective;
-    }
-
-    UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
-    if (PortalMaterial)
-    {
-        DynamicDisplayPlaneMaterial = DisplayPlaneStaticMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, PortalMaterial);
-        if (DynamicDisplayPlaneMaterial.IsValid())
-        {
-            DynamicDisplayPlaneMaterial->SetTextureParameterValue("PortalTexture", RenderTarget);
-        }
     }
 
     // built-in dynamic delegate
@@ -248,24 +235,10 @@ UBoxComponent* AQLPortal::GetBoxComponent()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UStaticMeshComponent* AQLPortal::GetDisplayPlaneStaticMesh()
-{
-    return DisplayPlaneStaticMesh;
-}
-
-//------------------------------------------------------------
-//------------------------------------------------------------
 void AQLPortal::Debug()
 {
     QLUtility::Log(SceneCaptureComponent->GetComponentLocation().ToString());
     QLUtility::Log(SceneCaptureComponent->GetComponentRotation().ToString());
-
-    //QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentLocation().ToString());
-    //QLUtility::Log(Spouse->SceneCaptureComponent->GetComponentRotation().ToString());
-
-    //APlayerCameraManager* cm = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-    //QLUtility::Log(cm->GetCameraLocation().ToString());
-    //QLUtility::Log(cm->GetCameraRotation().ToString());
 }
 
 //------------------------------------------------------------
@@ -310,4 +283,11 @@ void AQLPortal::RemoveFromRoll(AActor* GivenActor)
 bool AQLPortal::IsInMyRoll(AActor* GivenActor)
 {
     return Roll.Contains(GivenActor);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::SetPortalMaterialInstanceDynamic(UMaterialInstanceDynamic* PortalMaterialInstanceDynamicExt)
+{
+    PortalMaterialInstanceDynamic = PortalMaterialInstanceDynamicExt;
 }

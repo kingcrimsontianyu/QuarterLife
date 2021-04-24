@@ -11,6 +11,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "QLWeaponEnum.h"
+#include "QLAbilityEnum.h"
 #include "QLUmgInventory.generated.h"
 
 class AQLPlayerController;
@@ -44,7 +46,7 @@ public:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
-    int SetCurrentAbility(const FName& QLName);
+    int SetCurrentAbility(const EQLAbility AbilityType);
 protected:
     virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent);
 

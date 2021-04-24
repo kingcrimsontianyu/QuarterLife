@@ -64,7 +64,7 @@ EBTNodeResult::Type UQLBTTaskAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
         // if the current weapon is not set
         if (!CurrentWeapon)
         {
-            MyBotCharacter->SetCurrentWeapon(MyController->GetStartingWeaponName());
+            MyBotCharacter->SetCurrentWeapon(MyController->GetStartingWeaponType());
         }
         // otherwise, ready to shoot
         else

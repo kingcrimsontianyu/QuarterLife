@@ -30,6 +30,8 @@ AQLWeaponGauntlet::AQLWeaponGauntlet()
     SoundComponentEngineStop->bAutoActivate = false;
 
     QLName = FName(TEXT("Gauntlet"));
+    WeaponType = EQLWeapon::Gauntlet;
+
     //HitRange = 1200.0f;
     RateOfFire = 0.025f;
     bIsFireHeld = false;

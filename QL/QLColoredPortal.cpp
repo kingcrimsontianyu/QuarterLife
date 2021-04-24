@@ -23,6 +23,11 @@ PortalColor(EPortalColor::Invalid)
 {
     BoxComponent->InitBoxExtent(FVector(50.0f, 120.0f, 150.0f));
 
+    DisplayPlaneStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DisplayPlaneStaticMesh"));
+    DisplayPlaneStaticMesh->SetupAttachment(RootComponent);
+    DisplayPlaneStaticMesh->SetSimulatePhysics(false);
+    DisplayPlaneStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
+
     // animation
     EnlargeTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("EnlargeTimeline"));
     EnlargeTimelineInterpFunction.BindUFunction(this, FName(TEXT("EnlargeCallback")));
@@ -34,15 +39,33 @@ void AQLColoredPortal::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    if (DynamicDisplayPlaneMaterial.IsValid())
+    if (PortalMaterialInstanceDynamic.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", 0.1f);
+        PortalMaterialInstanceDynamic->SetScalarParameterValue("PortalScaleFactor", 0.1f);
     }
 
     if (EnlargeTimeline && EnlargeCurve)
     {
         EnlargeTimeline->AddInterpFloat(EnlargeCurve, EnlargeTimelineInterpFunction, FName(TEXT("Enlarge")));
     }
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLColoredPortal::BeginPlay()
+{
+    // specify PortalMaterialInstanceDynamic
+    UMaterialInterface* PortalMaterial = DisplayPlaneStaticMesh->GetMaterial(0);
+    if (PortalMaterial)
+    {
+        UMaterialInstanceDynamic* Result = DisplayPlaneStaticMesh->CreateAndSetMaterialInstanceDynamicFromMaterial(0, PortalMaterial);
+        SetPortalMaterialInstanceDynamic(Result);
+    }
+
+
+    // call Blueprint "event begin play" function
+    // then associate PortalMaterialInstanceDynamic with render target
+    Super::BeginPlay();
 }
 
 //------------------------------------------------------------
@@ -107,9 +130,9 @@ void AQLColoredPortal::CleanUp()
 //------------------------------------------------------------
 void AQLColoredPortal::SetBlue()
 {
-    if (DynamicDisplayPlaneMaterial.IsValid())
+    if (PortalMaterialInstanceDynamic.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 0);
+        PortalMaterialInstanceDynamic->SetScalarParameterValue("PortalColor", 0);
     }
 }
 
@@ -117,9 +140,9 @@ void AQLColoredPortal::SetBlue()
 //------------------------------------------------------------
 void AQLColoredPortal::SetOrange()
 {
-    if (DynamicDisplayPlaneMaterial.IsValid())
+    if (PortalMaterialInstanceDynamic.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalColor", 1);
+        PortalMaterialInstanceDynamic->SetScalarParameterValue("PortalColor", 1);
     }
 }
 
@@ -127,9 +150,9 @@ void AQLColoredPortal::SetOrange()
 //------------------------------------------------------------
 void AQLColoredPortal::SetActive()
 {
-    if (DynamicDisplayPlaneMaterial.IsValid())
+    if (PortalMaterialInstanceDynamic.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 1);
+        PortalMaterialInstanceDynamic->SetScalarParameterValue("PortalState", 1);
     }
 }
 
@@ -137,9 +160,9 @@ void AQLColoredPortal::SetActive()
 //------------------------------------------------------------
 void AQLColoredPortal::SetInactive()
 {
-    if (DynamicDisplayPlaneMaterial.IsValid())
+    if (PortalMaterialInstanceDynamic.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalState", 0);
+        PortalMaterialInstanceDynamic->SetScalarParameterValue("PortalState", 0);
     }
 }
 
@@ -147,8 +170,8 @@ void AQLColoredPortal::SetInactive()
 //------------------------------------------------------------
 void AQLColoredPortal::EnlargeCallback(float Val)
 {
-    if (DynamicDisplayPlaneMaterial.IsValid())
+    if (PortalMaterialInstanceDynamic.IsValid())
     {
-        DynamicDisplayPlaneMaterial->SetScalarParameterValue("PortalScaleFactor", Val);
+        PortalMaterialInstanceDynamic->SetScalarParameterValue("PortalScaleFactor", Val);
     }
 }

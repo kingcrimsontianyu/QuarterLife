@@ -15,10 +15,10 @@
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-UENUM()
+UENUM(BlueprintType)
 enum class EPortalColor : uint8
 {
-    Invalid,
-    Blue,
-    Orange,
+    Invalid UMETA(DisplayName="Invalid"),
+    Blue UMETA(DisplayName = "Blue"),
+    Orange UMETA(DisplayName = "Orange"),
 };

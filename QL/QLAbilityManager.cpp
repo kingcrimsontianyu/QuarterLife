@@ -44,14 +44,14 @@ AQLCharacter* UQLAbilityManager::GetUser()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLAbilityManager::SetCurrentAbility(const FName& QLName)
+void UQLAbilityManager::SetCurrentAbility(const EQLAbility AbilityType)
 {
     // find if the named Ability is in the inventory
     AQLAbility* AbilityWanted = nullptr;
 
     for (const auto& Item : AbilityList)
     {
-        if (QLName == Item->GetQLName())
+        if (AbilityType == Item->GetAbilityType())
         {
             AbilityWanted = Item;
             break;
@@ -61,7 +61,6 @@ void UQLAbilityManager::SetCurrentAbility(const FName& QLName)
     // if it is not, do nothing
     if (!AbilityWanted)
     {
-        QLUtility::Log("Named ability not found : " + QLName.ToString());
         return;
     }
 
@@ -154,7 +153,7 @@ void UQLAbilityManager::CreateAndAddAllAbilities(const TArray<TSubclassOf<AQLAbi
     {
         auto* Ability = GetWorld()->SpawnActor<AQLAbility>(Item, FVector::ZeroVector, FRotator::ZeroRotator);
         AddAbility(Ability);
-        User->SetCurrentAbility(Ability->GetQLName());
+        User->SetCurrentAbility(Ability->GetAbilityType());
         Ability->UpdateProgressOnUMGInternal(1.0f);
     }
 }

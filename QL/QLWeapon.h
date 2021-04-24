@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "QLPickup.h"
+#include "QLWeaponEnum.h"
 #include "QLWeapon.generated.h"
 
 class AQLCharacter;
@@ -98,6 +99,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     float GetProjectileSpeed();
+
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    EQLWeapon GetWeaponType() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -164,4 +168,7 @@ protected:
 
     UPROPERTY()
     TWeakObjectPtr<UAnimInstance> AnimInstanceWeapon;
+
+    UPROPERTY()
+    EQLWeapon WeaponType;
 };

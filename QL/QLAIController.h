@@ -12,7 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include <vector>
+#include "QLWeaponEnum.h"
 #include "QLAIController.generated.h"
 
 class UAISenseConfig;
@@ -71,7 +71,7 @@ public:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UFUNCTION(BlueprintCallable, Category = "C++Function")
-    FName GetStartingWeaponName();
+    EQLWeapon GetStartingWeaponType();
 
 protected:
     //------------------------------------------------------------
@@ -121,7 +121,10 @@ protected:
     //------------------------------------------------------------
     //------------------------------------------------------------
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
-    FName StartingWeaponName;
+    EQLWeapon StartingWeaponType;
 
-    std::vector<FName> StartingWeaponList;
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY()
+    TArray<EQLWeapon> StartingWeaponList;
 };

@@ -58,11 +58,6 @@ public:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    UFUNCTION(BlueprintCallable, Category = "C++Function")
-    UStaticMeshComponent* GetDisplayPlaneStaticMesh();
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
     virtual void Debug();
 
     //------------------------------------------------------------
@@ -81,6 +76,12 @@ public:
     void RemoveFromRoll(AActor* GivenActor);
 
     bool IsInMyRoll(AActor* GivenActor);
+
+    //------------------------------------------------------------
+    // Specify target material to which the render target feeds the view update per tick
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    void SetPortalMaterialInstanceDynamic(UMaterialInstanceDynamic* PortalMaterialInstanceDynamicExt);
 
 protected:
     //------------------------------------------------------------
@@ -131,13 +132,8 @@ protected:
 
     //------------------------------------------------------------
     //------------------------------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UStaticMeshComponent* FrameStaticMesh;
-
-    //------------------------------------------------------------
-    //------------------------------------------------------------
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
-    UStaticMeshComponent* DisplayPlaneStaticMesh;
+    UPROPERTY()
+    TWeakObjectPtr<UMaterialInstanceDynamic> PortalMaterialInstanceDynamic;
 
     //------------------------------------------------------------
     // The pairing portal
@@ -145,16 +141,11 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<AQLPortal> Spouse;
 
-    //------------------------------------------------------------
-    // Points to the dynamic instanced material of DisplayPlaneStaticMesh
-    //------------------------------------------------------------
-    UPROPERTY()
-    TWeakObjectPtr <UMaterialInstanceDynamic> DynamicDisplayPlaneMaterial;
-
     UPROPERTY()
     bool bCanUpdatePortalView;
 
-    UPROPERTY()
+    // Whether the portal can teleport players, or just provide views
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++Property")
     bool bCanTeleport;
 
     TArray<AActor*> Roll;

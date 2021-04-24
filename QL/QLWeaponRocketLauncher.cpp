@@ -26,6 +26,8 @@
 AQLWeaponRocketLauncher::AQLWeaponRocketLauncher()
 {
     QLName = FName(TEXT("RocketLauncher"));
+    WeaponType = EQLWeapon::RocketLauncher;
+
     RateOfFire = 0.8f;
     RocketProjectileClass = AQLRocketProjectile::StaticClass();
     bIsProjectileWeapon = true;

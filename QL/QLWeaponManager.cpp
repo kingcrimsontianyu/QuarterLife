@@ -44,14 +44,14 @@ AQLCharacter* UQLWeaponManager::GetUser()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void UQLWeaponManager::SetCurrentWeapon(const FName& QLName)
+void UQLWeaponManager::SetCurrentWeapon(const EQLWeapon WeaponType)
 {
     // find if the named weapon is in the inventory
     AQLWeapon* WeaponWanted = nullptr;
 
     for (const auto& Item : WeaponList)
     {
-        if (QLName == Item->GetQLName())
+        if (WeaponType == Item->GetWeaponType())
         {
             WeaponWanted = Item;
             break;
@@ -260,11 +260,11 @@ void UQLWeaponManager::SetCurrentWeaponVisibility(const bool bFlag)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-bool UQLWeaponManager::HasWeapon(const FName& WeaponName)
+bool UQLWeaponManager::HasWeapon(const EQLWeapon WeaponType)
 {
     for (auto& Item : WeaponList)
     {
-        if (Item->GetQLName() == WeaponName)
+        if (Item->GetWeaponType() == WeaponType)
         {
             return true;
         }

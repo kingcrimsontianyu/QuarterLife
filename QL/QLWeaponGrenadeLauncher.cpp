@@ -25,6 +25,7 @@
 AQLWeaponGrenadeLauncher::AQLWeaponGrenadeLauncher()
 {
     QLName = FName(TEXT("GrenadeLauncher"));
+    WeaponType = EQLWeapon::GrenadeLauncher;
 
     RateOfFire = 1.0f;
 

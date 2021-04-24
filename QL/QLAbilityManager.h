@@ -11,6 +11,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QLAbilityEnum.h"
 #include "UObject/NoExportTypes.h"
 #include "QLAbilityManager.generated.h"
 
@@ -33,7 +34,7 @@ public:
 
     void AddAbility(AQLAbility* Ability);
 
-    void SetCurrentAbility(const FName& QLName);
+    void SetCurrentAbility(const EQLAbility AbilityType);
 
     AQLAbility* GetCurrentAbility();
 

@@ -11,6 +11,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QLAbilityEnum.h"
+#include "QLWeaponEnum.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 #include "QLBPUtilityLibrary.generated.h"
@@ -24,8 +26,8 @@ class QL_API UQLBPUtilityLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
     UFUNCTION(BlueprintCallable, Category = "C++")
-    static void InitializePlayer(const FString& InitialAbility,
-        const FString& InitialWeapon,
+    static void InitializePlayer(const EQLAbility InitialAbility,
+        const EQLWeapon InitialWeapon,
         const UObject* WorldContextObj,
         const AActor* NearActor = nullptr,
         const AActor* FarActor = nullptr);

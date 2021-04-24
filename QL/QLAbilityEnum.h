@@ -11,16 +11,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "QLMovementStyle.generated.h"
+#include "QLAbilityEnum.generated.h"
 
 //------------------------------------------------------------
 //------------------------------------------------------------
 UENUM(BlueprintType)
-enum class EQLMovementStyle : uint8
+enum class EQLAbility : uint8
 {
-    Default UMETA(DisplayName = "Default"),
-    QuakeVanilla UMETA(DisplayName = "QuakeVanilla"), // vanilla quake 3, VQ3
-    QuakeCPMA UMETA(DisplayName = "QuakeCPMA"), // Challenge ProMode Arena
-    DoomGuy UMETA(DisplayName = "DoomGuy"),
-    QuakeCrouchSlide UMETA(DisplayName = "QuakeCrouchSlide"), // Slash, Strogg & Peeker
+    None UMETA(DisplayName = "None"),
+    GhostWalk UMETA(DisplayName = "GhostWalk"),
+    HealingRain UMETA(DisplayName = "HealingRain"),
+    PiercingSight UMETA(DisplayName = "PiercingSight"),
+    TheWorld UMETA(DisplayName = "TheWorld"),
+    TimeTravel UMETA(DisplayName = "TimeTravel"),
 };

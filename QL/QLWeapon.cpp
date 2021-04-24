@@ -53,6 +53,8 @@ AQLWeapon::AQLWeapon()
     DamageMultiplier = 1.0;
 
     bIsProjectileWeapon = false;
+
+    WeaponType = EQLWeapon::None;
 }
 
 //------------------------------------------------------------
@@ -219,13 +221,13 @@ void AQLWeapon::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp,
     if (QLCharacter)
     {
         // if the character has weapon of this type already, nothing will happen
-        if (QLCharacter->HasWeapon(this->GetQLName()))
+        if (QLCharacter->HasWeapon(this->GetWeaponType()))
         {
             return;
         }
 
         QLCharacter->AddWeapon(this);
-        QLCharacter->SetCurrentWeapon(this->GetQLName());
+        QLCharacter->SetCurrentWeapon(this->GetWeaponType());
         PlaySound("PickUp");
 
         // disable delegate
@@ -372,4 +374,11 @@ bool AQLWeapon::IsProjectileWeapon()
 float AQLWeapon::GetProjectileSpeed()
 {
     return ProjectileSpeed;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+EQLWeapon AQLWeapon::GetWeaponType() const
+{
+    return WeaponType;
 }

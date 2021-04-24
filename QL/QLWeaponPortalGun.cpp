@@ -26,6 +26,7 @@ AQLWeaponPortalGun::AQLWeaponPortalGun()
     HitRange = 10000.0f;
 
     QLName = FName(TEXT("PortalGun"));
+    WeaponType = EQLWeapon::PortalGun;
 
     PortalClass = AQLColoredPortal::StaticClass();
 }

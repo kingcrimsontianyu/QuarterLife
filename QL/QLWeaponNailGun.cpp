@@ -25,6 +25,8 @@
 AQLWeaponNailGun::AQLWeaponNailGun()
 {
     QLName = FName(TEXT("NailGun"));
+    WeaponType = EQLWeapon::NailGun;
+
     RateOfFire = 0.1f;
     NailProjectileClass = AQLNailProjectile::StaticClass();
 

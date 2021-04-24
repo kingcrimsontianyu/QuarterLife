@@ -64,10 +64,10 @@ AQLAIController::AQLAIController()
 
     QLTeamId = FGenericTeamId(1);
 
-    StartingWeaponList.push_back("RailGun");
-    StartingWeaponList.push_back("LightningGun");
-    StartingWeaponList.push_back("RocketLauncher");
-    StartingWeaponList.push_back("NailGun");
+    StartingWeaponList.Add(EQLWeapon::RailGun);
+    StartingWeaponList.Add(EQLWeapon::LightningGun);
+    StartingWeaponList.Add(EQLWeapon::RocketLauncher);
+    StartingWeaponList.Add(EQLWeapon::NailGun);
 
     bRandomStartingWeapon = false;
 }
@@ -291,14 +291,14 @@ void AQLAIController::BroadcastTarget(AQLCharacter* Target)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-FName AQLAIController::GetStartingWeaponName()
+EQLWeapon AQLAIController::GetStartingWeaponType()
 {
     if (bRandomStartingWeapon)
     {
-        StartingWeaponName = StartingWeaponList[FMath::RandRange(0, StartingWeaponList.size() - 1)];
+        StartingWeaponType = StartingWeaponList[FMath::RandRange(0, StartingWeaponList.Num() - 1)];
     }
 
-    return StartingWeaponName;
+    return StartingWeaponType;
 }
 
 //------------------------------------------------------------

@@ -12,6 +12,7 @@
 
 #include "CoreMinimal.h"
 #include "QLPickup.h"
+#include "QLAbilityEnum.h"
 #include "QLAbility.generated.h"
 
 //------------------------------------------------------------
@@ -74,6 +75,11 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     virtual void OnAbilityUnsetCurrent();
 
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, Category = "C++Function")
+    EQLAbility GetAbilityType() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -108,4 +114,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "C++Property")
     float AbilityDuration;
+
+    UPROPERTY()
+    EQLAbility AbilityType;
 };

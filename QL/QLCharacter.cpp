@@ -534,14 +534,14 @@ void AQLCharacter::RemovePowerup(AQLPowerup* Powerup)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::SetCurrentWeapon(const FName& QLName)
+void AQLCharacter::SetCurrentWeapon(const EQLWeapon WeaponType)
 {
     if (!WeaponManager)
     {
         return;
     }
 
-    WeaponManager->SetCurrentWeapon(QLName);
+    WeaponManager->SetCurrentWeapon(WeaponType);
 
     // for melee weapon, hide first person mesh for the time being
     if (GetCurrentWeapon() != nullptr)
@@ -572,14 +572,14 @@ AQLWeapon* AQLCharacter::GetCurrentWeapon()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-void AQLCharacter::SetCurrentAbility(const FName& QLName)
+void AQLCharacter::SetCurrentAbility(const EQLAbility AbilityType)
 {
     if (!AbilityManager)
     {
         return;
     }
 
-    AbilityManager->SetCurrentAbility(QLName);
+    AbilityManager->SetCurrentAbility(AbilityType);
 }
 
 //------------------------------------------------------------
@@ -823,7 +823,7 @@ void AQLCharacter::SwitchToGauntlet()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("Gauntlet")));
+        SetCurrentWeapon(EQLWeapon::Gauntlet);
     }
 }
 
@@ -833,7 +833,7 @@ void AQLCharacter::SwitchToRocketLauncher()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("RocketLauncher")));
+        SetCurrentWeapon(EQLWeapon::RocketLauncher);
     }
 }
 
@@ -843,7 +843,7 @@ void AQLCharacter::SwitchToLightningGun()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("LightningGun")));
+        SetCurrentWeapon(EQLWeapon::LightningGun);
     }
 }
 
@@ -853,7 +853,7 @@ void AQLCharacter::SwitchToRailGun()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("RailGun")));
+        SetCurrentWeapon(EQLWeapon::RailGun);
     }
 }
 
@@ -863,7 +863,7 @@ void AQLCharacter::SwitchToNailGun()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("NailGun")));
+        SetCurrentWeapon(EQLWeapon::NailGun);
     }
 }
 
@@ -873,7 +873,7 @@ void AQLCharacter::SwitchToPortalGun()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("PortalGun")));
+        SetCurrentWeapon(EQLWeapon::PortalGun);
     }
 }
 
@@ -883,7 +883,7 @@ void AQLCharacter::SwitchToGrenadeLauncher()
 {
     if (bCanSwitchWeapon)
     {
-        SetCurrentWeapon(FName(TEXT("GrenadeLauncher")));
+        SetCurrentWeapon(EQLWeapon::GrenadeLauncher);
     }
 }
 
@@ -1149,14 +1149,14 @@ void AQLCharacter::SetWeaponEnabled(const bool bFlag)
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-bool AQLCharacter::HasWeapon(const FName& WeaponName)
+bool AQLCharacter::HasWeapon(const EQLWeapon WeaponType)
 {
     if (!WeaponManager)
     {
         return false;
     }
 
-    return WeaponManager->HasWeapon(WeaponName);
+    return WeaponManager->HasWeapon(WeaponType);
 }
 
 //------------------------------------------------------------

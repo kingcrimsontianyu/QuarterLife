@@ -22,6 +22,8 @@
 AQLAbilityPiercingSight::AQLAbilityPiercingSight()
 {
     QLName = FName(TEXT("PiercingSight"));
+    AbilityType = EQLAbility::PiercingSight;
+
     PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
     PostProcessComponent->bEnabled = false;
 

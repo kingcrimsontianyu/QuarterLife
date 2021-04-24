@@ -36,6 +36,7 @@ AQLCelestialBody::AQLCelestialBody()
     BasicStaticMesh->SetSimulatePhysics(false);
     BasicStaticMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     BasicStaticMesh->SetCollisionObjectType(ECollisionChannel::ECC_Camera);
+    BasicStaticMesh->SetCastShadow(false);
 
     Tags.Add(FName(TEXT("QLPortalCompatible")));
 }

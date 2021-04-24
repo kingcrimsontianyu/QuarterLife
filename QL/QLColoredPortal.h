@@ -73,6 +73,11 @@ public:
 
 protected:
     //------------------------------------------------------------
+    // Called when the game starts or when spawned
+    //------------------------------------------------------------
+    virtual void BeginPlay() override;
+
+    //------------------------------------------------------------
     //------------------------------------------------------------
     virtual void PostInitializeComponents() override;
 
@@ -86,4 +91,9 @@ protected:
 
     UFUNCTION()
     void EnlargeCallback(float Val);
+
+    //------------------------------------------------------------
+    //------------------------------------------------------------
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "C++Property")
+    UStaticMeshComponent* DisplayPlaneStaticMesh;
 };

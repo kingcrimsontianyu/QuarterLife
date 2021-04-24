@@ -11,6 +11,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QLWeaponEnum.h"
 #include "QLWeaponManager.generated.h"
 
 class AQLCharacter;
@@ -36,7 +37,7 @@ public:
 
     void DestroyAllWeapon();
 
-    void SetCurrentWeapon(const FName& QLName);
+    void SetCurrentWeapon(const EQLWeapon WeaponType);
 
     void UpdateCrossHair();
 
@@ -52,7 +53,7 @@ public:
 
     void SetCurrentWeaponVisibility(const bool bFlag);
 
-    bool HasWeapon(const FName& WeaponName);
+    bool HasWeapon(const EQLWeapon WeaponType);
 protected:
     // do not use UPROPERTY() here
     // it breaks the character weapon system

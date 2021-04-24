@@ -104,7 +104,7 @@ FReply UQLUmgInventory::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyE
 
 //------------------------------------------------------------
 //------------------------------------------------------------
-int UQLUmgInventory::SetCurrentAbility_Implementation(const FName& QLName)
+int UQLUmgInventory::SetCurrentAbility_Implementation(const EQLAbility AbilityType)
 {
     if (QLPlayerController.IsValid())
     {
@@ -112,7 +112,7 @@ int UQLUmgInventory::SetCurrentAbility_Implementation(const FName& QLName)
         auto* Character = Cast<AQLCharacter>(Pawn);
         if (Character)
         {
-            Character->SetCurrentAbility(QLName);
+            Character->SetCurrentAbility(AbilityType);
         }
     }
 

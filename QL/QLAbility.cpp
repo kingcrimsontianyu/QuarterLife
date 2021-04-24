@@ -32,6 +32,7 @@ AQLAbility::AQLAbility()
     PrimaryActorTick.bStartWithTickEnabled = false;
 
     QLName = "None";
+    AbilityType = EQLAbility::None;
 
     DamageMultiplier = 1.0;
     bCanBeUsed = true;
@@ -125,7 +126,7 @@ void AQLAbility::OnComponentBeginOverlapImpl(UPrimitiveComponent* OverlappedComp
     if (QLCharacter)
     {
         QLCharacter->AddAbility(this);
-        QLCharacter->SetCurrentAbility(this->GetQLName());
+        QLCharacter->SetCurrentAbility(this->GetAbilityType());
         UpdateProgressOnUMGInternal(1.0f);
         PlaySound("PickUp");
     }
@@ -218,4 +219,11 @@ void AQLAbility::OnAbilitySetCurrent()
 //------------------------------------------------------------
 void AQLAbility::OnAbilityUnsetCurrent()
 {
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+EQLAbility AQLAbility::GetAbilityType() const
+{
+    return AbilityType;
 }
