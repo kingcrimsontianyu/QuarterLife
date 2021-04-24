@@ -40,6 +40,7 @@ AQLPortal::AQLPortal()
     SceneCaptureComponent->bEnableClipPlane = true;
     SceneCaptureComponent->bCaptureEveryFrame = true;
     SceneCaptureComponent->TextureTarget = nullptr;
+    SceneCaptureComponent->CaptureSource = ESceneCaptureSource::SCS_FinalColorHDR; // mitigate aliasing!!!
     SceneCaptureComponent->SetupAttachment(RootComponent);
 
     bCanUpdatePortalView = true;
@@ -95,12 +96,13 @@ void AQLPortal::PostInitializeComponents()
     // set up scene capture component and render target
     if (SceneCaptureComponent && RenderTarget)
     {
-        // todo: (1) how to avoid hardcoded resolution?!
-        //       (2) how to conduct antialiasing for the render target?!
+        // GSystemResolution is a global variable for resolution
+        uint32 ResolutionX = GSystemResolution.ResX;
+        uint32 ResolutionY = GSystemResolution.ResY;
 
-        uint32 ResolutionX = 1920 / 2;
-        uint32 ResolutionY = 1080 / 2;
+        // initialize render target
         RenderTarget->InitAutoFormat(ResolutionX, ResolutionY);
+
         RenderTarget->AddressX = TextureAddress::TA_Wrap;
         RenderTarget->AddressY = TextureAddress::TA_Wrap;
 
