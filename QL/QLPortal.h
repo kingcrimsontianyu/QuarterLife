@@ -25,6 +25,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Math/IntPoint.h"
 #include "QLPortal.generated.h"
 
 //------------------------------------------------------------
@@ -147,6 +148,19 @@ protected:
     // Whether the portal can teleport players, or just provide views
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++Property")
     bool bCanTeleport;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++Property")
+    FIntPoint PortalResolution;
+
+    // The desired portal frame rate.
+    // 0 (default) is to match the native frame rate.
+    // Higher value is more resource demanding and affects performance more seriously.
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++Property", meta = (ClampMin = "0.0", ClampMax = "360.0"))
+    float PortalFrameRate;
+
+    FTimerHandle UpdatePortalTimerHandle;
+
+    float PortalUpdateInterval;
 
     TArray<AActor*> Roll;
 };

@@ -45,7 +45,13 @@ AQLPortal::AQLPortal()
 
     bCanUpdatePortalView = true;
 
+    PortalFrameRate = 0.0f;
+
     bCanTeleport = true;
+
+    // GSystemResolution is a global variable for resolution
+    PortalResolution.X = GSystemResolution.ResX;
+    PortalResolution.Y = GSystemResolution.ResY;
 }
 
 //------------------------------------------------------------
@@ -62,6 +68,16 @@ void AQLPortal::BeginPlay()
     {
         PortalMaterialInstanceDynamic->SetTextureParameterValue("PortalTexture", RenderTarget);
     }
+
+    if (!FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
+    {
+        GetWorldTimerManager().SetTimer(UpdatePortalTimerHandle,
+            this,
+            &AQLPortal::UpdateSCC,
+            PortalUpdateInterval, // time interval in second
+            true, // loop
+            0.0f); // delay in second
+    }
 }
 
 //------------------------------------------------------------
@@ -71,7 +87,7 @@ void AQLPortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    if (bCanUpdatePortalView)
+    if (FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
     {
         UpdateSCC();
     }
@@ -96,12 +112,8 @@ void AQLPortal::PostInitializeComponents()
     // set up scene capture component and render target
     if (SceneCaptureComponent && RenderTarget)
     {
-        // GSystemResolution is a global variable for resolution
-        uint32 ResolutionX = GSystemResolution.ResX;
-        uint32 ResolutionY = GSystemResolution.ResY;
-
         // initialize render target
-        RenderTarget->InitAutoFormat(ResolutionX, ResolutionY);
+        RenderTarget->InitAutoFormat(PortalResolution.X, PortalResolution.Y);
 
         RenderTarget->AddressX = TextureAddress::TA_Wrap;
         RenderTarget->AddressY = TextureAddress::TA_Wrap;
@@ -126,6 +138,11 @@ void AQLPortal::PostInitializeComponents()
     // built-in dynamic delegate
     OnActorBeginOverlap.AddDynamic(this, &AQLPortal::OnOverlapBeginForActor);
     OnActorEndOverlap.AddDynamic(this, &AQLPortal::OnOverlapEndForActor);
+
+    if (!FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
+    {
+        PortalUpdateInterval = 1.0f / PortalFrameRate;
+    }
 }
 
 //------------------------------------------------------------
