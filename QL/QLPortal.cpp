@@ -69,7 +69,7 @@ void AQLPortal::BeginPlay()
         PortalMaterialInstanceDynamic->SetTextureParameterValue("PortalTexture", RenderTarget);
     }
 
-    if (!FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
+    if (!FMath::IsNearlyZero(PortalFrameRate, 1e-3f) && bCanUpdatePortalView)
     {
         GetWorldTimerManager().SetTimer(UpdatePortalTimerHandle,
             this,
@@ -87,7 +87,7 @@ void AQLPortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    if (FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
+    if (FMath::IsNearlyZero(PortalFrameRate, 1e-3f) && bCanUpdatePortalView)
     {
         UpdateSCC();
     }
@@ -265,6 +265,35 @@ void AQLPortal::Debug()
 void AQLPortal::SetCanUpdatePortalView(bool bFlag)
 {
     bCanUpdatePortalView = bFlag;
+
+    if (bCanUpdatePortalView)
+    {
+        // if PortalFrameRate is NOT set to 0, apply specified PortalFrameRate
+        if (!FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
+        {
+            // set the timer if it does not exist
+            if (!GetWorldTimerManager().TimerExists(UpdatePortalTimerHandle))
+            {
+                GetWorldTimerManager().SetTimer(UpdatePortalTimerHandle,
+                    this,
+                    &AQLPortal::UpdateSCC,
+                    PortalUpdateInterval, // time interval in second
+                    true, // loop
+                    0.0f); // delay in second
+            }
+        }
+    }
+    else
+    {
+        if (!FMath::IsNearlyZero(PortalFrameRate, 1e-3f))
+        {
+            // clear the timer if it exists
+            if (GetWorldTimerManager().TimerExists(UpdatePortalTimerHandle))
+            {
+                GetWorldTimerManager().ClearTimer(UpdatePortalTimerHandle); // delay in second
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------
@@ -309,4 +338,11 @@ bool AQLPortal::IsInMyRoll(AActor* GivenActor)
 void AQLPortal::SetPortalMaterialInstanceDynamic(UMaterialInstanceDynamic* PortalMaterialInstanceDynamicExt)
 {
     PortalMaterialInstanceDynamic = PortalMaterialInstanceDynamicExt;
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void AQLPortal::QLSetVisibility_Implementation(const bool bFlag)
+{
+
 }

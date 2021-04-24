@@ -65,6 +65,7 @@ void AQLAbilityTimeTravel::BeginPlay()
     FarPortal->AttachToActor(ShadowAbility, FAttachmentTransformRules::KeepRelativeTransform);
     FarPortal->SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
     FarPortal->SetActorRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+    FarPortal->QLSetVisibility(false);
 
     // to improve performance, disallow far portal to update its portal view
     FarPortal->SetCanUpdatePortalView(false);

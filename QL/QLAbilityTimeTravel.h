@@ -25,8 +25,10 @@ class AQLPortal;
 //     The relative transform between ShadowAbility and FarActor is always equal to that between AQLAbilityTimeTravel and NearActor.
 // --- NearPortal
 //     Actor to display the portal view. NearPortal is attached to the AQLAbilityTimeTravel actor with a fixed relative transform.
+//     Has a skeletal mesh model resembling the timepiece in Dishonored 2
 // --- FarPortal
 //     FarPortal is attached to the ShadowAbility actor with a fixed relative transform.
+//     Has a skeletal mesh model but is set to invisible
 //------------------------------------------------------------
 UCLASS()
 class QL_API AQLAbilityTimeTravel : public AQLAbility

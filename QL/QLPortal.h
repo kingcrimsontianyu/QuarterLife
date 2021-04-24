@@ -84,6 +84,16 @@ public:
     UFUNCTION(BlueprintCallable, Category = "C++Function")
     void SetPortalMaterialInstanceDynamic(UMaterialInstanceDynamic* PortalMaterialInstanceDynamicExt);
 
+    //------------------------------------------------------------
+    // Set the visibility of the mesh component (static mesh or skeletal mesh)
+    // To be overridden by blueprint.
+    // virtual void QLSetVisibility_Implementation(const bool bFlag); can be overriden in C++
+    //------------------------------------------------------------
+    UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "C++Function")
+    void QLSetVisibility(const bool bFlag);
+    virtual void QLSetVisibility_Implementation(const bool bFlag);
+
+
 protected:
     //------------------------------------------------------------
     // Called when the game starts or when spawned
@@ -142,7 +152,7 @@ protected:
     UPROPERTY()
     TWeakObjectPtr<AQLPortal> Spouse;
 
-    UPROPERTY()
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++Property")
     bool bCanUpdatePortalView;
 
     // Whether the portal can teleport players, or just provide views
@@ -158,9 +168,12 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "C++Property", meta = (ClampMin = "0.0", ClampMax = "360.0"))
     float PortalFrameRate;
 
+    UPROPERTY()
     FTimerHandle UpdatePortalTimerHandle;
 
+    UPROPERTY()
     float PortalUpdateInterval;
 
+    UPROPERTY()
     TArray<AActor*> Roll;
 };
