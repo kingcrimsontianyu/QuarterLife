@@ -896,6 +896,11 @@ void AQLCharacter::Die()
         WeaponManager->DestroyAllWeapon();
     }
 
+    if (AbilityManager)
+    {
+        AbilityManager->DestroyAllAbility();
+    }
+
     UAnimSequence* Animation = PlayAnimationSequence("Death1");
 
     // get animation length

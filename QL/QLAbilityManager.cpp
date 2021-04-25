@@ -190,3 +190,13 @@ void UQLAbilityManager::Debug()
 {
     CurrentAbility->Debug();
 }
+
+//------------------------------------------------------------
+//------------------------------------------------------------
+void UQLAbilityManager::DestroyAllAbility()
+{
+    for (auto& Item : AbilityList)
+    {
+        Item->Destroy();
+    }
+}

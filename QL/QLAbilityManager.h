@@ -34,6 +34,8 @@ public:
 
     void AddAbility(AQLAbility* Ability);
 
+    void DestroyAllAbility();
+
     void SetCurrentAbility(const EQLAbility AbilityType);
 
     AQLAbility* GetCurrentAbility();

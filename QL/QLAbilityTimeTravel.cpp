@@ -84,6 +84,28 @@ void AQLAbilityTimeTravel::BeginPlay()
 
 //------------------------------------------------------------
 //------------------------------------------------------------
+void AQLAbilityTimeTravel::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (NearPortal)
+    {
+        NearPortal->Destroy();
+    }
+
+    if (FarPortal)
+    {
+        FarPortal->Destroy();
+    }
+
+    if (ShadowAbility)
+    {
+        ShadowAbility->Destroy();
+    }
+
+    Super::EndPlay(EndPlayReason);
+}
+
+//------------------------------------------------------------
+//------------------------------------------------------------
 void AQLAbilityTimeTravel::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
