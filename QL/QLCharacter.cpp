@@ -73,6 +73,8 @@ Super(ObjectInitializer.SetDefaultSubobjectClass<UQLMoveComponentQuake>(ACharact
     FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.0f, 1.75f, 64.0f));
     FirstPersonCameraComponent->bUsePawnControlRotation = true; // critical! If false, mouse would not change pitch!
     FirstPersonCameraComponent->SetFieldOfView(100.0f);
+    FirstPersonCameraComponent->PostProcessSettings.bOverride_MotionBlurAmount = true;
+    FirstPersonCameraComponent->PostProcessSettings.MotionBlurAmount = 0.0f;
 
     // Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
     FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
